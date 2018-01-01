@@ -1,7 +1,5 @@
-import json
 import logging
 
-from psycopg2 import sql
 from config.config import *
 from src.common import common
 from src.common.db.postgres_pool import PgPool
@@ -89,6 +87,7 @@ class Scraper:
                 logger.exception('{exception}'.format(exception=e.message))
 
             self.insert_product_to_db(product, category_name)
+            self.scrap_all_reviews(product)
 
     def scrap_all_reviews(self, product_dict):
         """
