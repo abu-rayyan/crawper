@@ -1,0 +1,13 @@
+# Project Dependencies
+
+# Scraping dependencies
+requests
+beautifulsoup4
+lxml
+fake-useragent
+psycopg2
+singleton-decorator
+PySocks
+pysocks5
+
+# Others

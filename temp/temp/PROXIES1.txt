@@ -1,0 +1,92 @@
+165.84.167.54	8080	HK	elite proxy	yes
+159.203.126.11	8080	US	anonymous	yes
+197.251.209.19	8080	GH	elite proxy	yes
+144.76.176.72	80	DE	anonymous	yes
+147.135.210.114	54566	PL	anonymous	yes
+89.22.175.43	8080	RU	anonymous	yes
+23.111.166.114	8080	US	anonymous	yes
+185.93.3.123	8080	ES	anonymous	yes
+13.124.61.127	3128	KR	anonymous	yes
+45.77.189.222	3128	US	elite proxy	yes
+164.132.225.81	3128	FR	anonymous	yes
+207.154.240.229	3128	DE	elite proxy	yes
+178.207.110.98	8080	RU	anonymous	yes
+45.76.32.106	3128	NL	elite proxy	yes
+110.77.177.128	54318	TH	elite proxy	yes
+223.207.140.24	8080	TH	elite proxy	yes
+159.192.236.164	54318	TH	elite proxy	yes
+13.124.51.238	3128	KR	anonymous	yes
+61.7.181.249	54318	TH	elite proxy	yes
+13.124.254.88	3128	KR	anonymous	yes
+149.202.180.55	3128	FR	anonymous	yes
+45.6.216.66	3128	BR	anonymous	yes
+45.76.43.246	3128	NL	elite proxy	yes
+185.82.212.95	8080	CZ	anonymous	yes
+89.236.17.106	3128	SE	elite proxy	yes
+151.80.140.233	54566	FR	anonymous	yes
+54.70.50.55	3128	US	anonymous	yes
+212.49.115.67	8080	RU	anonymous	yes
+137.74.168.174	8080	FR	anonymous	yes
+52.170.21.0	3128	US	anonymous	yes
+165.227.186.129	80	US	anonymous	yes
+52.224.181.154	3128	US	anonymous	yes
+192.95.1.54	8080	CA	anonymous	yes
+110.77.177.54	55555	TH	elite proxy	yes
+110.77.177.61	54318	TH	elite proxy	yes
+113.161.161.188	8080	VN	elite proxy	yes
+110.78.150.146	54318	TH	elite proxy	yes
+110.77.238.182	54318	TH	elite proxy	yes
+178.49.136.82	8080	RU	anonymous	yes
+202.21.32.148	8080	IN	elite proxy	yes
+41.193.222.58	3128	ZA	anonymous	yes
+61.7.190.213	54318	TH	elite proxy	yes
+159.192.246.52	54318	TH	elite proxy	yes
+110.77.238.66	62637	TH	elite proxy	yes
+167.114.47.231	3128	CA	anonymous	yes
+122.183.139.101	8080	IN	elite proxy	yes
+5.9.38.77	8080	DE	elite proxy	yes
+61.7.174.107	54318	TH	elite proxy	yes
+180.247.12.6	8080	ID	elite proxy	yes
+180.183.232.236	8090	TH	elite proxy	yes
+110.77.219.40	54318	TH	elite proxy	yes
+196.201.112.185	8080	ZA	anonymous	yes
+103.210.38.174	3128	IN	elite proxy	yes
+110.77.200.107	54318	TH	elite proxy	yes
+93.190.68.160	8118	DE	elite proxy	yes
+54.233.90.45	80	BR	anonymous	yes
+188.166.204.221	8118	SG	elite proxy	yes
+159.192.249.243	54318	TH	elite proxy	yes
+46.101.78.149	8118	GB	elite proxy	yes
+96.9.79.140	55555	KH	elite proxy	yes
+178.49.136.84	8080	RU	anonymous	yes
+192.116.142.153	8080	IL	elite proxy	yes
+62.144.211.124	8080	DE	elite proxy	yes
+138.197.2.2	8118	US	anonymous	yes
+196.15.243.22	8080	ZA	elite proxy	yes
+122.183.139.104	8080	IN	elite proxy	yes
+165.227.126.213	8118	US	elite proxy	yes
+212.232.60.219	3128	RU	elite proxy	yes
+201.183.227.197	8080	EC	elite proxy	yes
+36.83.130.107	8080	ID	anonymous	yes
+110.78.151.164	54318	TH	elite proxy	yes
+107.170.208.83	8080	US	elite proxy	yes
+116.58.240.186	54318	TH	elite proxy	yes
+122.183.137.190	8080	IN	elite proxy	yes
+110.78.148.251	54318	TH	elite proxy	yes
+104.236.175.94	10000	US	elite proxy	yes
+176.215.252.152	8080	RU	anonymous	yes
+110.77.215.38	54318	TH	elite proxy	yes
+42.104.84.107	8080	IN	elite proxy	yes
+116.58.240.88	54318	TH	elite proxy	yes
+165.227.67.187	8118	US	elite proxy	yes
+174.139.160.197	3128	US	elite proxy	yes
+186.96.68.162	8080	VE	anonymous	yes
+61.91.79.42	54318	TH	elite proxy	yes
+116.58.236.13	54318	TH	elite proxy	yes
+116.58.240.14	54318	TH	elite proxy	yes
+122.183.139.109	8080	IN	elite proxy	yes
+103.74.245.144	65301	IN	elite proxy	yes
+138.0.227.187	54318	BR	elite proxy	yes
+122.183.139.98	8080	IN	elite proxy	yes
+61.7.174.86	54318	TH	elite proxy	yes
+93.179.231.56	53281	PL	elite proxy	yes

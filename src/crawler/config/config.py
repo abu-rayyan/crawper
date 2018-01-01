@@ -1,0 +1,17 @@
+URLS = {
+    "BaseUrl": "https://www.amazon.com",
+    "NewReleases": "/gp/new-releases/",
+    "SportsOutdoors": "/gp/new-releases/sporting-goods/",
+    "FanShop": "3386071/",
+    "AutoAccess": "374773011/"
+}
+
+QUERIES = {
+    "InsertCategory": "INSERT INTO crawper.categories(category_name) VALUES (%s);",
+    "GetCategory": "SELECT category_link FROM crawper.categories WHERE category_name='{category}';",
+    "DeleteCategory": "DELETE FROM crawper.categories WHERE category_name='{category}';",
+    "ExistsCategory": "SELECT EXISTS(SELECT category_name FROM crawper.categories WHERE "
+                      "category_name='{category}') ",
+    "SelectProductLink": "SELECT product_link FROM crawper.products WHERE category_name='{category}';",
+    "ExistsProduct": "SELECT EXISTS(SELECT product_asin FROM crawper.products WHERE product_asin=%s);"
+}
