@@ -47,10 +47,17 @@ def start_crawper(new_releases=False, best_sellers=False):
 
         queue.join()
 
+def dev_tests():
+    logger.info('Dev Testing started')
+    c = Crawler()
+
+    if c.exists_category('sporting-goods'):
+        print(c.get_links_from_db('sporting-goods'))
+
 
 def normal_mode_test():
     c = Crawler()
-    links, file_ = c.get_product_links(NewReleases["AutoAccessories"])
+    links, file_ = c.get_product_links(NewReleases["SportsOutdoors"])
     s = Scraper()
     print(s.get_products_info(links, file_))
 
@@ -83,8 +90,9 @@ def main():
     # noinspection PyUnusedLocal
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
-    start_crawper(new_releases=True, best_sellers=False)
-    #normal_mode_test()
+    #start_crawper(new_releases=True, best_sellers=False)
+    normal_mode_test()
+    #dev_tests()
 
     logger.info('closing database connection')
     db_conn.close_pool()

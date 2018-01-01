@@ -38,67 +38,18 @@ class Crawler:
     def get_product_links(self, url):
         category_name = self.get_category(url)
         logger.debug('products category name: {file}'.format(file=category_name))
-        pg_conn, pg_cursor = self.pg_.get_conn()
 
-        if not common.exists_file('temp/crawler/{file}.txt'.format(file=category_name)):
-            logger.debug('creating new record file for {category} links'.format(category=category_name))
-            record_file = open('temp/crawler/{file}.txt'.format(file=category_name), 'w')
-            current_date = datetime.datetime.now().strftime("%Y%m%d")
-
-            insert_query = QUERIES["InsertCategory"]
-            try:
-                self.pg_.execute_query(pg_cursor, insert_query, (category_name,))
-                self.pg_.commit_changes(pg_conn)
-                self.pg_.put_conn(pg_conn)
-            except Exception as e:
-                logger.exception(e.message)
-
-            urls_ = self.find_urls(url)
-            record_file.write(current_date)
-            record_file.close()
-            return urls_, category_name
-
-        else:
-            logger.debug('{file_} already exists'.format(file_=category_name))
-            current_date = datetime.datetime.now().strftime("%Y%m%d")
-            logger.debug('current time: {ctime}'.format(ctime=current_date))
-
-            rec_file = open('temp/crawler/{file_}.txt'.format(file_=category_name), 'r')
-            last_modified_date = rec_file.readline()
-            rec_file.close()
-            logger.debug(last_modified_date)
-
-            if int(current_date) - int(last_modified_date) >= 2:
-                logger.debug('deleting old file record & creating new file {file_name}'.format(file_name=category_name))
-                os.remove('temp/crawler/{file_name}.txt'.format(file_name=category_name))
-                del_query = QUERIES["DeleteCategory"]
-                self.pg_.execute_query(pg_cursor, del_query, (category_name,))
-                record_file = open('temp/crawler/{file_name}.txt'.format(file_name=category_name), 'w')
-                current_date = datetime.datetime.now().strftime("%Y%m%d")
-                self.pg_.commit_changes(pg_conn)
-                self.pg_.put_conn(pg_conn)
-                urls_ = self.find_urls(url)
-                record_file.write(current_date)
-                record_file.close()
-                return urls_, category_name
+        if not self.exists_category(category_name):
+            if self.insert_category(category_name):
+                product_urls = self.find_urls(url)
+                return product_urls, category_name
             else:
-                logger.info('getting links from database: {file}'.format(file=category_name))
-                exists_query = QUERIES["ExistsCategory"]
-                fetch_query = QUERIES["SelectProductLink"]
+                logger.debug('unknown error, in inserting category to the database')
+                return None, None
+        else:
+            product_urls = self.get_links_from_db(category_name)
+            return product_urls, category_name
 
-                if self.pg_.execute_query(pg_cursor, exists_query, (category_name,)):
-                    db_response = self.pg_.execute_query(pg_cursor, fetch_query, (category_name,))
-                    product_links = [link[0] for link in db_response]
-                    self.pg_.commit_changes(pg_conn)
-                    self.pg_.put_conn(pg_conn)
-                    return product_links, category_name
-                else:
-                    logger.debug('{category} not found in the database'.format(category=category_name))
-                    self.pg_.commit_changes(pg_conn)
-                    self.pg_.put_conn(pg_conn)
-                    return None, category_name
-
-    # find urls in a page and return list
     # TODO: Remove & Relace hard-coded tab entries with generics
     def find_urls(self, url):
         """
