@@ -33,15 +33,6 @@ class Scraper:
     def get_products_info(self, links, category_name):
         logger.info('scraping products info')
 
-        logger.debug('checking if temp/scraper/{file}.json exists'.format(file=category_name))
-        if not common.exists_file('temp/scraper/{file}.json'.format(file=category_name)):
-            logger.debug('temp/scraper/{file}.json does not exists, creating new'.format(file=category_name))
-            products_file = open('temp/scraper/{file}.json'.format(file=category_name), 'w')
-        else:
-            logger.debug('temp/scraper/{file}.json exists, opening file'.format(file=category_name))
-            products_file = open('temp/scraper/{file}.json'.format(file=category_name), 'a')
-
-        products = {}
         product = {
             "Title": None,
             "Price": None,
@@ -52,10 +43,15 @@ class Scraper:
             "Reviews": None
         }
 
-        logger.debug('Products Dict: {prods}   Product Dict: {prod}'.format(prods=products, prod=product))
+        logger.debug('Product Dict: {prod}'.format(prod=product))
 
         for link in links:
             logger.debug('fetching product info @ {link}'.format(link=link))
+
+            product["ASIN"] = link.split('/')[5]
+            product["ProductLink"] = link
+            logger.debug('ASIN: {asin}'.format(asin=product["ASIN"]))
+
             web_page = common.request_page(link)
 
             try:
@@ -92,26 +88,13 @@ class Scraper:
                 product["TotalReviews"] = None
                 logger.exception('{exception}'.format(exception=e.message))
 
-            asin = link.split('/')
-            product["ASIN"] = asin[5]
-            product["ProductLink"] = link
-            logger.debug("ASIN: {asin}".format(asin=asin[5]))
             self.insert_product_to_db(product, category_name)
 
-            prod = self.scrap_all_reviews(product)
-            logger.debug('updating products dict')
-            products.update(prod)
-            logger.debug('Product: {prod}'.format(prod=product))
-
-        logger.debug('writing products information to file')
-        products_file.write(json.dumps(products))
-        products_file.write('\n\n')
-        products_file.close()
-
-        return products
-
-    # find each review URL on review page
     def scrap_all_reviews(self, product_dict):
+        """
+        Scrap reviews from reviews page
+        :param product_dict: product data dictionary
+        """
         logger.info("scraping reviews")
         next_url = product_dict["ReviewsURL"]
         logger.debug('Reviews URL: {url}'.format(url=next_url))
@@ -127,7 +110,7 @@ class Scraper:
                 for link in review_links:
                     review_url = '{base_url}{url}'.format(base_url=self.base_url, url=link.get('href').encode('utf-8'))
                     logger.debug('review url: {url}'.format(url=review_url))
-                    product_dict["Reviews"] = self.scrap_review(review_url, product_dict["ASIN"])
+                    self.scrap_review(review_url, product_dict["ASIN"])
 
                 next_link = next_page.find('li', {'class': 'a-last'})
                 next_url = '{base_url}{url}'.format(base_url=self.base_url,
@@ -135,11 +118,14 @@ class Scraper:
             except AttributeError as e:
                 logger.exception('{exception}'.format(exception=e.message))
                 break
-        logger.debug('product dict: {dict}'.format(dict=product_dict))
-        return product_dict
 
-    # scrap a single review by review url
     def scrap_review(self, review_url, product_asin):
+        """
+        Scraps a review
+        :param review_url: url of the review page
+        :param product_asin: asin number of the product
+        :return:
+        """
         logger.info("scraping review @ {url}".format(url=review_url))
         global soup
 
@@ -216,15 +202,18 @@ class Scraper:
         logger.debug('Review: {dict}'.format(dict=review_dict))
         self.insert_review_to_db(review_dict, product_asin)
 
-        return review_dict
-
-    # insert product info into the database
     def insert_product_to_db(self, product, category_name):
+        """
+        Inserts product's data to the database
+        :param product: product data dictionary
+        :param category_name: category name of the product
+        :return: bool
+        """
         logger.debug('inserting product info to database')
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         insert_query = QUERIES["InsertProduct"]
         query_params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
-                        category_name, product["ProductLink"],  product["TotalReviews"])
+                        category_name, product["ProductLink"], product["TotalReviews"])
 
         try:
             self.pg_pool.execute_query(pg_cursor, insert_query, query_params)
@@ -235,8 +224,13 @@ class Scraper:
             logger.exception(e.message)
             return False
 
-    # insert product review into database
     def insert_review_to_db(self, review, product_asin):
+        """
+        Insertes review data to the database
+        :param review: review dictionary
+        :param product_asin: asin no of the product
+        :return: bool
+        """
         logger.debug('inseritng review into the database')
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         insert_query = QUERIES["InsertReview"]
@@ -244,10 +238,40 @@ class Scraper:
         logger.debug('insert query: {query}'.format(query=insert_query))
 
         try:
-            self.pg_pool.execute_query(pg_cursor, insert_query, (review["ReviewLink"], product_asin, review["ReviewTitle"], review["ReviewText"], review["ReviewRate"], review["ReviewerId"], review["ReviewDate"]))
+            self.pg_pool.execute_query(pg_cursor, insert_query, (review["ReviewLink"], product_asin,
+                                                                 review["ReviewTitle"], review["ReviewText"],
+                                                                 review["ReviewRate"], review["ReviewerId"],
+                                                                 review["ReviewDate"]))
             self.pg_pool.commit_changes(pg_conn)
             self.pg_pool.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
             return False
+
+    def exists_product(self, asin_no):
+        """
+        Checks if a product exists in the database
+        :param asin_no: asin number of the product
+        :return: bool
+        """
+        logger.debug('checking if product {asin} exists in database'.format(asin=asin_no))
+
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["ProductExists"]
+        params = (asin_no,)
+
+        try:
+            if self.pg_pool.execute_query(pg_cursor, query, params)[0][0]:
+                logger.debug('product {asin} exists in DB'.format(asin=asin_no))
+                self.pg_pool.commit_changes(pg_conn)
+                self.pg_pool.put_conn(pg_conn)
+                return True
+            else:
+                logger.debug('product {asin} does not exists in DB'.format(asin=asin_no))
+                self.pg_pool.put_conn(pg_conn)
+                return False
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None

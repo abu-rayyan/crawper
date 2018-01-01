@@ -26,6 +26,5 @@ class Worker(Thread):
             links, file_name = self.crawler.get_product_links(link)
             logger.debug('links @ {links} file name @ {file}'.format(links=type(links), file=file_name))
             logger.debug('starting scraper')
-            products = self.scraper.get_products_info(links, file_name)
-            logger.debug(products)
+            self.scraper.get_products_info(links, file_name)
             self.queue.task_done()

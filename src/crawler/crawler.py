@@ -116,7 +116,7 @@ class Crawler:
         params = (category_name,)
 
         try:
-            if self.pg_.execute_query(pg_cursor, query, params):
+            if self.pg_.execute_query(pg_cursor, query, params)[0][0]:
                 logger.debug('category {name} exists in the database'.format(name=category_name))
                 self.pg_.put_conn(pg_conn)
                 return True
