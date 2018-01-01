@@ -37,8 +37,8 @@ class Crawler:
     # get sports/outdoors products links (all 5 tabs)
     def get_product_links(self, url):
         category_name = self.get_category(url)
-        pg_conn, pg_cursor = self.pg_.get_conn()
         logger.debug('products category name: {file}'.format(file=category_name))
+        pg_conn, pg_cursor = self.pg_.get_conn()
 
         if not common.exists_file('temp/crawler/{file}.txt'.format(file=category_name)):
             logger.debug('creating new record file for {category} links'.format(category=category_name))
@@ -101,6 +101,11 @@ class Crawler:
     # find urls in a page and return list
     # TODO: Remove & Relace hard-coded tab entries with generics
     def find_urls(self, url):
+        """
+        Finds urls of products in all 5 tabs
+        :param url: url of the main page
+        :return: products link
+        """
         logger.info("fetching product links")
         product_links = []
         tab = 1
@@ -134,14 +139,83 @@ class Crawler:
         query = QUERIES["ExistsProduct"]
         params = (product_asin,)
 
-        if self.pg_.execute_query(pg_cursor, query, params):
-            logger.debug('product {asin} exists in database'.format(asin=product_asin))
+        try:
+            if self.pg_.execute_query(pg_cursor, query, params):
+                logger.debug('product {asin} exists in database'.format(asin=product_asin))
+                self.pg_.put_conn(pg_conn)
+                return True
+            else:
+                logger.debug('product {asin} does not exists in database'.format(asin=product_asin))
+                self.pg_.put_conn(pg_conn)
+                return False
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def exists_category(self, category_name):
+        """
+        Checks if a particular category exists in database
+        :param category_name: category name (str)
+        :return: bool
+        """
+        logger.debug('checking if category {name} exists in database'.format(name=category_name))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["ExistsCategory"]
+        params = (category_name,)
+
+        try:
+            if self.pg_.execute_query(pg_cursor, query, params):
+                logger.debug('category {name} exists in the database'.format(name=category_name))
+                self.pg_.put_conn(pg_conn)
+                return True
+            else:
+                logger.debug('category {name} does not exists in database')
+                self.pg_.put_conn(pg_conn)
+                return False
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def insert_category(self, category_name):
+        """
+        Inserts a new category into the DB
+        :param category_name: name of the category
+        :return: bool
+        """
+        logger.debug('inserting new category {name} into the database'.format(name=category_name))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["InsertCategory"]
+        params = (category_name,)
+
+        try:
+            self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
             self.pg_.put_conn(pg_conn)
             return True
-        else:
-            logger.debug('product {asin} does not exists in database'.format(asin=product_asin))
+        except Exception as e:
+            logger.exception(e.message)
             self.pg_.put_conn(pg_conn)
             return False
 
-    def get_product_reviews_count(self, product_link):
-        logger.debug('getting product reviews count')
+    def get_links_from_db(self, category_name):
+        """
+        Get links of products for existing category in DB
+        :param category_name: name of the category
+        :return: product links
+        """
+        logger.debug('getting product links from database')
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["SelectProductLink"]
+        params = (category_name,)
+
+        try:
+            query_responce = self.pg_.execute_query(pg_cursor, query, params)
+            product_links = [link[0] for link in query_responce]
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return product_links
+        except Exception as e:
+            logger.exception(e.message)
+            return None
