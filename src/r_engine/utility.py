@@ -60,3 +60,35 @@ class UtilityFunctions:
         except Exception as e:
             logger.debug(e.message)
             return None
+
+    def get_products_asin_from_db(self):
+        logger.debug('getting all products asin from database')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetProductsAsin"]
+
+        try:
+            res_data = self.pg_pool.execute_query(pg_cursor, query, params='')
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return res_data
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def insert_rewiew_analysis_into_db(self, review_stat):
+        logger.debug('inserting review analysis into database')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["InsertReviewStat"]
+        params = (review_stat["ReviewLink"], review_stat["ReviewLength"],
+                  review_stat["WordCountCategory"], review_stat["SentimentScore"],
+                  review_stat["SentimentLabel"], review_stat["CommonPhrase"],
+                  review_stat["CredulityScore"], review_stat["ReviewScore"])
+
+        try:
+            self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            return False

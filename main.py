@@ -10,7 +10,7 @@ from src.scraper import Scraper
 from src.common.proxy_rotator import ProxyRotator
 
 from src.common.db.postgres_pool import PgPool
-from src.analysis_engine.aengine import AEngine
+from src.r_engine.rengine import REngine
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +51,8 @@ def start_crawper(new_releases=False, best_sellers=False):
 def dev_tests():
     logger.info('Dev Testing started')
     asin = "B075R4B6DX"
-    ae = AEngine()
-    ae.get_product_reviews_from_db(asin)
+    ae = REngine()
+    ae.start_engine()
 
 
 def normal_mode_test():
@@ -90,9 +90,9 @@ def main():
     # noinspection PyUnusedLocal
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
-    start_crawper(new_releases=True, best_sellers=False)
+    #start_crawper(new_releases=True, best_sellers=False)
     #normal_mode_test()
-    #dev_tests()
+    dev_tests()
 
     logger.info('closing database connection')
     db_conn.close_pool()

@@ -10,4 +10,7 @@ singleton-decorator
 PySocks
 pysocks5
 
+# REngine
+textblob
+
 # Others

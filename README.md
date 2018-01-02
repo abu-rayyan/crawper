@@ -42,3 +42,5 @@ Follow these steps in order to deploy it correctly via Python VirtualEnviroment.
 * [PostgresSql 10.1](https://www.postgresql.org/download/)
 * [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 * [python requests](http://docs.python-requests.org/en/master/)
+
+python -m textblob.download_corpora
