@@ -27,8 +27,12 @@ class Scraper:
             logger.debug('temp/scraper exists')
 
     # scrap all products info based on links
-    # TODO: add db operations instead of filing
     def get_products_info(self, links, category_name):
+        """
+        Scraps all products information
+        :param links:
+        :param category_name:
+        """
         logger.info('scraping products info')
 
         product = {
