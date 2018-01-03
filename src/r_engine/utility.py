@@ -5,6 +5,7 @@ from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
+
 class UtilityFunctions:
     def __init__(self):
         logger.debug('initializing utility functions')

@@ -1,3 +1,4 @@
+nltk
 # Project Dependencies
 
 # Scraping dependencies

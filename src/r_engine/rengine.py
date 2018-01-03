@@ -18,7 +18,6 @@ class REngine:
         logger.info('starting analysis engine')
         self.analyze_products()
 
-
     def analyze_products(self):
         logger.info('analyzing products information')
         asins = self.utility_method.get_products_asin_from_db()
@@ -42,8 +41,8 @@ class REngine:
             for review_text in reviews_text:
                 blob = TextBlob(review_text[0].decode('utf-8'))
                 reviews_length.append(len(blob.words))
-            avg_review_length = sum(reviews_length)/len(reviews_length)
-        '''
+            avg_review_length = sum(reviews_length) / len(reviews_length)
+
         for review in reviews:
             review_stats = {
                 "ReviewLink": review[0],
@@ -56,7 +55,6 @@ class REngine:
                 "ReviewScore": None
             }
 
-            
             try:
                 blob = TextBlob(review[3].decode('utf-8'))
                 review_stats["ReviewLength"] = len(blob.words)
@@ -72,10 +70,10 @@ class REngine:
             except Exception as e:
                 logger.exception(e.message)
 
-            self.utility_method.insert_rewiew_analysis_into_db(review_stats)'''
+            self.utility_method.insert_rewiew_analysis_into_db(review_stats)
 
-
-    def get_sentiment_label(self, sentiment_score):
+    @staticmethod
+    def get_sentiment_label(sentiment_score):
         logger.debug('generating sentiment label')
 
         if -100 <= sentiment_score < -50:
@@ -86,18 +84,19 @@ class REngine:
             return 'neutral'
         elif 10 <= sentiment_score < 50:
             return 'satisfied'
-        elif 50 <= sentiment_score <= 100 :
+        elif 50 <= sentiment_score <= 100:
             return 'happy'
         else:
             return None
 
-    def get_word_count_category(self, avg_review_length, review_length):
+    @staticmethod
+    def get_word_count_category(avg_review_length, review_length):
         logger.debug('generating word count category')
-        if 0*avg_review_length <= review_length <= 0.25*avg_review_length:
+        if 0 * avg_review_length <= review_length <= 0.25 * avg_review_length:
             return "A"
-        elif 0.25*avg_review_length <= review_length <= 2*review_length:
+        elif 0.25 * avg_review_length <= review_length <= 2 * review_length:
             return "B"
-        elif 2*avg_review_length <= review_length:
+        elif 2 * avg_review_length <= review_length:
             return "C"
         else:
             return "Error"
@@ -122,7 +121,8 @@ class REngine:
                 for rate in rates:
                     sum_rates += float(rate)
 
-                reviewer_data["CredualityScore"] = sum_rates/float(reviewer_data["TotalReviews"]) if reviewer_data["TotalReviews"] else 0
+                reviewer_data["CredualityScore"] = sum_rates / float(reviewer_data["TotalReviews"]) if reviewer_data[
+                    "TotalReviews"] else 0
 
                 if self.utility_method.update_reviewer_creduality_in_db(reviewer_data):
                     logger.debug('total reviews & creduality update success')
@@ -131,18 +131,19 @@ class REngine:
         else:
             logger.debug('error in fetching reviewer ids from database')
 
-    def find_common_phrases_in_reviews(self, reviews):
+    @staticmethod
+    def find_common_phrases_in_reviews(reviews):
         logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
         combined_review_text = ''
         most_common_phrases = []
         for review in reviews:
-            combined_review_text += ' '+review[0].decode('utf-8')
+            combined_review_text += ' ' + review[0].decode('utf-8')
 
         trigrams = ngrams(combined_review_text.split(), 3)
         freq = nltk.FreqDist(trigrams)
         decision_freq = math.ceil(freq.most_common(1)[0][1] * 0.2)  # round off to nearest integer
         most_common = freq.most_common()
-        for key,val in most_common:
+        for key, val in most_common:
             if val > decision_freq:
                 most_common_phrases.append(key)
 
