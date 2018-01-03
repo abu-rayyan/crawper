@@ -5,7 +5,7 @@
 -- Dumped from database version 10.1
 -- Dumped by pg_dump version 10.1
 
--- Started on 2018-01-02 14:23:10
+-- Started on 2018-01-03 10:50:16
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE SCHEMA crawper;
 ALTER SCHEMA crawper OWNER TO postgres;
 
 --
--- TOC entry 2904 (class 0 OID 0)
+-- TOC entry 2901 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: SCHEMA crawper; Type: COMMENT; Schema: -; Owner: postgres
 --
@@ -54,7 +54,7 @@ CREATE TABLE categories (
 ALTER TABLE categories OWNER TO postgres;
 
 --
--- TOC entry 2905 (class 0 OID 0)
+-- TOC entry 2902 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: TABLE categories; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -88,7 +88,7 @@ CREATE TABLE product_triggers (
 ALTER TABLE product_triggers OWNER TO postgres;
 
 --
--- TOC entry 2906 (class 0 OID 0)
+-- TOC entry 2903 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: TABLE product_triggers; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -97,7 +97,7 @@ COMMENT ON TABLE product_triggers IS 'contains analyzed triggers about product d
 
 
 --
--- TOC entry 2907 (class 0 OID 0)
+-- TOC entry 2904 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.product_asin; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -106,7 +106,7 @@ COMMENT ON COLUMN product_triggers.product_asin IS 'asin number of the product';
 
 
 --
--- TOC entry 2908 (class 0 OID 0)
+-- TOC entry 2905 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.overlapped_reviews; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -115,7 +115,7 @@ COMMENT ON COLUMN product_triggers.overlapped_reviews IS 'Trigger is activated i
 
 
 --
--- TOC entry 2909 (class 0 OID 0)
+-- TOC entry 2906 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.vw_comparison; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -124,7 +124,7 @@ COMMENT ON COLUMN product_triggers.vw_comparison IS 'Trigger is activated if the
 
 
 --
--- TOC entry 2910 (class 0 OID 0)
+-- TOC entry 2907 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.one_off_reviewers; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -133,7 +133,7 @@ COMMENT ON COLUMN product_triggers.one_off_reviewers IS 'Trigger is activated fo
 
 
 --
--- TOC entry 2911 (class 0 OID 0)
+-- TOC entry 2908 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.abnormal_reviewer_participation; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -142,7 +142,7 @@ COMMENT ON COLUMN product_triggers.abnormal_reviewer_participation IS 'Trigger i
 
 
 --
--- TOC entry 2912 (class 0 OID 0)
+-- TOC entry 2909 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.multiple_single_day_reviews; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -151,7 +151,7 @@ COMMENT ON COLUMN product_triggers.multiple_single_day_reviews IS 'Trigger is ac
 
 
 --
--- TOC entry 2913 (class 0 OID 0)
+-- TOC entry 2910 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.repeated_remarks; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -160,7 +160,7 @@ COMMENT ON COLUMN product_triggers.repeated_remarks IS 'Trigger is activated for
 
 
 --
--- TOC entry 2914 (class 0 OID 0)
+-- TOC entry 2911 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.review_spikes; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -169,7 +169,7 @@ COMMENT ON COLUMN product_triggers.review_spikes IS 'Trigger is activated if num
 
 
 --
--- TOC entry 2915 (class 0 OID 0)
+-- TOC entry 2912 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.rating_trend; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -178,7 +178,7 @@ COMMENT ON COLUMN product_triggers.rating_trend IS 'Trigger is activated if the 
 
 
 --
--- TOC entry 2916 (class 0 OID 0)
+-- TOC entry 2913 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.three_stars_ratio; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -187,7 +187,7 @@ COMMENT ON COLUMN product_triggers.three_stars_ratio IS 'Trigger is activated if
 
 
 --
--- TOC entry 2917 (class 0 OID 0)
+-- TOC entry 2914 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: COLUMN product_triggers.total_triggers; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -214,7 +214,7 @@ CREATE TABLE products (
 ALTER TABLE products OWNER TO postgres;
 
 --
--- TOC entry 2918 (class 0 OID 0)
+-- TOC entry 2915 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: TABLE products; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -241,7 +241,7 @@ CREATE TABLE products_analysis (
 ALTER TABLE products_analysis OWNER TO postgres;
 
 --
--- TOC entry 2919 (class 0 OID 0)
+-- TOC entry 2916 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: TABLE products_analysis; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -250,7 +250,7 @@ COMMENT ON TABLE products_analysis IS 'Contains analysis data related to a parti
 
 
 --
--- TOC entry 2920 (class 0 OID 0)
+-- TOC entry 2917 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.product_asin; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -259,7 +259,7 @@ COMMENT ON COLUMN products_analysis.product_asin IS 'Unique asin muber of the pr
 
 
 --
--- TOC entry 2921 (class 0 OID 0)
+-- TOC entry 2918 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.repeated_remarks; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -268,7 +268,7 @@ COMMENT ON COLUMN products_analysis.repeated_remarks IS 'Most commonly repeated 
 
 
 --
--- TOC entry 2922 (class 0 OID 0)
+-- TOC entry 2919 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.repeated_phrase_frequency; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -277,7 +277,7 @@ COMMENT ON COLUMN products_analysis.repeated_phrase_frequency IS 'Number of a pr
 
 
 --
--- TOC entry 2923 (class 0 OID 0)
+-- TOC entry 2920 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.percent_reviews_with_common_phrase; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -286,7 +286,7 @@ COMMENT ON COLUMN products_analysis.percent_reviews_with_common_phrase IS 'Perce
 
 
 --
--- TOC entry 2924 (class 0 OID 0)
+-- TOC entry 2921 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.reviewer_frequency; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -295,7 +295,7 @@ COMMENT ON COLUMN products_analysis.reviewer_frequency IS 'Number of times a rev
 
 
 --
--- TOC entry 2925 (class 0 OID 0)
+-- TOC entry 2922 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.reviewer_participation; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -325,7 +325,7 @@ Depending on how many times a reviewer has given review, a label value will be a
 
 
 --
--- TOC entry 2926 (class 0 OID 0)
+-- TOC entry 2923 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: COLUMN products_analysis.product_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -344,7 +344,9 @@ COMMENT ON COLUMN products_analysis.product_score IS 'Represents the overall pro
 CREATE TABLE reviewers (
     reviewer_id character varying(48) NOT NULL,
     reviewer_name character varying(24) NOT NULL,
-    profile_link text NOT NULL
+    profile_link text NOT NULL,
+    total_reviews integer NOT NULL,
+    creduality_score real NOT NULL
 );
 
 
@@ -369,7 +371,7 @@ CREATE TABLE reviews (
 ALTER TABLE reviews OWNER TO postgres;
 
 --
--- TOC entry 2927 (class 0 OID 0)
+-- TOC entry 2924 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: TABLE reviews; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -397,7 +399,7 @@ CREATE TABLE reviews_analysis (
 ALTER TABLE reviews_analysis OWNER TO postgres;
 
 --
--- TOC entry 2928 (class 0 OID 0)
+-- TOC entry 2925 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: TABLE reviews_analysis; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -406,7 +408,7 @@ COMMENT ON TABLE reviews_analysis IS 'Contains analysis of reviews of a product'
 
 
 --
--- TOC entry 2929 (class 0 OID 0)
+-- TOC entry 2926 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_link; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -415,7 +417,7 @@ COMMENT ON COLUMN reviews_analysis.review_link IS 'link of the review as pkey an
 
 
 --
--- TOC entry 2930 (class 0 OID 0)
+-- TOC entry 2927 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_length; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -424,7 +426,7 @@ COMMENT ON COLUMN reviews_analysis.review_length IS 'total length of the review 
 
 
 --
--- TOC entry 2931 (class 0 OID 0)
+-- TOC entry 2928 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.word_count_category; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -436,7 +438,7 @@ C: if review length is more than double of average review length of the product 
 
 
 --
--- TOC entry 2932 (class 0 OID 0)
+-- TOC entry 2929 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.sentiment_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -448,7 +450,7 @@ Closer this value is to -100, more negative the emotion is.
 
 
 --
--- TOC entry 2933 (class 0 OID 0)
+-- TOC entry 2930 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.sentiment_label; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -467,7 +469,7 @@ sentiment= ''happy''
 
 
 --
--- TOC entry 2934 (class 0 OID 0)
+-- TOC entry 2931 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.common_phrase; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -478,7 +480,7 @@ True if yes, False if no
 
 
 --
--- TOC entry 2935 (class 0 OID 0)
+-- TOC entry 2932 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.credulity_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -487,7 +489,7 @@ COMMENT ON COLUMN reviews_analysis.credulity_score IS 'Higher this value is, mor
 
 
 --
--- TOC entry 2936 (class 0 OID 0)
+-- TOC entry 2933 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_scores; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -509,7 +511,7 @@ ALTER TABLE ONLY categories
 
 
 --
--- TOC entry 2772 (class 2606 OID 33233)
+-- TOC entry 2770 (class 2606 OID 33233)
 -- Name: product_triggers product_triggers_pkey; Type: CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -518,7 +520,7 @@ ALTER TABLE ONLY product_triggers
 
 
 --
--- TOC entry 2770 (class 2606 OID 33223)
+-- TOC entry 2768 (class 2606 OID 33223)
 -- Name: products_analysis products_analysis_pkey; Type: CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -536,16 +538,7 @@ ALTER TABLE ONLY products
 
 
 --
--- TOC entry 2762 (class 2606 OID 16666)
--- Name: reviews reviewer_id_con; Type: CONSTRAINT; Schema: crawper; Owner: postgres
---
-
-ALTER TABLE ONLY reviews
-    ADD CONSTRAINT reviewer_id_con UNIQUE (reviewer_id);
-
-
---
--- TOC entry 2766 (class 2606 OID 16664)
+-- TOC entry 2764 (class 2606 OID 16664)
 -- Name: reviewers reviewer_pkey; Type: CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -554,7 +547,7 @@ ALTER TABLE ONLY reviewers
 
 
 --
--- TOC entry 2768 (class 2606 OID 33207)
+-- TOC entry 2766 (class 2606 OID 33207)
 -- Name: reviews_analysis reviews_analysis_pkey; Type: CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -563,7 +556,7 @@ ALTER TABLE ONLY reviews_analysis
 
 
 --
--- TOC entry 2764 (class 2606 OID 16633)
+-- TOC entry 2762 (class 2606 OID 16633)
 -- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -572,7 +565,7 @@ ALTER TABLE ONLY reviews
 
 
 --
--- TOC entry 2778 (class 2606 OID 33234)
+-- TOC entry 2775 (class 2606 OID 33234)
 -- Name: product_triggers product_trigger's fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -581,7 +574,7 @@ ALTER TABLE ONLY product_triggers
 
 
 --
--- TOC entry 2777 (class 2606 OID 33224)
+-- TOC entry 2774 (class 2606 OID 33224)
 -- Name: products_analysis products_analysis_fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -590,7 +583,7 @@ ALTER TABLE ONLY products_analysis
 
 
 --
--- TOC entry 2773 (class 2606 OID 24595)
+-- TOC entry 2771 (class 2606 OID 24595)
 -- Name: products products_fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -599,16 +592,7 @@ ALTER TABLE ONLY products
 
 
 --
--- TOC entry 2775 (class 2606 OID 16667)
--- Name: reviewers reviewers_fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
---
-
-ALTER TABLE ONLY reviewers
-    ADD CONSTRAINT reviewers_fkey FOREIGN KEY (reviewer_id) REFERENCES reviews(reviewer_id);
-
-
---
--- TOC entry 2776 (class 2606 OID 33208)
+-- TOC entry 2773 (class 2606 OID 33208)
 -- Name: reviews_analysis reviews_analysis_fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -617,7 +601,7 @@ ALTER TABLE ONLY reviews_analysis
 
 
 --
--- TOC entry 2774 (class 2606 OID 24606)
+-- TOC entry 2772 (class 2606 OID 24606)
 -- Name: reviews reviews_fkey; Type: FK CONSTRAINT; Schema: crawper; Owner: postgres
 --
 
@@ -625,7 +609,7 @@ ALTER TABLE ONLY reviews
     ADD CONSTRAINT reviews_fkey FOREIGN KEY (product_asin) REFERENCES products(product_asin);
 
 
--- Completed on 2018-01-02 14:23:10
+-- Completed on 2018-01-03 10:50:16
 
 --
 -- PostgreSQL database dump complete

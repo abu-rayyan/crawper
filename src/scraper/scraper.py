@@ -204,6 +204,7 @@ class Scraper:
                 logger.exception('{exception}'.format(exception=e.message))
         logger.debug('Review: {dict}'.format(dict=review_dict))
         self.insert_review_to_db(review_dict, product_asin)
+        self.insert_reviewer_to_db(review_dict)
 
     def insert_product_to_db(self, product, category_name):
         """
@@ -278,3 +279,19 @@ class Scraper:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return None
+
+    def insert_reviewer_to_db(self, review):
+        logger.debug('inserting reviewer {name} information into database'.format(name=review["ReviewerName"]))
+
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["InsertReviewer"]
+        params = (review["ReviewerId"], review["ReviewerName"], review["ReviewerProfile"], 0, 0.0)
+
+        try:
+            self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            return False
