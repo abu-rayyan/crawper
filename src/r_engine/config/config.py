@@ -6,5 +6,10 @@ QUERIES = {
     "GetProductsAsin": "SELECT product_asin FROM crawper.products;",
     "InsertReviewStat": "INSERT INTO crawper.reviews_analysis(review_link, review_length, word_count_category, "
                         "sentiment_score, sentiment_label, common_phrase, credulity_score, review_scores) VALUES (%s, "
-                        "%s, %s, %s, %s, %s, %s, %s); "
+                        "%s, %s, %s, %s, %s, %s, %s); ",
+    "GetReviewerIds": "SELECT reviewer_id FROM crawper.reviewers;",
+    "GetTotalReviewsOfReviewer": "SELECT review_rate FROM crawper.reviews where reviewer_id = %s;",
+    "UpdateReviewerCredualityScore": "UPDATE crawper.reviewers SET total_reviews=%s, creduality_score=%s WHERE reviewer_id=%s;",
+    "GetProductReviewsText": "SELECT review_text FROM crawper.reviews where product_asin=%s;",
+    "GetReviewerCreaduality": "SELECT creduality_score FROM crawper.reviewers where reviewer_id = %s;"
 }

@@ -92,3 +92,84 @@ class UtilityFunctions:
         except Exception as e:
             logger.exception(e.message)
             return False
+
+    def get_reviewers_ids_from_db(self):
+        logger.debug('getting reviewers information from database')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewerIds"]
+
+        try:
+            reviewer_ids = self.pg_pool.execute_query(pg_cursor, query, params='')
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviewer_ids
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_reviewers_total_reviews_from_db(self, reviewer_id):
+        logger.debug('getting reviewer {id} total no of reviews  and ratings from database'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetTotalReviewsOfReviewer"]
+        params = (reviewer_id,)
+
+        try:
+            reviews_rate = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews_rate
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def update_reviewer_creduality_in_db(self, reviewer_data):
+        logger.debug('updating reviewer {id} creduality score'.format(id=reviewer_data["ReviewerId"]))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["UpdateReviewerCredualityScore"]
+        params = (reviewer_data["TotalReviews"], reviewer_data["CredualityScore"], reviewer_data["ReviewerId"])
+
+        try:
+            self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return False
+
+    def get_product_reviews_text_from_db(self, asin):
+        logger.debug('getting product {asin} all reviews text from database'.format(asin=asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetProductReviewsText"]
+        params = (asin,)
+
+        try:
+            reviews_text = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews_text
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_reviewer_creduality_from_db(self, reviewer_id):
+        logger.debug('getting reviewer {id} creaduality from database'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewerCreaduality"]
+        params = (reviewer_id,)
+
+        try:
+            creduality = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return creduality
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
