@@ -5,6 +5,7 @@ import math
 from nltk.util import ngrams
 from utility import UtilityFunctions
 from textblob import TextBlob
+from triggers import Triggers
 
 logger = logging.getLogger(__name__)
 
@@ -13,10 +14,16 @@ class REngine:
     def __init__(self):
         logger.debug('initiating AEngine')
         self.utility_method = UtilityFunctions()
+        self.triggers = Triggers()
 
     def start_engine(self):
         logger.info('starting analysis engine')
-        self.analyze_products()
+        #self.calculate_reviewer_creduality()
+        #self.analyze_products()
+        # reviews_texts = self.utility_method.get_product_reviews_text_from_db('B075R4B6DX')
+        # repeated_phrase_freq = self.get_no_of_reviews_having_most_common(reviews_texts)
+        # print('Frequency: {freq}'.format(freq=repeated_phrase_freq))
+        self.triggers.get_overlapping_trigger('B000P7M26I')
 
     def analyze_products(self):
         logger.info('analyzing products information')
@@ -35,9 +42,10 @@ class REngine:
 
         reviews_text = self.utility_method.get_product_reviews_text_from_db(asin)
         reviews_length = []
+        reviews_commons = []
         avg_review_length = 0
         if reviews_text:
-            self.find_common_phrases_in_reviews(reviews_text)
+            reviews_commons = self.find_common_phrases_in_reviews(reviews_text)
             for review_text in reviews_text:
                 blob = TextBlob(review_text[0].decode('utf-8'))
                 reviews_length.append(len(blob.words))
@@ -64,7 +72,8 @@ class REngine:
                 review_stats["CredulityScore"] = self.utility_method.get_reviewer_creduality_from_db(review[5])[0][0]
                 review_stats["WordCountCategory"] = self.get_word_count_category(avg_review_length, review_stats[
                     "ReviewLength"])
-                review_stats["CommonPhrase"] = True  # TODO: Remove hard-coded value
+                review_stats["CommonPhrase"] = self.is_most_common_phrase_exists(review[3].decode('utf-8'),
+                                                                                 reviews_commons)
                 review_stats["ReviewScore"] = float(review[4]) + review_stats["SentimentScore"] + review_stats[
                     "CredulityScore"]
             except Exception as e:
@@ -107,7 +116,8 @@ class REngine:
         reviewer_data = {
             "ReviewerId": None,
             "TotalReviews": None,
-            "CredualityScore": None
+            "CredualityScore": None,
+            "ParticipationHistory": None
         }
 
         if reviewer_ids is not None:
@@ -123,6 +133,8 @@ class REngine:
 
                 reviewer_data["CredualityScore"] = sum_rates / float(reviewer_data["TotalReviews"]) if reviewer_data[
                     "TotalReviews"] else 0
+                reviewer_data["ParticipationHistory"] = self.utility_method.calculate_participation_history(
+                    reviewer_data["TotalReviews"])
 
                 if self.utility_method.update_reviewer_creduality_in_db(reviewer_data):
                     logger.debug('total reviews & creduality update success')
@@ -148,3 +160,53 @@ class REngine:
                 most_common_phrases.append(key)
 
         return most_common_phrases
+
+    @staticmethod
+    def is_most_common_phrase_exists(review, reviews_commons):
+        logger.debug('checking if most common phrase also found in most common phrases of reviews')
+
+        try:
+            trigrams = ngrams(review.split(), 3)
+            freq = nltk.FreqDist(trigrams)
+            most_common = freq.most_common(1)
+
+            if not len(most_common) == 0:
+                match_count = 0
+                for key, val in most_common:
+                    if key in reviews_commons:
+                        match_count += 1
+                    else:
+                        continue
+                if match_count > 0:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+
+        except Exception as e:
+            logger.exception(e.message)
+
+    @staticmethod
+    def get_no_of_reviews_having_most_common(reviews):
+        logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
+        combined_review_text = ''
+        for review in reviews:
+            combined_review_text += ' ' + review[0].decode('utf-8')
+
+        trigrams = ngrams(combined_review_text.split(), 3)
+        freq = nltk.FreqDist(trigrams)
+        most_common = freq.most_common(1)
+
+        match_count = 0
+        if not most_common == 0:
+            for review in reviews:
+                review_text = review[0].decode('utf-8')
+                tri_grams = ngrams(review_text.split(), 3)
+                for key, val in most_common:
+                    if key in tri_grams:
+                        match_count += 1
+                    else:
+                        continue
+        percent_reviews = (float(match_count) / float(len(reviews))) * 100
+        return match_count, percent_reviews
