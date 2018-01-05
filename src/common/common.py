@@ -32,8 +32,8 @@ def request_page(page_url):
     logger.debug('Headers: {head}'.format(head=headers))
 
     try:
-        # response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
-        response = requests.get(page_url, headers=headers)
+        response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
+        # response = requests.get(page_url, headers=headers)
         logger.debug('requests response @ {res}'.format(res=response))
         if response.status_code == requests.codes.ok:
             page_content = BeautifulSoup(response.content, 'lxml')
