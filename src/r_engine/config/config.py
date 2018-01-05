@@ -28,5 +28,13 @@ QUERIES = {
 
     "GetReviewersWithOneReview": "SELECT reviewer_id FROM crawper.reviewers where total_reviews=1;",
 
-    "Get45StarReviewers": "SELECT reviewer_id FROM crawper.reviews where review_rate >= 4;"
+    "Get45StarReviewers": "SELECT reviewer_id FROM crawper.reviews where review_rate >= 4;",
+
+    "GetReviewerReviewsDate": "SELECT review_date FROM crawper.reviews where reviewer_id=%s AND review_rate >= 4;",
+
+    "GetTotalNoReviewesOfReviewer": "SELECT total_reviews FROM crawper.reviewers where reviewer_id=%s;",
+
+    "GetReviewer45StarReviews": "SELECT review_text FROM crawper.reviews where reviewer_id = %s and review_rate >= 4;",
+
+    "GetRatesOfReviewsOfProduct": "SELECT review_rate FROM crawper.reviews where product_asin=%s;",
 }

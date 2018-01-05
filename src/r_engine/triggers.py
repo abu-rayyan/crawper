@@ -1,4 +1,5 @@
 import logging
+import math
 
 from textblob import TextBlob
 from utility import UtilityFunctions
@@ -45,7 +46,7 @@ class Triggers:
         trigger = False
         for review_text in reviews_text:
             blob = TextBlob(review_text[0].decode('utf-8'))
-            if len(blob.words) < 0.25*avg_review_length or len(blob.words) > 2*avg_review_length:
+            if len(blob.words) < 0.25 * avg_review_length or len(blob.words) > 2 * avg_review_length:
                 trigger = True
 
         return trigger
@@ -57,23 +58,63 @@ class Triggers:
 
         return any(reviewer_id in all_reviewer_ids for reviewer_id in reviewer_ids)
 
-    def get_abnormal_review_trigger(self):
-        logger.debug('generating abormal review category participation trigger')
+    def get_multiple_single_day_reviews_trigger(self, reviewer_id):
+        logger.debug(
+            'generating multiple single day reviews trigger for reviewer {reviewer}'.format(reviewer=reviewer_id))
+        reviews_dates = self.utility_methods.get_reviewer_reviewes_date_from_db(reviewer_id)
+        dates_list = []
 
-    def get_multiple_single_day_reviews_trigger(self, product_asin):
-        logger.debug('generating multiple single day reviews trigger for product {asin}'.format(asin=product_asin))
+        for review_date in reviews_dates:
+            dates_list.append(review_date[0])
 
-    def get_duplicated_reviews_trigger(self, product_asin):
-        logger.debug('generating duplicated reviews trigger for product {asin}'.format(asin=product_asin))
+        if self.utility_methods.get_no_duplicates(dates_list) > 3:
+            return True
+        else:
+            return False
 
-    def get_repeated_remarks_trigger(self, product_asin):
-        logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
+    def get_duplicated_reviews_trigger(self, reviewer_id):
+        logger.debug('generating duplicated reviews trigger for reviewer {id}'.format(id=reviewer_id))
+        total_reviews = self.utility_methods.get_total_no_of_reviewes_of_reviewer_from_db(reviewer_id)[0][0]
+        reviews = self.utility_methods.get_four_five_star_reviews_of_reviewer_from_db(reviewer_id)
 
-    def get_review_spikes_trigger(self, product_asin):
-        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))
+        reviews_list = []
+        for review in reviews:
+            reviews_list.append(review[0])
+        review_set = set(reviews_list)
+
+        if len(reviews_list) > 0.05 * total_reviews and len(review_set) == 1:
+            return True
+        else:
+            return False
 
     def get_rating_trend_trigger(self, product_asin):
         logger.debug('generating rating trend trigger for product {asin}'.format(asin=product_asin))
+        review_rates = self.utility_methods.get_review_rate_of_reviews_of_product(product_asin)
+        rate_list = []
+        no_first_reviews_list = []
+        no_last_reviews_list = []
+
+        for rate in review_rates:
+            rate_list.append(rate[0])
+
+        no_first_reviews = int(math.ceil(len(rate_list) * 0.05))
+
+        for item in range(no_first_reviews):
+            no_first_reviews_list.append(rate_list[item])
+
+        check_first_bool = all(item <= 2 for item in no_first_reviews_list)
+        no_last_reviews = no_first_reviews + (int(math.ceil(no_first_reviews*0.8)))
+
+        for item in rate_list[no_first_reviews:no_last_reviews+1]:
+            no_last_reviews_list.append(item)
+
+        check_last_bool = all(item >= 4 for item in no_last_reviews_list)
+
+        if check_first_bool and check_last_bool:
+            return True
+        else:
+            return False
+
 
     def get_three_star_ratio_check_trigger(self, product_asin):
         logger.debug('generating 3 start ratio check trigger for product {asin}'.format(asin=product_asin))
@@ -81,4 +122,11 @@ class Triggers:
     def get_total_triggers(self, product_asin):
         logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))
 
+    def get_abnormal_review_trigger(self):
+        logger.debug('generating abormal review category participation trigger')
 
+    def get_repeated_remarks_trigger(self, product_asin):
+        logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
+
+    def get_review_spikes_trigger(self, product_asin):
+        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))

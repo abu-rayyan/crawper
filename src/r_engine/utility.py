@@ -131,7 +131,9 @@ class UtilityFunctions:
         logger.debug('updating reviewer {id} creduality score'.format(id=reviewer_data["ReviewerId"]))
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["UpdateReviewerCredualityScore"]
-        params = (reviewer_data["TotalReviews"], reviewer_data["CredualityScore"], reviewer_data["ParticipationHistory"], reviewer_data["ReviewerId"])
+        params = (
+            reviewer_data["TotalReviews"], reviewer_data["CredualityScore"], reviewer_data["ParticipationHistory"],
+            reviewer_data["ReviewerId"])
 
         try:
             self.pg_pool.execute_query(pg_cursor, query, params)
@@ -175,7 +177,8 @@ class UtilityFunctions:
             self.pg_pool.put_conn(pg_conn)
             return None
 
-    def calculate_participation_history(self, no_of_reviews):
+    @staticmethod
+    def calculate_participation_history(no_of_reviews):
         logger.debug('calculating reviewer participation hisotry')
         if 0 <= no_of_reviews <= 1:
             return 'R1'
@@ -195,7 +198,6 @@ class UtilityFunctions:
             return 'R8'
         else:
             return 'R9'
-
 
     def get_reviewers_from_db(self, product_asin):
         logger.debug('getting reviewrs info of product {product}'.format(product=product_asin))
@@ -269,3 +271,77 @@ class UtilityFunctions:
             self.pg_pool.put_conn(pg_conn)
             return None
 
+    def get_reviewer_reviewes_date_from_db(self, reviewer_id):
+        logger.debug('getting reviews date of reviewer {id}'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewerReviewsDate"]
+        params = (reviewer_id,)
+
+        try:
+            reviews_dates = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews_dates
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    @staticmethod
+    def get_no_duplicates(item_list):
+        new_list = []
+        no_duplicates = 0
+        for item in item_list:
+            if item not in new_list:
+                new_list.append(item)
+            else:
+                no_duplicates += 1
+        return no_duplicates
+
+    def get_total_no_of_reviewes_of_reviewer_from_db(self, reviewer_id):
+        logger.debug('getting total no of reviewes of reviewer {id} from database'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetTotalNoReviewesOfReviewer"]
+        params = (reviewer_id,)
+
+        try:
+            total_reviews = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return total_reviews
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_four_five_star_reviews_of_reviewer_from_db(self, reviewer_id):
+        logger.debug('getting 4-5 star reviews of reviewer {id} from database'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewer45StarReviews"]
+        params = (reviewer_id,)
+
+        try:
+            reviews = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_review_rate_of_reviews_of_product(self, product_asin):
+        logger.debug('getting review rates of reviews of product {asin}'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetRatesOfReviewsOfProduct"]
+        params = (product_asin,)
+
+        try:
+            review_rates = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return review_rates
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
