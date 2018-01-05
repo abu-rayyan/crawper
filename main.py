@@ -5,8 +5,12 @@ from src.common import common
 from src.common.thread import Worker
 from src.common.config.urls import *
 from Queue import Queue
+from src.crawler import Crawler
+from src.scraper import Scraper
 from src.common.proxy_rotator import ProxyRotator
+
 from src.common.db.postgres_pool import PgPool
+from src.r_engine.rengine import REngine
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +49,20 @@ def start_crawper(new_releases=False, best_sellers=False):
         queue.join()
 
 
+def dev_tests():
+    logger.info('Dev Testing started')
+    asin = "B075R4B6DX"
+    ae = REngine()
+    ae.start_engine()
+
+
+def normal_mode_test():
+    c = Crawler()
+    links, file_ = c.get_product_links(NewReleases["SportsOutdoors"])
+    s = Scraper()
+    print(s.get_products_info(links, file_))
+
+
 def main():
     logger.info('checking configs')
     if not common.exists_dir("temp"):
@@ -73,7 +91,9 @@ def main():
     # noinspection PyUnusedLocal
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
-    start_crawper(new_releases=True, best_sellers=False)
+    #start_crawper(new_releases=True, best_sellers=False)
+    #normal_mode_test()
+    dev_tests()
 
     logger.info('closing database connection')
     db_conn.close_pool()
