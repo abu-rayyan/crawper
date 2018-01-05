@@ -27,12 +27,13 @@ def request_page(page_url):
     sleep_time = randint(4, 16)
     user_agent = UserAgent()
     logger.debug('fake_useragent initialized: {addr}'.format(addr=user_agent))
-    #time.sleep(sleep_time)
+    # time.sleep(sleep_time)
     headers = {'User-Agent': str(user_agent.random)}
     logger.debug('Headers: {head}'.format(head=headers))
 
     try:
-        response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
+        # response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
+        response = requests.get(page_url, headers=headers)
         logger.debug('requests response @ {res}'.format(res=response))
         if response.status_code == requests.codes.ok:
             page_content = BeautifulSoup(response.content, 'lxml')

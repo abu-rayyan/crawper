@@ -217,7 +217,7 @@ class Scraper:
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         insert_query = QUERIES["InsertProduct"]
         query_params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
-                        category_name, product["ProductLink"], product["TotalReviews"])
+                        category_name, product["ProductLink"], product["TotalReviews"], '0')
 
         try:
             self.pg_pool.execute_query(pg_cursor, insert_query, query_params)
@@ -244,8 +244,8 @@ class Scraper:
         try:
             self.pg_pool.execute_query(pg_cursor, insert_query, (review["ReviewLink"], product_asin,
                                                                  review["ReviewTitle"], review["ReviewText"],
-                                                                 review["ReviewRate"], review["ReviewerId"],
-                                                                 review["ReviewDate"]))
+                                                                 review["ReviewerId"], review["ReviewDate"],
+                                                                 review["ReviewRate"]))
             self.pg_pool.commit_changes(pg_conn)
             self.pg_pool.put_conn(pg_conn)
             return True

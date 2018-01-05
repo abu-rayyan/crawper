@@ -55,4 +55,22 @@ class Triggers:
     def get_multiple_single_day_reviews_trigger(self, product_asin):
         logger.debug('generating multiple single day reviews trigger for product {asin}'.format(asin=product_asin))
 
+    def get_duplicated_reviews_trigger(self, product_asin):
+        logger.debug('generating duplicated reviews trigger for product {asin}'.format(asin=product_asin))
+
+    def get_repeated_remarks_trigger(self, product_asin):
+        logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
+
+    def get_review_spikes_trigger(self, product_asin):
+        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))
+
+    def get_rating_trend_trigger(self, product_asin):
+        logger.debug('generating rating trend trigger for product {asin}'.format(asin=product_asin))
+
+    def get_three_star_ratio_check_trigger(self, product_asin):
+        logger.debug('generating 3 start ratio check trigger for product {asin}'.format(asin=product_asin))
+
+    def get_total_triggers(self, product_asin):
+        logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))
+
 

@@ -91,9 +91,9 @@ def main():
     # noinspection PyUnusedLocal
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
-    #start_crawper(new_releases=True, best_sellers=False)
-    # normal_mode_test()
-    dev_tests()
+    start_crawper(new_releases=True, best_sellers=False)
+    #normal_mode_test()
+    #dev_tests()
 
     logger.info('closing database connection')
     db_conn.close_pool()
