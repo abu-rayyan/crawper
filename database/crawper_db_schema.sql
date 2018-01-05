@@ -5,7 +5,7 @@
 -- Dumped from database version 10.1
 -- Dumped by pg_dump version 10.1
 
--- Started on 2018-01-03 10:50:16
+-- Started on 2018-01-05 11:21:51
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -207,7 +207,8 @@ CREATE TABLE products (
     reviews_link text NOT NULL,
     category_name character varying NOT NULL,
     product_link text NOT NULL,
-    total_reviews character varying NOT NULL
+    total_reviews character varying NOT NULL,
+    product_rank integer
 );
 
 
@@ -232,8 +233,6 @@ CREATE TABLE products_analysis (
     repeated_remarks text NOT NULL,
     repeated_phrase_frequency integer NOT NULL,
     percent_reviews_with_common_phrase real NOT NULL,
-    reviewer_frequency integer NOT NULL,
-    reviewer_participation character varying(4) NOT NULL,
     product_score integer NOT NULL
 );
 
@@ -288,45 +287,6 @@ COMMENT ON COLUMN products_analysis.percent_reviews_with_common_phrase IS 'Perce
 --
 -- TOC entry 2921 (class 0 OID 0)
 -- Dependencies: 222
--- Name: COLUMN products_analysis.reviewer_frequency; Type: COMMENT; Schema: crawper; Owner: postgres
---
-
-COMMENT ON COLUMN products_analysis.reviewer_frequency IS 'Number of times a reviewer has given review';
-
-
---
--- TOC entry 2922 (class 0 OID 0)
--- Dependencies: 222
--- Name: COLUMN products_analysis.reviewer_participation; Type: COMMENT; Schema: crawper; Owner: postgres
---
-
-COMMENT ON COLUMN products_analysis.reviewer_participation IS 'Depending on how many times a reviewer has given review, a label value will be assigned:
-0- 1: ''R1''
-2-5: ''R2''
-6- 10: ''R3''
-11-20: ''R4''
-21- 30: ''R5''
-31- 40: ''R6''
-
-Column Q- Reviewer Frequency
-Number of times a reviewer has given review
-Column R- Reviewer Participation History
-Depending on how many times a reviewer has given review, a label value will be assigned:
-0- 1: ''R1''
-2-5: ''R2''
-6- 10: ''R3''
-11-20: ''R4''
-21- 30: ''R5''
-31- 40: ''R6''
-41- 50: ''R7''
-51- 60: ''R8''
-61 onwards: ''R9''
-';
-
-
---
--- TOC entry 2923 (class 0 OID 0)
--- Dependencies: 222
 -- Name: COLUMN products_analysis.product_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
 
@@ -346,7 +306,8 @@ CREATE TABLE reviewers (
     reviewer_name character varying(24) NOT NULL,
     profile_link text NOT NULL,
     total_reviews integer NOT NULL,
-    creduality_score real NOT NULL
+    creduality_score real,
+    participation_history character varying
 );
 
 
@@ -362,16 +323,16 @@ CREATE TABLE reviews (
     product_asin character varying(24) NOT NULL,
     review_title text NOT NULL,
     review_text text NOT NULL,
-    review_rate character varying NOT NULL,
     reviewer_id character varying(48) NOT NULL,
-    review_date character varying NOT NULL
+    review_date character varying NOT NULL,
+    review_rate double precision NOT NULL
 );
 
 
 ALTER TABLE reviews OWNER TO postgres;
 
 --
--- TOC entry 2924 (class 0 OID 0)
+-- TOC entry 2922 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: TABLE reviews; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -399,7 +360,7 @@ CREATE TABLE reviews_analysis (
 ALTER TABLE reviews_analysis OWNER TO postgres;
 
 --
--- TOC entry 2925 (class 0 OID 0)
+-- TOC entry 2923 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: TABLE reviews_analysis; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -408,7 +369,7 @@ COMMENT ON TABLE reviews_analysis IS 'Contains analysis of reviews of a product'
 
 
 --
--- TOC entry 2926 (class 0 OID 0)
+-- TOC entry 2924 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_link; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -417,7 +378,7 @@ COMMENT ON COLUMN reviews_analysis.review_link IS 'link of the review as pkey an
 
 
 --
--- TOC entry 2927 (class 0 OID 0)
+-- TOC entry 2925 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_length; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -426,7 +387,7 @@ COMMENT ON COLUMN reviews_analysis.review_length IS 'total length of the review 
 
 
 --
--- TOC entry 2928 (class 0 OID 0)
+-- TOC entry 2926 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.word_count_category; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -438,7 +399,7 @@ C: if review length is more than double of average review length of the product 
 
 
 --
--- TOC entry 2929 (class 0 OID 0)
+-- TOC entry 2927 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.sentiment_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -450,7 +411,7 @@ Closer this value is to -100, more negative the emotion is.
 
 
 --
--- TOC entry 2930 (class 0 OID 0)
+-- TOC entry 2928 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.sentiment_label; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -469,7 +430,7 @@ sentiment= ''happy''
 
 
 --
--- TOC entry 2931 (class 0 OID 0)
+-- TOC entry 2929 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.common_phrase; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -480,7 +441,7 @@ True if yes, False if no
 
 
 --
--- TOC entry 2932 (class 0 OID 0)
+-- TOC entry 2930 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.credulity_score; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -489,7 +450,7 @@ COMMENT ON COLUMN reviews_analysis.credulity_score IS 'Higher this value is, mor
 
 
 --
--- TOC entry 2933 (class 0 OID 0)
+-- TOC entry 2931 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: COLUMN reviews_analysis.review_scores; Type: COMMENT; Schema: crawper; Owner: postgres
 --
@@ -609,7 +570,7 @@ ALTER TABLE ONLY reviews
     ADD CONSTRAINT reviews_fkey FOREIGN KEY (product_asin) REFERENCES products(product_asin);
 
 
--- Completed on 2018-01-03 10:50:16
+-- Completed on 2018-01-05 11:21:51
 
 --
 -- PostgreSQL database dump complete
