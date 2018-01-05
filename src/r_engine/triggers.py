@@ -34,23 +34,31 @@ class Triggers:
     def get_words_vol_comparison_trigger(self, product_asin):
         logger.debug('generating words volume comparison trigger')
         reviews_length = []
-        reviews_text = self.utility_methods.get_product_reviews_text_from_db(product_asin)
+        avg_review_length = 0
+        reviews_text = self.utility_methods.get_product_reviews_with_four_five_stars(product_asin)
         if reviews_text:
             for review_text in reviews_text:
                 blob = TextBlob(review_text[0].decode('utf-8'))
                 reviews_length.append(len(blob.words))
-        avg_review_length = sum(reviews_length) / len(reviews_length)
+            avg_review_length = sum(reviews_length) / len(reviews_length)
 
         trigger = False
-        for review_text in reviews_text:  # TODO: Consider 4-5 star reviews only, need change in database schema
+        for review_text in reviews_text:
             blob = TextBlob(review_text[0].decode('utf-8'))
             if len(blob.words) < 0.25*avg_review_length or len(blob.words) > 2*avg_review_length:
                 trigger = True
 
         return trigger
 
-    def get_one_off_trigger(self, reviewer_id): # TODO: Need to develop it
-        logger.debug('generating one off reviewer trigger for {reviewer}'.format(reviewer=reviewer_id))
+    def get_one_off_trigger(self):
+        logger.debug('generating one off reviewer trigger ')
+        reviewer_ids = self.utility_methods.get_reviewers_with_one_review_from_db()
+        all_reviewer_ids = self.utility_methods.get_all_reviewers_with_four_five_stars()
+
+        return any(reviewer_id in all_reviewer_ids for reviewer_id in reviewer_ids)
+
+    def get_abnormal_review_trigger(self):
+        logger.debug('generating abormal review category participation trigger')
 
     def get_multiple_single_day_reviews_trigger(self, product_asin):
         logger.debug('generating multiple single day reviews trigger for product {asin}'.format(asin=product_asin))

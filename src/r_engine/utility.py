@@ -222,3 +222,50 @@ class UtilityFunctions:
                 product_reviews = self.get_reviewers_from_db(asin[0])
                 all_product_reviews.append(product_reviews)
         return all_product_reviews
+
+    def get_product_reviews_with_four_five_stars(self, product_asin):
+        logger.debug('getting 4-5 star reviews of product {asin} from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["Get45StarProductReviews"]
+        params = (product_asin,)
+
+        try:
+            reviews_text = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews_text
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_reviewers_with_one_review_from_db(self):
+        logger.debug('getting reviewers with one review from database')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewersWithOneReview"]
+
+        try:
+            reviewer_ids = self.pg_pool.execute_query(pg_cursor, query, params='')
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviewer_ids
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_all_reviewers_with_four_five_stars(self):
+        logger.debug('getting reviewers of 4-5 star reviews from database')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["Get45StarReviewers"]
+
+        try:
+            reviewer_ids = self.pg_pool.execute_query(pg_cursor, query, params='')
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviewer_ids
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
