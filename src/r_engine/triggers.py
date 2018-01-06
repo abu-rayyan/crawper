@@ -13,6 +13,11 @@ class Triggers:
         self.utility_methods = UtilityFunctions()
 
     def get_overlapping_trigger(self, product_asin):
+        """
+        Checks and returns trigger if over-lapping reviews exists
+        :param product_asin: asin no of product
+        :return: bool
+        """
         logger.debug('generating overlapping reviews trigger')
         product_reviewers = self.utility_methods.get_reviewers_from_db(product_asin)
 
@@ -33,6 +38,11 @@ class Triggers:
             return False
 
     def get_words_vol_comparison_trigger(self, product_asin):
+        """
+        Checks and generates Words-Volume-Comparison trigger
+        :param product_asin: asin no of product
+        :return: bool
+        """
         logger.debug('generating words volume comparison trigger')
         reviews_length = []
         avg_review_length = 0
@@ -52,6 +62,10 @@ class Triggers:
         return trigger
 
     def get_one_off_trigger(self):
+        """
+        Checks and generates One-Off-Review trigger
+        :return: bool
+        """
         logger.debug('generating one off reviewer trigger ')
         reviewer_ids = self.utility_methods.get_reviewers_with_one_review_from_db()
         all_reviewer_ids = self.utility_methods.get_all_reviewers_with_four_five_stars()
@@ -59,6 +73,11 @@ class Triggers:
         return any(reviewer_id in all_reviewer_ids for reviewer_id in reviewer_ids)
 
     def get_multiple_single_day_reviews_trigger(self, reviewer_id):
+        """
+        Checks and generates Multiple-Single-Day-Review trigger
+        :param reviewer_id: Id of the reviewer
+        :return: bool
+        """
         logger.debug(
             'generating multiple single day reviews trigger for reviewer {reviewer}'.format(reviewer=reviewer_id))
         reviews_dates = self.utility_methods.get_reviewer_reviewes_date_from_db(reviewer_id)
@@ -73,6 +92,11 @@ class Triggers:
             return False
 
     def get_duplicated_reviews_trigger(self, reviewer_id):
+        """
+        Checks and generates Duplicated-Reviews trigger
+        :param reviewer_id: Id of reviewer
+        :return: bool
+        """
         logger.debug('generating duplicated reviews trigger for reviewer {id}'.format(id=reviewer_id))
         total_reviews = self.utility_methods.get_total_no_of_reviewes_of_reviewer_from_db(reviewer_id)[0][0]
         reviews = self.utility_methods.get_four_five_star_reviews_of_reviewer_from_db(reviewer_id)
@@ -88,6 +112,11 @@ class Triggers:
             return False
 
     def get_rating_trend_trigger(self, product_asin):
+        """
+        Checks and generates Rating-Trend trigger
+        :param product_asin: asin no of product
+        :return: bool
+        """
         logger.debug('generating rating trend trigger for product {asin}'.format(asin=product_asin))
         review_rates = self.utility_methods.get_review_rate_of_reviews_of_product(product_asin)
         rate_list = []
