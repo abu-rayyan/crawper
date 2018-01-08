@@ -1,8 +1,11 @@
 import logging
 import math
+import datetime
 
 from textblob import TextBlob
 from utility import UtilityFunctions
+from dateutil import parser
+from datetime import timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -184,7 +187,35 @@ class Triggers:
             return False
 
     def get_review_spikes_trigger(self, product_asin):
-        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))
+        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin.decode('utf-8')))
+        dates_list = self.utility_methods.get_product_reviews_dates_from_db(product_asin)
+        date_list = []
+
+        if dates_list:
+            for date in dates_list:
+                dt = parser.parse(date[0])
+                date_list.append(dt)
+
+            oldest_date = min(date_list)
+            todays_date = datetime.datetime.today()
+            yesterday_date = todays_date - timedelta(days=1)
+            total_days = yesterday_date - oldest_date
+            date_to_remove = todays_date.strftime('%Y-%m-%d')
+
+            present_day_reviews_count = 0
+            for date in date_list:
+                if date == parser.parse(date_to_remove):
+                    present_day_reviews_count += 1
+                    date_list.remove(date)
+
+            avg_reviews_per_day = float(len(date_list))/float(total_days.days)
+            avg_reviews_per_day = math.ceil(avg_reviews_per_day)
+
+            if present_day_reviews_count <= avg_reviews_per_day:
+                return False
+            else:
+                return True
+
 
     def get_repeated_remarks_trigger(self, product_asin):
         logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))

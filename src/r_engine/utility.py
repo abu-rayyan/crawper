@@ -525,3 +525,46 @@ class UtilityFunctions:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return None
+
+    def get_product_reviews_dates_from_db(self, product_asin):
+        """
+        Returns product's reviews dates from database
+        :param product_asin: asin no of product
+        :return: dates list
+        """
+        logger.debug('getting product {asin} reviews dates from database'.format(asin=product_asin.decode('utf-8')))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetProductReviewsDates"]
+        params = (product_asin,)
+
+        try:
+            reviews_dates = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviews_dates
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_product_today_reviews_from_db(self, product_asin, t_date):
+        """
+        Get present day reviews of product from database
+        :param product_asin: asin no of product
+        :param t_date: present date
+        :return: total no of reviews
+        """
+        logger.debug('getting today reviews of product {asin} from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetNoOfTodayReviewsOfProduct"]
+        params = (product_asin, t_date,)
+
+        try:
+            total_reviews = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return total_reviews
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
