@@ -26,7 +26,7 @@ class REngine:
         # reviews_texts = self.utility_method.get_product_reviews_text_from_db('B075R4B6DX')
         # repeated_phrase_freq = self.get_no_of_reviews_having_most_common(reviews_texts)
         # print('Frequency: {freq}'.format(freq=repeated_phrase_freq))
-        print(self.triggers.get_three_star_ratio_check_trigger('1234'))
+        self.triggers.get_abnormal_review_trigger('1234')
 
     def analyze_products(self):
         """

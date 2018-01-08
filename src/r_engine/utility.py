@@ -483,3 +483,45 @@ class UtilityFunctions:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return None
+
+    def get_reviews_reviewer_ids_from_db(self, product_asin):
+        """
+        Returns reviewer ids of a product reviews from database
+        :param product_asin: asin no of product
+        :return: reviewer ids list
+        """
+        logger.debug('getting reviewer ids of product {asin} reviews from database'.format(asin=product_asin.decode('utf-8')))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewerIdsOfProductReviews"]
+        params = (product_asin,)
+
+        try:
+            reviewer_ids = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return reviewer_ids
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_reviewers_participation_from_db(self, reviewer_id):
+        """
+        Returns a reviewer's participation history from database
+        :param reviewer_id: reviewer id
+        :return: participation history label
+        """
+        logger.debug('getting reviewer {reviewer_id} participation history from db'.format(reviewer_id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewerParticipationHistory"]
+        params = (reviewer_id,)
+
+        try:
+            participt_history = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return participt_history
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None

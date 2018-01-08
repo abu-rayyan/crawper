@@ -166,14 +166,28 @@ class Triggers:
             logger.debug('rating trend trigger is not activated')
             return False
 
-    def get_total_triggers(self, product_asin):
-        logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))
+    def get_abnormal_review_trigger(self, product_asin):
+        logger.debug('generating abormal review category participation trigger for product {asin}'.format(asin=product_asin.decode('utf-8')))
+        reviewer_ids = self.utility_methods.get_reviews_reviewer_ids_from_db(product_asin)
+        labels_list = []
 
-    def get_abnormal_review_trigger(self):
-        logger.debug('generating abormal review category participation trigger')
+        if reviewer_ids:
+            for reviewer_id in reviewer_ids:
+                participation_label = self.utility_methods.get_reviewers_participation_from_db(reviewer_id[0])
+                if participation_label:
+                    labels_list.append(participation_label[0][0])
+
+        labels_set = set(labels_list)
+        if len(labels_set) == 1:
+            return True
+        else:
+            return False
+
+    def get_review_spikes_trigger(self, product_asin):
+        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))
 
     def get_repeated_remarks_trigger(self, product_asin):
         logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
 
-    def get_review_spikes_trigger(self, product_asin):
-        logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin))
+    def get_total_triggers(self, product_asin):
+        logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))
