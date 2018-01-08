@@ -37,4 +37,9 @@ QUERIES = {
     "GetReviewer45StarReviews": "SELECT review_text FROM crawper.reviews where reviewer_id = %s and review_rate >= 4;",
 
     "GetRatesOfReviewsOfProduct": "SELECT review_rate FROM crawper.reviews where product_asin=%s;",
+
+    "GetNoOf3StarReviewsOfProduct": "SELECT count(*) FROM crawper.reviews where product_asin = %s and review_rate=3;",
+
+    "GetNoOf1to2StarReviewsOfProduct": "SELECT count(*) FROM crawper.reviews where product_asin = %s and review_rate "
+                                       "<= 2; "
 }

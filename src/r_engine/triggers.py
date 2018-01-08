@@ -132,9 +132,9 @@ class Triggers:
             no_first_reviews_list.append(rate_list[item])
 
         check_first_bool = all(item <= 2 for item in no_first_reviews_list)
-        no_last_reviews = no_first_reviews + (int(math.ceil(no_first_reviews*0.8)))
+        no_last_reviews = no_first_reviews + (int(math.ceil(no_first_reviews * 0.8)))
 
-        for item in rate_list[no_first_reviews:no_last_reviews+1]:
+        for item in rate_list[no_first_reviews:no_last_reviews + 1]:
             no_last_reviews_list.append(item)
 
         check_last_bool = all(item >= 4 for item in no_last_reviews_list)
@@ -144,9 +144,27 @@ class Triggers:
         else:
             return False
 
-
     def get_three_star_ratio_check_trigger(self, product_asin):
+        """
+        Get three star reviews check trigger based on rating trend trigger
+        :param product_asin: asin no of product
+        :return: bool
+        """
         logger.debug('generating 3 start ratio check trigger for product {asin}'.format(asin=product_asin))
+        if self.get_rating_trend_trigger(product_asin):
+            three_star_reviews = \
+                self.utility_methods.get_total_no_three_star_reviews_of_product_from_db(product_asin)[0][0]
+            one_two_star_reviews = \
+                self.utility_methods.get_total_no_one_two_star_reviews_of_product_from_db(product_asin)[0][0]
+            three_star_percent = (float(three_star_reviews) / float(
+                one_two_star_reviews)) * 100 if one_two_star_reviews else 0
+            if three_star_percent < 20.0:
+                return True
+            else:
+                return False
+        else:
+            logger.debug('rating trend trigger is not activated')
+            return False
 
     def get_total_triggers(self, product_asin):
         logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))

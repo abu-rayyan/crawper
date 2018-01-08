@@ -441,3 +441,45 @@ class UtilityFunctions:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return None
+
+    def get_total_no_three_star_reviews_of_product_from_db(self, product_asin):
+        """
+        Returns total number of three star reviews of product from database
+        :param product_asin: asin no of product
+        :return: total no of reviews
+        """
+        logger.debug("getting total no of 3 star reviews of product {asin}".format(asin=product_asin.decode('utf-8')))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetNoOf3StarReviewsOfProduct"]
+        params = (product_asin,)
+
+        try:
+            total_reviews = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return total_reviews
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_total_no_one_two_star_reviews_of_product_from_db(self, product_asin):
+        """
+        Returns total no of 1-2 star reviews of a product from database
+        :param product_asin: asin no of product
+        :return: total no of reviews
+        """
+        logger.debug("getting total no of 1-2 star reviews of product {asin}".format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetNoOf1to2StarReviewsOfProduct"]
+        params = (product_asin,)
+
+        try:
+            total_reviews = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return total_reviews
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
