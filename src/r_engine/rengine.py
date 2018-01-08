@@ -17,27 +17,42 @@ class REngine:
         self.triggers = Triggers()
 
     def start_engine(self):
+        """
+        Starts the REngine to start the data analytics
+        """
         logger.info('starting analysis engine')
         #self.calculate_reviewer_creduality()
         #self.analyze_products()
         # reviews_texts = self.utility_method.get_product_reviews_text_from_db('B075R4B6DX')
         # repeated_phrase_freq = self.get_no_of_reviews_having_most_common(reviews_texts)
         # print('Frequency: {freq}'.format(freq=repeated_phrase_freq))
-        self.triggers.get_overlapping_trigger('B000P7M26I')
+        print(self.triggers.get_three_star_ratio_check_trigger('1234'))
 
     def analyze_products(self):
+        """
+        Calls all product analysis functionality of REngine
+        """
         logger.info('analyzing products information')
         asins = self.utility_method.get_products_asin_from_db()
         for asin in asins:
             self.analyze_product(asin[0])
 
     def analyze_product(self, asin):
+        """
+        Analyze and perform analytics on a single product's data
+        :param asin: asin no of the product
+        """
         logger.debug('analyzing product {asin}'.format(asin=asin))
         logger.debug('getting product reviews from database')
         product_reviews = self.utility_method.get_product_reviews_from_db(asin)
         self.analyze_reviews(product_reviews, asin)
 
     def analyze_reviews(self, reviews, asin):
+        """
+        Analyzes all reviews of a product
+        :param reviews: list of a product's reviews
+        :param asin: asin no of the product
+        """
         logger.debug('analyzing reviews {review}'.format(review=reviews))
 
         reviews_text = self.utility_method.get_product_reviews_text_from_db(asin)
@@ -83,6 +98,11 @@ class REngine:
 
     @staticmethod
     def get_sentiment_label(sentiment_score):
+        """
+        Returns sentiment label for a sentiment score
+        :param sentiment_score: sentiment score of text
+        :return: sentiment label
+        """
         logger.debug('generating sentiment label')
 
         if -100 <= sentiment_score < -50:
@@ -100,6 +120,12 @@ class REngine:
 
     @staticmethod
     def get_word_count_category(avg_review_length, review_length):
+        """
+        Returns Word-Count-Category of a review
+        :param avg_review_length: average review length of a product
+        :param review_length: length of the target review
+        :return: Word Count Category
+        """
         logger.debug('generating word count category')
         if 0 * avg_review_length <= review_length <= 0.25 * avg_review_length:
             return "A"
@@ -111,6 +137,9 @@ class REngine:
             return "Error"
 
     def calculate_reviewer_creduality(self):
+        """
+        Calculates reviewer's credulity's and Participation histories
+        """
         logger.debug('calculating reviewer creduality')
         reviewer_ids = self.utility_method.get_reviewers_ids_from_db()
         reviewer_data = {
@@ -145,6 +174,11 @@ class REngine:
 
     @staticmethod
     def find_common_phrases_in_reviews(reviews):
+        """
+        Finds and returns most common phrases in reviews of a product
+        :param reviews: list of reviews
+        :return: list of most common phrases
+        """
         logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
         combined_review_text = ''
         most_common_phrases = []
@@ -163,6 +197,12 @@ class REngine:
 
     @staticmethod
     def is_most_common_phrase_exists(review, reviews_commons):
+        """
+        Checks if a most common phrase exists in target review
+        :param review: target review
+        :param reviews_commons: list of common phrases in reviews
+        :return: bool (True/False)
+        """
         logger.debug('checking if most common phrase also found in most common phrases of reviews')
 
         try:
@@ -186,9 +226,15 @@ class REngine:
 
         except Exception as e:
             logger.exception(e.message)
+            return None
 
     @staticmethod
     def get_no_of_reviews_having_most_common(reviews):
+        """
+        Returns no of reviews which have most common phrase in them
+        :param reviews: list of reviews
+        :return: no of reviews & percentage reviews having most common phrase
+        """
         logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
         combined_review_text = ''
         for review in reviews:
