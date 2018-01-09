@@ -100,18 +100,22 @@ class Triggers:
         :param reviewer_id: Id of reviewer
         :return: bool
         """
-        logger.debug('generating duplicated reviews trigger for reviewer {id}'.format(id=reviewer_id))
-        total_reviews = self.utility_methods.get_total_no_of_reviewes_of_reviewer_from_db(reviewer_id)[0][0]
-        reviews = self.utility_methods.get_four_five_star_reviews_of_reviewer_from_db(reviewer_id)
+        try:
+            logger.debug('generating duplicated reviews trigger for reviewer {id}'.format(id=reviewer_id))
+            total_reviews = self.utility_methods.get_total_no_of_reviewes_of_reviewer_from_db(reviewer_id)[0][0]
+            reviews = self.utility_methods.get_four_five_star_reviews_of_reviewer_from_db(reviewer_id)
 
-        reviews_list = []
-        for review in reviews:
-            reviews_list.append(review[0])
-        review_set = set(reviews_list)
+            reviews_list = []
+            for review in reviews:
+                reviews_list.append(review[0])
+            review_set = set(reviews_list)
 
-        if len(reviews_list) > 0.05 * total_reviews and len(review_set) == 1:
-            return True
-        else:
+            if len(reviews_list) > 0.05 * total_reviews and len(review_set) == 1:
+                return True
+            else:
+                return False
+        except Exception as e:
+            logger.exception(e.message)
             return False
 
     def get_rating_trend_trigger(self, product_asin):
@@ -170,7 +174,8 @@ class Triggers:
             return False
 
     def get_abnormal_review_trigger(self, product_asin):
-        logger.debug('generating abormal review category participation trigger for product {asin}'.format(asin=product_asin.decode('utf-8')))
+        logger.debug('generating abormal review category participation trigger for product {asin}'.format(
+            asin=product_asin.decode('utf-8')))
         reviewer_ids = self.utility_methods.get_reviews_reviewer_ids_from_db(product_asin)
         labels_list = []
 
@@ -215,7 +220,6 @@ class Triggers:
                 return False
             else:
                 return True
-
 
     def get_repeated_remarks_trigger(self, product_asin):
         logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))

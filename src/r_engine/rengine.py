@@ -22,11 +22,7 @@ class REngine:
         """
         logger.info('starting analysis engine')
         self.calculate_reviewer_creduality()
-        #self.analyze_products()
-        # reviews_texts = self.utility_method.get_product_reviews_text_from_db('B075R4B6DX')
-        # repeated_phrase_freq = self.get_no_of_reviews_having_most_common(reviews_texts)
-        # print('Frequency: {freq}'.format(freq=repeated_phrase_freq))
-        print(self.triggers.get_review_spikes_trigger('1234'))
+        self.analyze_products()
 
     def analyze_products(self):
         """
@@ -36,6 +32,7 @@ class REngine:
         asins = self.utility_method.get_products_asin_from_db()
         for asin in asins:
             self.analyze_product(asin[0])
+            self.generate_product_triggers(asin[0])
 
     def analyze_product(self, asin):
         """
@@ -256,3 +253,56 @@ class REngine:
                         continue
         percent_reviews = (float(match_count) / float(len(reviews))) * 100
         return match_count, percent_reviews
+
+    def generate_product_triggers(self, product_asin):
+        logger.debug('checking and generating triggers for product {asin}'.format(asin=product_asin))
+        trigger_list = []
+
+        over_lapping_review_trigger = self.triggers.get_overlapping_trigger(product_asin)
+        wvc_trigger = self.triggers.get_words_vol_comparison_trigger(product_asin)
+        rating_trend_trigger = self.triggers.get_rating_trend_trigger(product_asin)
+        ts_ratio_trigger = self.triggers.get_three_star_ratio_check_trigger(product_asin)
+        abnormal_review_trigger = self.triggers.get_abnormal_review_trigger(product_asin)
+        review_spikes_trigger = self.triggers.get_review_spikes_trigger(product_asin)
+        one_off_review_trigger = self.triggers.get_one_off_trigger()
+
+        if over_lapping_review_trigger:
+            trigger_list.append(1)
+        if wvc_trigger:
+            trigger_list.append(1)
+        if rating_trend_trigger:
+            trigger_list.append(1)
+        if ts_ratio_trigger:
+            trigger_list.append(1)
+        if abnormal_review_trigger:
+            trigger_list.append(0.5)
+        if review_spikes_trigger:
+            trigger_list.append(1)
+        if one_off_review_trigger:
+            trigger_list.append(1)
+
+        reviewer_ids = self.utility_method.get_reviews_reviewer_ids_from_db(product_asin)
+        for reviewer_id in reviewer_ids:
+            status = self.generate_reviewer_reliability_status(reviewer_id[0], trigger_list)
+            print('-----------------------')
+            print(status)
+            print('-----------------------')
+
+    def generate_reviewer_reliability_status(self, reviewer_id, trigger_list):
+        logger.debug('generating reviewer {reviewer_id} reliability status'.format(reviewer_id=reviewer_id))
+
+        msd_reviews_trigger = self.triggers.get_multiple_single_day_reviews_trigger(reviewer_id)
+        duplicated_reviews_trigger = self.triggers.get_duplicated_reviews_trigger(reviewer_id)
+
+        if msd_reviews_trigger:
+            trigger_list.append(1)
+        if duplicated_reviews_trigger:
+            trigger_list.append(1)
+
+        total_triggers = len(trigger_list)
+        if total_triggers >= 6:
+            return 'RED'
+        elif total_triggers in range(2, 5):
+            return 'YELLOW'
+        elif total_triggers < 2:
+            return 'GREEN'

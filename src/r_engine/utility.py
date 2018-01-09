@@ -490,7 +490,8 @@ class UtilityFunctions:
         :param product_asin: asin no of product
         :return: reviewer ids list
         """
-        logger.debug('getting reviewer ids of product {asin} reviews from database'.format(asin=product_asin.decode('utf-8')))
+        logger.debug('getting reviewer ids of product {asin} reviews from database'.format(
+            asin=product_asin.decode('utf-8')))
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerIdsOfProductReviews"]
         params = (product_asin,)

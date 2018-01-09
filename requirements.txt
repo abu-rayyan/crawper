@@ -1,4 +1,3 @@
-nltk
 # Project Dependencies
 
 # Scraping dependencies
@@ -13,5 +12,7 @@ pysocks5
 
 # REngine
 textblob
+nltk
+python-dateutil
 
 # Others
