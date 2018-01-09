@@ -31,8 +31,11 @@ class REngine:
         logger.info('analyzing products information')
         asins = self.utility_method.get_products_asin_from_db()
         for asin in asins:
-            self.analyze_product(asin[0])
-            self.generate_product_triggers(asin[0])
+            try:
+                self.analyze_product(asin[0])
+                self.generate_product_triggers(asin[0])
+            except Exception as e:
+                logger.exception(e.message)
 
     def analyze_product(self, asin):
         """

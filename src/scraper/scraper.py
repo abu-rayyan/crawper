@@ -12,19 +12,6 @@ class Scraper:
         logger.info('initiating scrapper')
         self.base_url = URLS["BaseUrl"]
         self.pg_pool = PgPool()
-        self.check_configs()
-
-    # checks basic configs of scraper
-    @staticmethod
-    def check_configs():
-        logger.debug('checking scraper configurations')
-
-        logger.debug('checking if temp/scraper exists')
-        if not common.exists_dir('temp/scraper'):
-            logger.debug('temp/scraper does not exists, creating new')
-            common.make_dir('temp/scraper')
-        else:
-            logger.debug('temp/scraper exists')
 
     # scrap all products info based on links
     def get_products_info(self, links, category_name):
@@ -50,9 +37,12 @@ class Scraper:
         for link in links:
             logger.debug('fetching product info @ {link}'.format(link=link))
 
-            product["ASIN"] = link.split('/')[5]
-            product["ProductLink"] = link
-            logger.debug('ASIN: {asin}'.format(asin=product["ASIN"]))
+            try:
+                product["ASIN"] = link.split('/')[5]
+                product["ProductLink"] = link
+                logger.debug('ASIN: {asin}'.format(asin=product["ASIN"]))
+            except Exception as e:
+                logger.exception(e.message)
 
             web_page = common.request_page(link)
 

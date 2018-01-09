@@ -1,6 +1,4 @@
-import datetime
 import logging
-import os
 
 from config.config import *
 from src.common import common
@@ -28,7 +26,7 @@ class Crawler:
 
     # get product category name from url
     @staticmethod
-    def get_category(url):
+    def get_category(url):  # TODO: Replace with category name from thread
         logger.debug('getting category name @ {url}'.format(url=url))
         category = url.split('/')
         logger.debug('category: {category}'.format(category=category[-2]))
