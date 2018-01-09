@@ -223,6 +223,3 @@ class Triggers:
 
     def get_repeated_remarks_trigger(self, product_asin):
         logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
-
-    def get_total_triggers(self, product_asin):
-        logger.debug('getting total number of triggers for product {asin}'.format(asin=product_asin))

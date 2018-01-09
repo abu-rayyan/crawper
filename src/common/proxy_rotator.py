@@ -44,7 +44,7 @@ class ProxyRotator:
                         'http': 'http://{user}:{passwd}@{ip}:{port}'.format(user=content[0], passwd=content[1],
                                                                             ip=content[2], port=content[3]),
                         'https': 'socks5://{user}:{passwd}@{ip}:{port}'.format(user=content[0], passwd=content[1],
-                                                                             ip=content[2], port=content[4])
+                                                                               ip=content[2], port=content[4])
                     }
                     self.proxies.append(proxy)
                 proxy_file.close()
@@ -60,10 +60,13 @@ class ProxyRotator:
         Get first proxy from queue and rotate the queue
         :return: proxy
         """
-        if self.proxy_queue is not None:
-            proxy = self.proxy_queue[0]
-            self.proxy_queue.rotate(1)
-            logger.debug('generating proxy: {proxy}'.format(proxy=proxy))
-            return proxy
-        else:
-            return None
+        try:
+            if self.proxy_queue is not None:
+                proxy = self.proxy_queue[0]
+                self.proxy_queue.rotate(1)
+                logger.debug('generating proxy: {proxy}'.format(proxy=proxy))
+                return proxy
+            else:
+                return None
+        except Exception as e:
+            logger.exception(e.message)
