@@ -48,5 +48,15 @@ QUERIES = {
 
     "GetProductReviewsDates": "SELECT review_date FROM crawper.reviews where product_asin=%s;",
 
-    "GetNoOfTodayReviewsOfProduct": "SELECT count(*) FROM crawper.reviews where product_asin=%s and review_date=%s;"
+    "GetNoOfTodayReviewsOfProduct": "SELECT count(*) FROM crawper.reviews where product_asin=%s and review_date=%s;",
+
+    "GetReviewsIdsOfReviewer": "SELECT review_link FROM crawper.reviews where reviewer_id=%s;",
+
+    "GetReviewScore": "SELECT review_scores FROM crawper.reviews_analysis where review_link=%s;",
+
+    "UpdateReviewScore": "UPDATE crawper.reviews_analysis SET review_scores=%s WHERE review_link=%s;",
+
+    "GetProductRank": "SELECT product_rank FROM crawper.products where product_asin=%s;",
+
+    "UpdateProductRank": "UPDATE crawper.products SET product_rank=%s WHERE product_asin=%s;"
 }

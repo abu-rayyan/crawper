@@ -569,3 +569,110 @@ class UtilityFunctions:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return None
+
+    def get_review_ids_of_reviewer_from_db(self, reviewer_id):
+        """
+        Returns review ids of reviewer from database
+        :param reviewer_id: reviewer id
+        :return: reviewer ids
+        """
+        logger.debug('getting reviews ids of reviewer {id} from database'.format(id=reviewer_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewsIdsOfReviewer"]
+        params = (reviewer_id,)
+
+        try:
+            review_ids = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return review_ids
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def get_review_score_from_db(self, review_id):
+        """
+        Returns a review's score from database
+        :param review_id: review link or id
+        :return: review score
+        """
+        logger.debug('getting review {id} score from database'.format(id=review_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewScore"]
+        params = (review_id,)
+
+        try:
+            review_score = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return review_score
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def update_review_score_in_db(self, review_id, score):
+        """
+        Updates review score in database
+        :param review_id: review link or id
+        :param score: updated score
+        :return: success bool
+        """
+        logger.debug('updating review {id} score in database'.format(id=review_id))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["UpdateReviewScore"]
+        params = (score, review_id,)
+
+        try:
+            self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return False
+
+    def get_product_rank_from_db(self, product_asin):
+        """
+        Returns product score from database
+        :param product_asin:
+        :return:
+        """
+        logger.debug('getting product {id} rank from database'.format(id=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetProductRank"]
+        params = (product_asin,)
+
+        try:
+            product_score = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return product_score
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None
+
+    def update_product_rank_in_db(self, product_asin, score):
+        """
+        Updates product rank in database
+        :param product_asin: asin no of product
+        :param score: ranking score
+        :return: success bool
+        """
+        logger.debug('updating product {asin} rank in database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["UpdateProductRank"]
+        params = (score, product_asin,)
+
+        try:
+            self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return False

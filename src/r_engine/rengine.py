@@ -281,12 +281,27 @@ class REngine:
         if one_off_review_trigger:
             trigger_list.append(1)
 
-        reviewer_ids = self.utility_method.get_reviews_reviewer_ids_from_db(product_asin)
-        for reviewer_id in reviewer_ids:
-            status = self.generate_reviewer_reliability_status(reviewer_id[0], trigger_list)
-            print('-----------------------')
-            print(status)
-            print('-----------------------')
+        try:
+            reviewer_ids = self.utility_method.get_reviews_reviewer_ids_from_db(product_asin)
+            for reviewer_id in reviewer_ids:
+                status = self.generate_reviewer_reliability_status(reviewer_id[0], trigger_list)
+                review_links = self.utility_method.get_review_ids_of_reviewer_from_db(reviewer_id[0])
+
+                for link in review_links:
+                    review_score = self.utility_method.get_review_score_from_db(link[0])[0][0]
+                    updated_score = self.get_review_score(int(review_score), status)
+                    self.utility_method.update_review_score_in_db(link[0], updated_score)
+
+            reviews_score = 0
+            product_score = self.utility_method.get_product_rank_from_db(product_asin)[0][0]
+            product_reviews = self.utility_method.get_product_reviews_from_db(product_asin)
+            for review in product_reviews:
+                score = self.utility_method.get_review_score_from_db(review[0])[0][0]
+                reviews_score += score
+            product_score += reviews_score
+            self.utility_method.update_product_rank_in_db(product_asin, product_score)
+        except Exception as e:
+            logger.exception(e.message)
 
     def generate_reviewer_reliability_status(self, reviewer_id, trigger_list):
         logger.debug('generating reviewer {reviewer_id} reliability status'.format(reviewer_id=reviewer_id))
@@ -306,3 +321,14 @@ class REngine:
             return 'YELLOW'
         elif total_triggers < 2:
             return 'GREEN'
+
+    @staticmethod
+    def get_review_score(score, reviewer_status):
+        logger.debug('calculating review score')
+
+        if reviewer_status == 'GREEN':
+            return score + 60
+        elif reviewer_status == 'YELLOW':
+            return score + 30
+        elif reviewer_status == 'RED':
+            return score - 60
