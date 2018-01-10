@@ -1,0 +1,3 @@
+MESSAGES = {
+    "Test": "Hello World"
+}

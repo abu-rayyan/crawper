@@ -15,4 +15,7 @@ textblob
 nltk
 python-dateutil
 
+
+# Server
+Flask
 # Others
