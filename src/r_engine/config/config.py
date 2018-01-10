@@ -58,5 +58,7 @@ QUERIES = {
 
     "GetProductRank": "SELECT product_rank FROM crawper.products where product_asin=%s;",
 
-    "UpdateProductRank": "UPDATE crawper.products SET product_rank=%s WHERE product_asin=%s;"
+    "UpdateProductRank": "UPDATE crawper.products SET product_rank=%s WHERE product_asin=%s;",
+
+    "GetReviewText": "SELECT review_text FROM crawper.reviews WHERE review_link=%s;"
 }

@@ -6,6 +6,7 @@ from src.common.thread import Worker
 from src.common.config.urls import *
 from Queue import Queue
 from src.common.proxy_rotator import ProxyRotator
+from src.r_engine.rengine import REngine
 
 from src.common.db.postgres_pool import PgPool
 
@@ -60,6 +61,8 @@ def main():
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
     start_crawper()
+    r_engine = REngine()
+    r_engine.start_engine()
 
     logger.info('closing database connection')
     db_conn.close_pool()

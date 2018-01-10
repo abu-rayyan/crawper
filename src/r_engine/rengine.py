@@ -258,6 +258,10 @@ class REngine:
         return match_count, percent_reviews
 
     def generate_product_triggers(self, product_asin):
+        """
+        Checks and generates all the triggers for product, reviews and reviewers
+        :param product_asin: asin no of product
+        """
         logger.debug('checking and generating triggers for product {asin}'.format(asin=product_asin))
         trigger_list = []
 
@@ -292,6 +296,8 @@ class REngine:
 
                 for link in review_links:
                     review_score = self.utility_method.get_review_score_from_db(link[0])[0][0]
+                    if self.get_repeated_remarks_trigger(link[0], product_asin):
+                        trigger_list.append(1)
                     updated_score = self.get_review_score(int(review_score), status)
                     self.utility_method.update_review_score_in_db(link[0], updated_score)
 
@@ -307,6 +313,12 @@ class REngine:
             logger.exception(e.message)
 
     def generate_reviewer_reliability_status(self, reviewer_id, trigger_list):
+        """
+        Returns a reviewer's reliability status based on trigger list
+        :param reviewer_id: id of reviewer
+        :param trigger_list: activated triggers list
+        :return: reliability status of reviewer
+        """
         logger.debug('generating reviewer {reviewer_id} reliability status'.format(reviewer_id=reviewer_id))
 
         msd_reviews_trigger = self.triggers.get_multiple_single_day_reviews_trigger(reviewer_id)
@@ -327,6 +339,12 @@ class REngine:
 
     @staticmethod
     def get_review_score(score, reviewer_status):
+        """
+        Calculates and returns a review score
+        :param score: previous score of review
+        :param reviewer_status: reliability status of reviewer
+        :return: updated review score
+        """
         logger.debug('calculating review score')
 
         if reviewer_status == 'GREEN':
@@ -335,3 +353,21 @@ class REngine:
             return score + 30
         elif reviewer_status == 'RED':
             return score - 60
+
+    def get_repeated_remarks_trigger(self, review_id, product_asin):
+        """
+        Get repeeated remarks trigger for a review and product
+        :param review_id: review id or link
+        :param product_asin: asin no of product being reviewed
+        :return: success bool
+        """
+        logger.debug('generating repeated remarks trigger')
+
+        try:
+            product_reviews = self.utility_method.get_product_reviews_text_from_db(product_asin)
+            review_text = self.utility_method.get_review_text_from_db(review_id)[0][0]
+            review_common = self.find_common_phrases_in_reviews(product_reviews)
+            return self.is_most_common_phrase_exists(review_text, review_common)
+        except Exception as e:
+            logger.exception(e.message)
+            return False

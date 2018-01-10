@@ -676,3 +676,24 @@ class UtilityFunctions:
             logger.exception(e.message)
             self.pg_pool.put_conn(pg_conn)
             return False
+
+    def get_review_text_from_db(self, review_id):
+        """
+        Get review text from database
+        :param review_id: review id or link
+        :return: review text
+        """
+        logger.debug('getting review {link} text from database'.format(link=review_id.decode('utf-8')))
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetReviewText"]
+        params = (review_id,)
+
+        try:
+            review_text = self.pg_pool.execute_query(pg_cursor, query, params)
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return review_text
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_pool.put_conn(pg_conn)
+            return None

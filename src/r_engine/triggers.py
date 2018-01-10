@@ -1,8 +1,10 @@
 import logging
 import math
+import nltk
 import datetime
 
 from textblob import TextBlob
+from nltk.util import ngrams
 from utility import UtilityFunctions
 from dateutil import parser
 from datetime import timedelta
@@ -220,6 +222,3 @@ class Triggers:
                 return False
             else:
                 return True
-
-    def get_repeated_remarks_trigger(self, product_asin):
-        logger.debug('generating repeated remarks trigger for product {asin}'.format(asin=product_asin))
