@@ -263,7 +263,7 @@ COMMENT ON COLUMN products_analysis.product_asin IS 'Unique asin muber of the pr
 -- Name: COLUMN products_analysis.repeated_remarks; Type: COMMENT; Schema: crawper; Owner: postgres
 --
 
-COMMENT ON COLUMN products_analysis.repeated_remarks IS 'Most commonly repeated phrases of length 3 (common to reviews for same products). ';
+COMMENT ON COLUMN products_analysis.repeated_remarks IS 'Most commonly repeated phrases of length 3 (config to reviews for same products). ';
 
 
 --
@@ -272,7 +272,7 @@ COMMENT ON COLUMN products_analysis.repeated_remarks IS 'Most commonly repeated 
 -- Name: COLUMN products_analysis.repeated_phrase_frequency; Type: COMMENT; Schema: crawper; Owner: postgres
 --
 
-COMMENT ON COLUMN products_analysis.repeated_phrase_frequency IS 'Number of a product’s reviews in which most common phrase occurred.';
+COMMENT ON COLUMN products_analysis.repeated_phrase_frequency IS 'Number of a product’s reviews in which most config phrase occurred.';
 
 
 --
@@ -435,7 +435,7 @@ sentiment= ''happy''
 -- Name: COLUMN reviews_analysis.common_phrase; Type: COMMENT; Schema: crawper; Owner: postgres
 --
 
-COMMENT ON COLUMN reviews_analysis.common_phrase IS 'Is most common phrase (common to the review itself) present?
+COMMENT ON COLUMN reviews_analysis.common_phrase IS 'Is most config phrase (config to the review itself) present?
 True if yes, False if no
 ';
 
