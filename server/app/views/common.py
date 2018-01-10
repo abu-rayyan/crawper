@@ -1,8 +1,7 @@
 import json
 
-from flask import request
 from server.app import app
-from server.app.models import common
+from server.app.models.database import *
 
 var = [{
     "Categories": {
@@ -30,4 +29,5 @@ def test():
 
 @app.route('/categories')
 def return_categories():
-    return json.dumps(var)
+    get_categories()
+    return "sdjhaskjhdasjkhdahskjdhlkash"

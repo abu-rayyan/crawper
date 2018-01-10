@@ -175,11 +175,11 @@ class REngine:
     @staticmethod
     def find_common_phrases_in_reviews(reviews):
         """
-        Finds and returns most common phrases in reviews of a product
+        Finds and returns most config phrases in reviews of a product
         :param reviews: list of reviews
-        :return: list of most common phrases
+        :return: list of most config phrases
         """
-        logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
+        logger.debug('finding config phrases in reviews {reviews}'.format(reviews=reviews))
         combined_review_text = ''
         most_common_phrases = []
         for review in reviews:
@@ -198,12 +198,12 @@ class REngine:
     @staticmethod
     def is_most_common_phrase_exists(review, reviews_commons):
         """
-        Checks if a most common phrase exists in target review
+        Checks if a most config phrase exists in target review
         :param review: target review
-        :param reviews_commons: list of common phrases in reviews
+        :param reviews_commons: list of config phrases in reviews
         :return: bool (True/False)
         """
-        logger.debug('checking if most common phrase also found in most common phrases of reviews')
+        logger.debug('checking if most config phrase also found in most config phrases of reviews')
 
         try:
             trigrams = ngrams(review.split(), 3)
@@ -231,11 +231,11 @@ class REngine:
     @staticmethod
     def get_no_of_reviews_having_most_common(reviews):
         """
-        Returns no of reviews which have most common phrase in them
+        Returns no of reviews which have most config phrase in them
         :param reviews: list of reviews
-        :return: no of reviews & percentage reviews having most common phrase
+        :return: no of reviews & percentage reviews having most config phrase
         """
-        logger.debug('finding common phrases in reviews {reviews}'.format(reviews=reviews))
+        logger.debug('finding config phrases in reviews {reviews}'.format(reviews=reviews))
         combined_review_text = ''
         for review in reviews:
             combined_review_text += ' ' + review[0].decode('utf-8')
