@@ -1,6 +1,6 @@
 categories = {
     "Categories": {
-        "Sports & Outdoors": {
+        "Sports Outdoors": {
             "Fan Shop": {
                 "Auto Accessories": {
                     "Air Fresheners": {},
@@ -45,7 +45,7 @@ categories = {
             "Xbox One": {},
             "Xbox 360": {}
         },
-        "Toys & Games": {},
+        "Toys Games": {},
         "Baby": {}
     }
 }
