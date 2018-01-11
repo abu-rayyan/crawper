@@ -19,13 +19,54 @@ categories = {
                     "Backpacks": {},
                     "Drawstring Bags": {},
                     "Duffle Bags": {},
-                    "Laptop & Messenger Bags": {}
+                    "Laptop & Messenger Bags": {},
+                    "Luggage": {},
+                    "Luggage Tags": {},
+                    "Lunchboxes": {},
+                    "Tote Bags": {},
+                    "Wallets": {},
+                    "Women's Handbags & Purses": {}
                 },
-                "Caps & Hats": {},
+                "Caps & Hats": {
+                    "Baseball Caps": {},
+                    "Novelty Headwear": {},
+                    "Scrub Caps": {},
+                    "Skullies & Beanies": {},
+                    "Visors": {}
+                },
                 "Cell Phone Accessories": {},
-                "Clothing": {},
-                "Clothing Accessories": {},
-                "Electronics": {}
+                "Clothing": {
+                    "Jackets": {},
+                    "Jerseys": {},
+                    "Pants": {},
+                    "Polo Shirts": {},
+                    "Shorts": {},
+                    "Sweaters": {},
+                    "Sweatshirts & Hoodies": {},
+                    "T-Shirts": {},
+                    "Baby Clothing": {}
+                },
+                "Clothing Accessories": {
+                    "Belts": {},
+                    "Buckles": {},
+                    "Caps & Hats": {},
+                    "Headbands": {},
+                    "Sleeve Patches": {},
+                    "Socks": {},
+                    "Scarves": {},
+                    "Sunglasses": {},
+                    "Ties": {},
+                    "Wristbands": {}
+                },
+                "Electronics": {
+                    "Binoculars": {},
+                    "Computer Mice": {},
+                    "Computer Mousepads": {},
+                    "Computer Accessories": {},
+                    "Headphones": {},
+                    "MP3 Player Accessories": {},
+                    "Tablet Accessories": {}
+                }
             },
             "Outdoor Recreation": {
                 "Outdoor Clothing": {},

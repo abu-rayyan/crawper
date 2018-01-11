@@ -3,8 +3,6 @@ import json
 from flask import Response
 from server.app import app
 from server.app.models.database import *
-from server.mock.categories import categories
-from server.mock.products import sports_outdoors
 
 
 @app.route('/')
@@ -34,4 +32,3 @@ def return_products(category_name):
         ret_data = 'Category Not Found'
         response = Response(json.dumps(ret_data), status=400, mimetype='application/json')
         return response
-
