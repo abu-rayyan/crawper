@@ -3,11 +3,14 @@ import json
 from flask import Response
 from server.app import app
 from server.app.models.database import *
+from server.app.models.common import find_item
+from server.mock.categories import category_storage
 
 
 @app.route('/')
 def test():
-    return "Crawper Server routes working"
+    var = '3386071'
+    return json.dumps(find_item(category_storage, var))
 
 
 @app.route('/categories', methods=['GET'])
