@@ -4,13 +4,12 @@ from flask import Response
 from server.app import app
 from server.app.models.database import *
 from server.app.models.common import find_item
-from server.mock.categories import category_storage
 
 
 @app.route('/')
 def test():
     var = '3386071'
-    return json.dumps(find_item(category_storage, var))
+    return 'test route working'
 
 
 @app.route('/categories', methods=['GET'])

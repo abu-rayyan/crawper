@@ -1,507 +1,610 @@
 categories = {
     "Categories": {
         "Sports Outdoors": {
-            "Fan Shop": {
-                "Auto Accessories": {
-                    "Air Fresheners": {},
-                    "Antenna Toppers": {},
-                    "Car Covers": {},
-                    "Car Flags": {},
-                    "Car Magnets": {},
-                    "Decals & Bumper Stickers": {},
-                    "Emblems": {},
-                    "Floormats": {},
-                    "Key Chains": {},
-                    "License Plate Covers": {},
-                    "License Plate Frames": {}
-                },
-                "Bags, Packs & Accessories": {
-                    "Backpacks": {},
-                    "Drawstring Bags": {},
-                    "Duffle Bags": {},
-                    "Laptop & Messenger Bags": {},
-                    "Luggage": {},
-                    "Luggage Tags": {},
-                    "Lunchboxes": {},
-                    "Tote Bags": {},
-                    "Wallets": {},
-                    "Women's Handbags & Purses": {}
-                },
-                "Caps & Hats": {
-                    "Baseball Caps": {},
-                    "Novelty Headwear": {},
-                    "Scrub Caps": {},
-                    "Skullies & Beanies": {},
-                    "Visors": {}
-                },
-                "Cell Phone Accessories": {},
-                "Clothing": {
-                    "Jackets": {},
-                    "Jerseys": {},
-                    "Pants": {},
-                    "Polo Shirts": {},
-                    "Shorts": {},
-                    "Sweaters": {},
-                    "Sweatshirts & Hoodies": {},
-                    "T-Shirts": {},
-                    "Baby Clothing": {}
-                },
-                "Clothing Accessories": {
-                    "Belts": {},
-                    "Buckles": {},
-                    "Caps & Hats": {},
-                    "Headbands": {},
-                    "Sleeve Patches": {},
-                    "Socks": {},
-                    "Scarves": {},
-                    "Sunglasses": {},
-                    "Ties": {},
-                    "Wristbands": {}
-                },
-                "Electronics": {
-                    "Binoculars": {},
-                    "Computer Mice": {},
-                    "Computer Mousepads": {},
-                    "Computer Accessories": {},
-                    "Headphones": {},
-                    "MP3 Player Accessories": {},
-                    "Tablet Accessories": {}
-                },
-                "Footwear": {
-                    "Sandals": {},
-                    "Slippers": {},
-                    "Sneakers": {},
-                    "Shoelaces": {}
-                },
-                "Gameday & Tailgating": {
-                    "Aprons": {},
-                    "Binoculars": {},
-                    "Canopies": {},
-                    "Coolers": {},
-                    "Folding Chairs": {},
-                    "Grills & Accessories": {},
-                    "Paper Cups & Plates": {},
-                    "Rally Towels": {},
-                    "Stadium Noisemakers": {},
-                    "Stadium Seats & Cushions": {},
-                    "Tailgater Mats": {}
-                },
-                "Golf Store": {
-                    "Golf Equipment": {},
-                    "Polo Shirts": {},
-                    "Visors": {}
-                },
-                "Home & Kitchen": {
-                    "Artwork": {},
-                    "Bath": {},
-                    "Bedding": {},
-                    "Decor": {},
-                    "Furniture": {},
-                    "Kitchen & Dining": {}
-                },
-                "Jewelry & Watches": {
-                    "Bracelets": {},
-                    "Charms": {},
-                    "Cuff Links": {},
-                    "Earrings": {},
-                    "Necklaces & Pendants": {},
-                    "Rings": {},
-                    "Watches": {}
-                },
-                "Office Products": {
-                    "Backrests": {},
-                    "Badge Holders": {},
-                    "Briefcases": {},
-                    "Calendars & Planners": {},
-                    "Clipboards": {},
-                    "Desk Caddies": {},
-                    "Desk Lamps": {},
-                    "Desk Pads & Blotters": {},
-                    "Letter Openers": {},
-                    "Memo Boards": {},
-                    "Notebooks": {},
-                    "Notepad Holders": {},
-                    "Notepads": {},
-                    "Office Chairs": {},
-                    "Paper Cubes": {},
-                    "Paperweights": {},
-                    "Pencil Holders": {},
-                    "Pencils": {},
-                    "Pens": {},
-                    "Staplers": {},
-                    "Waste Baskets": {},
-                    "Wrapping Paper": {}
-                },
-                "Patio, Lawn & Garden": {
-                    "Can Coolers": {},
-                    "Canopies": {},
-                    "Coolers": {},
-                    "Grills & Accessories": {},
-                    "Outdoor Flags": {},
-                    "Outdoor Pennants": {},
-                    "Stepping Stones": {},
-                    "Street Signs": {},
-                    "Wind Chimes": {},
-                    "Wind Socks": {},
-                    "Wind Spinners & Wheels": {},
-                    "Outdoor Statues": {},
-                    "Outdoor Lighting": {},
-                    "Outdoor Thermometers": {}
-                },
-                "Pet Gear": {
-                    "Pet Bandanas": {},
-                    "Pet Beds": {},
-                    "Pet Bowls": {},
-                    "Pet Clothing": {},
-                    "Pet Collars & Harnesses": {},
-                    "Pet ID Tags": {},
-                    "Pet Jerseys": {},
-                    "Pet Leashes": {},
-                    "Pet Mats": {}
-                },
-                "Sports Collectibles": {
-                    "Balls": {},
-                    "Baseball Bases": {},
-                    "Bats": {},
-                    "Bobble Heads": {},
-                    "Books": {},
-                    "Clothing & Uniforms": {},
-                    "Cut Signatures": {},
-                    "Diecast Cars": {},
-                    "Equipment Travel Bags": {},
-                    "Experience Tickets": {},
-                    "Figurines": {},
-                    "Flags & Banners": {},
-                    "Gloves": {},
-                    "Golf Clubs": {},
-                    "Hats": {},
-                    "Helmets": {},
-                    "Hockey Pucks": {},
-                    "Hockey Sticks & Blades": {},
-                    "Jerseys": {},
-                    "Lineup Cards": {},
-                    "Magazines": {},
-                    "Personal Checks": {},
-                    "Photographs": {},
-                    "Postcards & Index Cards": {},
-                    "Prints & Posters": {},
-                    "Publications & Media": {},
-                    "Shoes": {},
-                    "Stadium Components": {},
-                    "Ticket Stubs": {},
-                    "Trading Cards": {},
-                    "Trophies": {}
-                },
-                "Sports Equipment": {
-                    "Baseball Equipment": {},
-                    "Basketball Equipment": {},
-                    "Football Equipment": {},
-                    "Golf Equipment": {},
-                    "Hockey Equipment": {},
-                    "Soccer Equipment": {},
-                    "Tennis Equipment": {}
+            "Id": "sporting-goods",
+            "Sub": {
+                "Fan Shop": {
+                    "Id": "3386071",
+                    "Sub": {
+                        "Auto Accessories": {
+                            "Id": "374773011",
+                            "Sub": {
+                                "Air Fresheners": {
+                                    "Id": "5769016011",
+                                    "Sub": {}
+                                },
+                                "Antenna Toppers": {
+                                    "Id": "5769017011",
+                                    "Sub": {}
+                                },
+                                "Car Covers": {
+                                    "Id": "5769018011",
+                                    "Sub": {}
+                                },
+                                "Car Flags": {
+                                    "Id": "374774011",
+                                    "Sub": {}
+                                },
+                                "Car Magnets": {
+                                    "Id": "374775011",
+                                    "Sub": {}
+                                },
+                                "Decals & Bumper Stickers": {
+                                    "Id": "3209245011",
+                                    "Sub": {}
+                                },
+                                "Emblems": {
+                                    "Id": "5769019011",
+                                    "Sub": {}
+                                },
+                                "Floormats": {
+                                    "Id": "374776011",
+                                    "Sub": {}
+                                },
+                                "Key Chains": {
+                                    "Id": "374793011",
+                                    "Sub": {}
+                                },
+                                "License Plate Covers": {
+                                    "Id": "721262011",
+                                    "Sub": {}
+                                },
+                                "License Plate Frames": {
+                                    "Id": "721261011",
+                                    "Sub": {}
+                                },
+                                "Mirror Covers": {
+                                    "Id": "5769021011",
+                                    "Sub": {}
+                                },
+                                "Seat Covers": {
+                                    "Id": "5769022011",
+                                    "Sub": {}
+                                },
+                                "Splashguards": {
+                                    "Id": "374778011",
+                                    "Sub": {}
+                                },
+                                "Steering Wheel Covers": {
+                                    "Id": "5769023011",
+                                    "Sub": {}
+                                },
+                                "Tire Covers": {
+                                    "Id": "374780011",
+                                    "Sub": {}
+                                },
+                                "Trailer Hitch Covers": {
+                                    "Id": "374781011",
+                                    "Sub": {}
+                                },
+                                "Windshield Sun Shades": {
+                                    "Id": "5769024011",
+                                    "Sub": {}
+                                }
+                            }
+                        },
+                        "Bags, Packs & Accessories": {
+                            "Id": "5768574011",
+                            "Sub": {
+                                "Backpacks": {
+                                    "Id": "5768575011",
+                                    "Sub": {}
+                                },
+                                "Drawstring Bags": {
+                                    "Id": "5768576011",
+                                    "Sub": {}
+                                },
+                                "Duffle Bags": {
+                                    "Id": "5768577011",
+                                    "Sub": {}
+                                },
+                                "Laptop & Messenger Bags": {
+                                    "Id": "5768578011",
+                                    "Sub": {}
+                                },
+                                "Luggage": {
+                                    "Id": "5768581011",
+                                    "Sub": {}
+                                },
+                                "Luggage Tags": {
+                                    "Id": "5768582011",
+                                    "Sub": {}
+                                },
+                                "Lunchboxes": {
+                                    "Id": "374878011",
+                                    "Sub": {}
+                                },
+                                "Tote Bags": {
+                                    "Id": "5768583011",
+                                    "Sub": {}
+                                },
+                                "Wallets": {
+                                    "Id": "374745011",
+                                    "Sub": {}
+                                },
+                                "Women's Handbags & Purses": {
+                                    "Id": "5768584011",
+                                    "Sub": {}
+                                }
+                            }
+                        },
+                        "Caps & Hats": {
+                            "Baseball Caps": {},
+                            "Novelty Headwear": {},
+                            "Scrub Caps": {},
+                            "Skullies & Beanies": {},
+                            "Visors": {}
+                        },
+                        "Cell Phone Accessories": {},
+                        "Clothing": {
+                            "Jackets": {},
+                            "Jerseys": {},
+                            "Pants": {},
+                            "Polo Shirts": {},
+                            "Shorts": {},
+                            "Sweaters": {},
+                            "Sweatshirts & Hoodies": {},
+                            "T-Shirts": {},
+                            "Baby Clothing": {}
+                        },
+                        "Clothing Accessories": {
+                            "Belts": {},
+                            "Buckles": {},
+                            "Caps & Hats": {},
+                            "Headbands": {},
+                            "Sleeve Patches": {},
+                            "Socks": {},
+                            "Scarves": {},
+                            "Sunglasses": {},
+                            "Ties": {},
+                            "Wristbands": {}
+                        },
+                        "Electronics": {
+                            "Binoculars": {},
+                            "Computer Mice": {},
+                            "Computer Mousepads": {},
+                            "Computer Accessories": {},
+                            "Headphones": {},
+                            "MP3 Player Accessories": {},
+                            "Tablet Accessories": {}
+                        },
+                        "Footwear": {
+                            "Sandals": {},
+                            "Slippers": {},
+                            "Sneakers": {},
+                            "Shoelaces": {}
+                        },
+                        "Gameday & Tailgating": {
+                            "Aprons": {},
+                            "Binoculars": {},
+                            "Canopies": {},
+                            "Coolers": {},
+                            "Folding Chairs": {},
+                            "Grills & Accessories": {},
+                            "Paper Cups & Plates": {},
+                            "Rally Towels": {},
+                            "Stadium Noisemakers": {},
+                            "Stadium Seats & Cushions": {},
+                            "Tailgater Mats": {}
+                        },
+                        "Golf Store": {
+                            "Golf Equipment": {},
+                            "Polo Shirts": {},
+                            "Visors": {}
+                        },
+                        "Home & Kitchen": {
+                            "Artwork": {},
+                            "Bath": {},
+                            "Bedding": {},
+                            "Decor": {},
+                            "Furniture": {},
+                            "Kitchen & Dining": {}
+                        },
+                        "Jewelry & Watches": {
+                            "Bracelets": {},
+                            "Charms": {},
+                            "Cuff Links": {},
+                            "Earrings": {},
+                            "Necklaces & Pendants": {},
+                            "Rings": {},
+                            "Watches": {}
+                        },
+                        "Office Products": {
+                            "Backrests": {},
+                            "Badge Holders": {},
+                            "Briefcases": {},
+                            "Calendars & Planners": {},
+                            "Clipboards": {},
+                            "Desk Caddies": {},
+                            "Desk Lamps": {},
+                            "Desk Pads & Blotters": {},
+                            "Letter Openers": {},
+                            "Memo Boards": {},
+                            "Notebooks": {},
+                            "Notepad Holders": {},
+                            "Notepads": {},
+                            "Office Chairs": {},
+                            "Paper Cubes": {},
+                            "Paperweights": {},
+                            "Pencil Holders": {},
+                            "Pencils": {},
+                            "Pens": {},
+                            "Staplers": {},
+                            "Waste Baskets": {},
+                            "Wrapping Paper": {}
+                        },
+                        "Patio, Lawn & Garden": {
+                            "Can Coolers": {},
+                            "Canopies": {},
+                            "Coolers": {},
+                            "Grills & Accessories": {},
+                            "Outdoor Flags": {},
+                            "Outdoor Pennants": {},
+                            "Stepping Stones": {},
+                            "Street Signs": {},
+                            "Wind Chimes": {},
+                            "Wind Socks": {},
+                            "Wind Spinners & Wheels": {},
+                            "Outdoor Statues": {},
+                            "Outdoor Lighting": {},
+                            "Outdoor Thermometers": {}
+                        },
+                        "Pet Gear": {
+                            "Pet Bandanas": {},
+                            "Pet Beds": {},
+                            "Pet Bowls": {},
+                            "Pet Clothing": {},
+                            "Pet Collars & Harnesses": {},
+                            "Pet ID Tags": {},
+                            "Pet Jerseys": {},
+                            "Pet Leashes": {},
+                            "Pet Mats": {}
+                        },
+                        "Sports Collectibles": {
+                            "Balls": {},
+                            "Baseball Bases": {},
+                            "Bats": {},
+                            "Bobble Heads": {},
+                            "Books": {},
+                            "Clothing & Uniforms": {},
+                            "Cut Signatures": {},
+                            "Diecast Cars": {},
+                            "Equipment Travel Bags": {},
+                            "Experience Tickets": {},
+                            "Figurines": {},
+                            "Flags & Banners": {},
+                            "Gloves": {},
+                            "Golf Clubs": {},
+                            "Hats": {},
+                            "Helmets": {},
+                            "Hockey Pucks": {},
+                            "Hockey Sticks & Blades": {},
+                            "Jerseys": {},
+                            "Lineup Cards": {},
+                            "Magazines": {},
+                            "Personal Checks": {},
+                            "Photographs": {},
+                            "Postcards & Index Cards": {},
+                            "Prints & Posters": {},
+                            "Publications & Media": {},
+                            "Shoes": {},
+                            "Stadium Components": {},
+                            "Ticket Stubs": {},
+                            "Trading Cards": {},
+                            "Trophies": {}
+                        },
+                        "Sports Equipment": {
+                            "Baseball Equipment": {},
+                            "Basketball Equipment": {},
+                            "Football Equipment": {},
+                            "Golf Equipment": {},
+                            "Hockey Equipment": {},
+                            "Soccer Equipment": {},
+                            "Tennis Equipment": {}
 
+                        },
+                        "Sports Souvenirs": {
+                            "Baseball Bats": {},
+                            "Event Programs": {},
+                            "Fan Packs": {},
+                            "Hard Hats": {},
+                            "Helmets": {},
+                            "Key Chains": {},
+                            "Magnets": {},
+                            "Memorabilia Display & Storage": {},
+                            "Pennants": {},
+                            "Photo Baseball Bats": {},
+                            "Photo Baseballs": {},
+                            "Photomints": {},
+                            "Pins": {},
+                            "Tailgater Mats": {},
+                            "Trading Cards": {},
+                            "Water Globes": {}
+                        },
+                        "Tools & Home Improvement": {
+                            "Cabinet & Furniture Knobs": {},
+                            "Hand Tools": {},
+                            "Lamps": {},
+                            "Lighters": {},
+                            "Mailboxes": {},
+                            "Night Lights": {},
+                            "Tape Measures": {},
+                            "Wallpaper": {}
+                        },
+                        "Toys & Game Room": {
+                            "Billiards": {},
+                            "Bobbleheads": {},
+                            "Darts & Dartboards": {},
+                            "Games": {},
+                            "Poker": {},
+                            "Toy Figures": {},
+                            "Toy Vehicles": {},
+                            "Tailgating Toss Games": {}
+                        },
+                        "Video Games & Accessories": {}
+                    }
                 },
-                "Sports Souvenirs": {
-                    "Baseball Bats": {},
-                    "Event Programs": {},
-                    "Fan Packs": {},
-                    "Hard Hats": {},
-                    "Helmets": {},
-                    "Key Chains": {},
-                    "Magnets": {},
-                    "Memorabilia Display & Storage": {},
-                    "Pennants": {},
-                    "Photo Baseball Bats": {},
-                    "Photo Baseballs": {},
-                    "Photomints": {},
-                    "Pins": {},
-                    "Tailgater Mats": {},
-                    "Trading Cards": {},
-                    "Water Globes": {}
+                "Outdoor Recreation": {
+                    "Outdoor Clothing": {
+                        "Men": {},
+                        "Women": {},
+                        "Boys": {},
+                        "Girls": {}
+                    },
+                    "Camping & Hiking": {
+                        "Backpacks & Bags": {},
+                        "Tents & Shelters": {},
+                        "Sleeping Bags & Camp Bedding": {},
+                        "Camp Kitchen": {},
+                        "Camping Furniture": {},
+                        "Clothing": {},
+                        "Footwear & Accessories": {},
+                        "Hydration & Filtration": {},
+                        "Knives & Tools": {},
+                        "Lights & Lanterns": {},
+                        "Navigation & Electronics": {},
+                        "Personal Care": {},
+                        "Safety & Survival": {},
+                        "Trekking Poles": {}
+                    },
+                    "Climbing": {
+                        "Rope, Cord & Webbing": {},
+                        "Harnesses": {},
+                        "Belay & Rigging": {},
+                        "Carabiners & Quickdraws": {},
+                        "Footwear": {},
+                        "Clothing": {},
+                        "Helmets": {},
+                        "Climbing Protection": {},
+                        "Mountaineering & Ice Equipment": {},
+                        "Bouldering & Wall Equipment": {}
+                    },
+                    "Cycling": {
+                        "Car Racks, Transportation & Storage": {},
+                        "Bikes": {},
+                        "Kids Bikes & Accessories": {},
+                        "Clothing": {},
+                        "Parts & Components": {},
+                        "Accessories": {},
+                        "Tires & Tubes": {},
+                        "Bike Racks & Bags": {},
+                        "Helmets & Accessories": {},
+                        "Wheels & Accessories": {},
+                        "Bike Frames": {},
+                        "Footwear": {},
+                        "Bike Tools & Maintenance": {},
+                        "Cycling Electronics": {},
+                        "Protective Gear": {},
+                        "Hydration": {},
+                        "Bike Trainers & Accessories": {},
+                        "Child Seats & Cargo Trailers": {},
+                        "BMX": {}
+                    },
+                    "Skates, Skateboards & Scooters": {
+                        "Skateboarding": {},
+                        "Scooters & Equipment": {},
+                        "Inline & Roller Skating": {}
+                    },
+                    "Water Sports": {
+                        "Canoeing": {},
+                        "Kayaking": {},
+                        "Diving & Snorkeling": {},
+                        "Stand - Up Paddleboarding": {},
+                        "Surfing": {},
+                        "Waterskiing & Towsports": {},
+                        "Windsurfing": {},
+                        "Water Sports Accessories": {}
+                    },
+                    "Winter Sports": {
+                        "Skiing": {},
+                        "Snowboarding": {},
+                        "Sledding": {},
+                        "Snowmobiling": {},
+                        "Snowshoeing": {},
+                        "Ice Skating": {},
+                        "Winter Sports Accessories": {}
+                    },
+                    "Accessories": {
+                        "Accessory & Keychain Carabiners": {},
+                        "Car Racks & Carriers": {},
+                        "Electronics": {},
+                        "Gear Repair Equipment": {},
+                        "Inflation Devices & Accessories": {},
+                        "Paracord": {},
+                        "Reflective Gear": {},
+                        "Sports Medicine": {},
+                        "Sports Sunglasses": {},
+                        "Sports Water Bottle Accessories": {},
+                        "Sports Water Bottles": {},
+                        "Traction Cleats": {}
+                    }
                 },
-                "Tools & Home Improvement": {
-                    "Cabinet & Furniture Knobs": {},
-                    "Hand Tools": {},
-                    "Lamps": {},
-                    "Lighters": {},
-                    "Mailboxes": {},
-                    "Night Lights": {},
-                    "Tape Measures": {},
-                    "Wallpaper": {}
-                },
-                "Toys & Game Room": {
-                    "Billiards": {},
-                    "Bobbleheads": {},
-                    "Darts & Dartboards": {},
-                    "Games": {},
-                    "Poker": {},
-                    "Toy Figures": {},
-                    "Toy Vehicles": {},
-                    "Tailgating Toss Games": {}
-                },
-                "Video Games & Accessories": {}
-            },
-            "Outdoor Recreation": {
-                "Outdoor Clothing": {
-                    "Men": {},
-                    "Women": {},
-                    "Boys": {},
-                    "Girls": {}
-                },
-                "Camping & Hiking": {
-                    "Backpacks & Bags": {},
-                    "Tents & Shelters": {},
-                    "Sleeping Bags & Camp Bedding": {},
-                    "Camp Kitchen": {},
-                    "Camping Furniture": {},
-                    "Clothing": {},
-                    "Footwear & Accessories": {},
-                    "Hydration & Filtration": {},
-                    "Knives & Tools": {},
-                    "Lights & Lanterns": {},
-                    "Navigation & Electronics": {},
-                    "Personal Care": {},
-                    "Safety & Survival": {},
-                    "Trekking Poles": {}
-                },
-                "Climbing": {
-                    "Rope, Cord & Webbing": {},
-                    "Harnesses": {},
-                    "Belay & Rigging": {},
-                    "Carabiners & Quickdraws": {},
-                    "Footwear": {},
-                    "Clothing": {},
-                    "Helmets": {},
-                    "Climbing Protection": {},
-                    "Mountaineering & Ice Equipment": {},
-                    "Bouldering & Wall Equipment": {}
-                },
-                "Cycling": {
-                    "Car Racks, Transportation & Storage": {},
-                    "Bikes": {},
-                    "Kids Bikes & Accessories": {},
-                    "Clothing": {},
-                    "Parts & Components": {},
-                    "Accessories": {},
-                    "Tires & Tubes": {},
-                    "Bike Racks & Bags": {},
-                    "Helmets & Accessories": {},
-                    "Wheels & Accessories": {},
-                    "Bike Frames": {},
-                    "Footwear": {},
-                    "Bike Tools & Maintenance": {},
-                    "Cycling Electronics": {},
-                    "Protective Gear": {},
-                    "Hydration": {},
-                    "Bike Trainers & Accessories": {},
-                    "Child Seats & Cargo Trailers": {},
-                    "BMX": {}
-                },
-                "Skates, Skateboards & Scooters": {
-                    "Skateboarding": {},
-                    "Scooters & Equipment": {},
-                    "Inline & Roller Skating": {}
-                },
-                "Water Sports": {
-                    "Canoeing": {},
-                    "Kayaking": {},
-                    "Diving & Snorkeling": {},
-                    "Stand - Up Paddleboarding": {},
-                    "Surfing": {},
-                    "Waterskiing & Towsports": {},
-                    "Windsurfing": {},
-                    "Water Sports Accessories": {}
-                },
-                "Winter Sports": {
-                    "Skiing": {},
-                    "Snowboarding": {},
-                    "Sledding": {},
-                    "Snowmobiling": {},
-                    "Snowshoeing": {},
-                    "Ice Skating": {},
-                    "Winter Sports Accessories": {}
-                },
-                "Accessories": {
-                    "Accessory & Keychain Carabiners": {},
-                    "Car Racks & Carriers": {},
-                    "Electronics": {},
-                    "Gear Repair Equipment": {},
-                    "Inflation Devices & Accessories": {},
-                    "Paracord": {},
-                    "Reflective Gear": {},
-                    "Sports Medicine": {},
-                    "Sports Sunglasses": {},
-                    "Sports Water Bottle Accessories": {},
-                    "Sports Water Bottles": {},
-                    "Traction Cleats": {}
-                }
-            },
-            "Sports & Fitness": {
-                "Boating & Sailing": {
-                    "Boating": {},
-                    "Canoeing": {},
-                    "Kayaking": {},
-                    "Rowing & Crew": {},
-                    "Sailing": {},
-                    "Boating & Water Sports Accessories": {}
-                },
-                "Clothing": {
-                    "Men": {},
-                    "Women": {},
-                    "Boys": {},
-                    "Girls": {}
-                },
-                "Exercise & Fitness": {
-                    "Strength Training Equipment": {},
-                    "Cardio Training": {},
-                    "Exercise Machine Parts & Accessories": {},
-                    "Balance Trainers": {},
-                    "Accessories": {},
-                    "Running": {},
-                    "Pilates": {},
-                    "Triathlon": {},
-                    "Yoga": {},
-                    "Exercise Videos": {},
-                    "Clothing": {},
-                    "Footwear": {},
-                    "Fitness Technology": {},
-                    "Speed & Agility Training": {}
-                },
-                "Golf": {
-                    "Golf Clubs": {},
-                    "Golf Club Parts": {},
-                    "Golf Balls": {},
-                    "Golf Carts": {},
-                    "Golf Cart Accessories": {},
-                    "Golf Club Bags": {},
-                    "Golf Club Bag Accessories": {},
-                    "On - Course Accessories": {},
-                    "Accessories": {},
-                    "Gloves": {},
-                    "Training Equipment": {},
-                    "Footwear": {},
-                    "Clothing": {},
-                    "GPS Units": {},
-                    "Rangefinders": {},
-                },
-                "Hunting & Fishing": {
-                    "Hunting": {},
-                    "Fishing": {},
-                    "Shooting": {},
-                    "Archery": {},
-                    "Tactical & Personal Defense": {}
-                },
-                "Leisure Sports & Game Room": {
-                    "Arcade & Table Games": {},
-                    "Billiards & Pool": {},
-                    "Bowling": {},
-                    "Casino Equipment": {},
-                    "Darts & Equipment": {},
-                    "Outdoor Games & Activities": {},
-                    "Play Sets & Playground Equipment": {},
-                    "Table Tennis": {},
-                    "Trampolines & Accessories": {},
-                    "Video Game Chairs": {}
-                },
-                "Airsoft & Paintball": {
-                    "Airsoft": {},
-                    "Paintball": {}
-                },
-                "Running": {
-                    "Hydration Packs": {},
-                    "Reflective Gear": {},
-                    "Waist Packs": {},
-                    "GPS Units": {},
-                    "Clothing": {},
-                    "Footwear": {}
-                },
-                "Swimming": {
-                    "Aquatic Gloves": {},
-                    "Earplugs": {},
-                    "Equipment Bags": {},
-                    "Goggles": {},
-                    "Nose Clips": {},
-                    "Swim Caps": {},
-                    "Swim Fins": {},
-                    "Swimwear": {},
-                    "Training Equipment": {}
-                },
-                "Team Sports": {
-                    "Baseball & Softball": {},
-                    "Basketball": {},
-                    "Football": {},
-                    "Soccer": {},
-                    "Tennis & Racquet Sports": {},
-                    "Lacrosse": {},
-                    "Ice Hockey": {},
-                    "Gymnastics": {},
-                    "Volleyball": {},
-                    "Equestrian Sports": {},
-                    "Sports Medicine": {},
-                    "Sports Training": {},
-                    "Other Team Sports": {}
-                },
-                "Tennis & Racquet Sports": {
-                    "Badminton": {},
-                    "Handball": {},
-                    "Racquetball": {},
-                    "Squash": {},
-                    "Tennis": {}
-                },
-                "Yoga": {
-                    "Blocks": {},
-                    "Clothing": {},
-                    "Foam Wedges": {},
-                    "Mat Bags": {},
-                    "Mats": {},
-                    "Silk Eye Bags": {},
-                    "Starter Sets": {},
-                    "Straps": {},
-                    "Towels": {}
-                },
-                "Other Sports": {
-                    "Boxing": {},
-                    "Dance": {},
-                    "Equestrian Sports": {},
-                    "Fencing": {},
-                    "Gymnastics": {},
-                    "Ice Skating": {},
-                    "Martial Arts": {}
-                },
-                "Accessories": {
-                    "Ball Storage": {},
-                    "Car Racks & Carriers": {},
-                    "Coach & Referee Gear": {},
-                    "Electronics & Gadgets": {},
-                    "Field, Court & Rink Equipment": {},
-                    "Gear Repair Equipment": {},
-                    "Gym Bags": {},
-                    "Headbands": {},
-                    "Inflation Devices & Accessories": {},
-                    "Memorabilia Display & Storage": {},
-                    "Multipurpose Daypacks": {},
-                    "Paracord": {},
-                    "Reflective Gear": {},
-                    "Sports Sunglasses": {},
-                    "Sports Water Bottle Accessories": {},
-                    "Sports Water Bottles": {},
-                    "Trophies, Medals & Awards": {},
-                    "Wristbands": {}
-                },
-                "Sports Medicine": {
-                    "Athletic Tape & Supplies": {},
-                    "Bandages & Dressings": {},
-                    "Braces, Splints & Slings": {},
-                    "First Aid Kits": {},
-                    "Hot & Cold Therapy": {},
-                    "Mouthguards": {},
-                    "Padding Supplies": {}
+                "Sports & Fitness": {
+                    "Boating & Sailing": {
+                        "Boating": {},
+                        "Canoeing": {},
+                        "Kayaking": {},
+                        "Rowing & Crew": {},
+                        "Sailing": {},
+                        "Boating & Water Sports Accessories": {}
+                    },
+                    "Clothing": {
+                        "Men": {},
+                        "Women": {},
+                        "Boys": {},
+                        "Girls": {}
+                    },
+                    "Exercise & Fitness": {
+                        "Strength Training Equipment": {},
+                        "Cardio Training": {},
+                        "Exercise Machine Parts & Accessories": {},
+                        "Balance Trainers": {},
+                        "Accessories": {},
+                        "Running": {},
+                        "Pilates": {},
+                        "Triathlon": {},
+                        "Yoga": {},
+                        "Exercise Videos": {},
+                        "Clothing": {},
+                        "Footwear": {},
+                        "Fitness Technology": {},
+                        "Speed & Agility Training": {}
+                    },
+                    "Golf": {
+                        "Golf Clubs": {},
+                        "Golf Club Parts": {},
+                        "Golf Balls": {},
+                        "Golf Carts": {},
+                        "Golf Cart Accessories": {},
+                        "Golf Club Bags": {},
+                        "Golf Club Bag Accessories": {},
+                        "On - Course Accessories": {},
+                        "Accessories": {},
+                        "Gloves": {},
+                        "Training Equipment": {},
+                        "Footwear": {},
+                        "Clothing": {},
+                        "GPS Units": {},
+                        "Rangefinders": {},
+                    },
+                    "Hunting & Fishing": {
+                        "Hunting": {},
+                        "Fishing": {},
+                        "Shooting": {},
+                        "Archery": {},
+                        "Tactical & Personal Defense": {}
+                    },
+                    "Leisure Sports & Game Room": {
+                        "Arcade & Table Games": {},
+                        "Billiards & Pool": {},
+                        "Bowling": {},
+                        "Casino Equipment": {},
+                        "Darts & Equipment": {},
+                        "Outdoor Games & Activities": {},
+                        "Play Sets & Playground Equipment": {},
+                        "Table Tennis": {},
+                        "Trampolines & Accessories": {},
+                        "Video Game Chairs": {}
+                    },
+                    "Airsoft & Paintball": {
+                        "Airsoft": {},
+                        "Paintball": {}
+                    },
+                    "Running": {
+                        "Hydration Packs": {},
+                        "Reflective Gear": {},
+                        "Waist Packs": {},
+                        "GPS Units": {},
+                        "Clothing": {},
+                        "Footwear": {}
+                    },
+                    "Swimming": {
+                        "Aquatic Gloves": {},
+                        "Earplugs": {},
+                        "Equipment Bags": {},
+                        "Goggles": {},
+                        "Nose Clips": {},
+                        "Swim Caps": {},
+                        "Swim Fins": {},
+                        "Swimwear": {},
+                        "Training Equipment": {}
+                    },
+                    "Team Sports": {
+                        "Baseball & Softball": {},
+                        "Basketball": {},
+                        "Football": {},
+                        "Soccer": {},
+                        "Tennis & Racquet Sports": {},
+                        "Lacrosse": {},
+                        "Ice Hockey": {},
+                        "Gymnastics": {},
+                        "Volleyball": {},
+                        "Equestrian Sports": {},
+                        "Sports Medicine": {},
+                        "Sports Training": {},
+                        "Other Team Sports": {}
+                    },
+                    "Tennis & Racquet Sports": {
+                        "Badminton": {},
+                        "Handball": {},
+                        "Racquetball": {},
+                        "Squash": {},
+                        "Tennis": {}
+                    },
+                    "Yoga": {
+                        "Blocks": {},
+                        "Clothing": {},
+                        "Foam Wedges": {},
+                        "Mat Bags": {},
+                        "Mats": {},
+                        "Silk Eye Bags": {},
+                        "Starter Sets": {},
+                        "Straps": {},
+                        "Towels": {}
+                    },
+                    "Other Sports": {
+                        "Boxing": {},
+                        "Dance": {},
+                        "Equestrian Sports": {},
+                        "Fencing": {},
+                        "Gymnastics": {},
+                        "Ice Skating": {},
+                        "Martial Arts": {}
+                    },
+                    "Accessories": {
+                        "Ball Storage": {},
+                        "Car Racks & Carriers": {},
+                        "Coach & Referee Gear": {},
+                        "Electronics & Gadgets": {},
+                        "Field, Court & Rink Equipment": {},
+                        "Gear Repair Equipment": {},
+                        "Gym Bags": {},
+                        "Headbands": {},
+                        "Inflation Devices & Accessories": {},
+                        "Memorabilia Display & Storage": {},
+                        "Multipurpose Daypacks": {},
+                        "Paracord": {},
+                        "Reflective Gear": {},
+                        "Sports Sunglasses": {},
+                        "Sports Water Bottle Accessories": {},
+                        "Sports Water Bottles": {},
+                        "Trophies, Medals & Awards": {},
+                        "Wristbands": {}
+                    },
+                    "Sports Medicine": {
+                        "Athletic Tape & Supplies": {},
+                        "Bandages & Dressings": {},
+                        "Braces, Splints & Slings": {},
+                        "First Aid Kits": {},
+                        "Hot & Cold Therapy": {},
+                        "Mouthguards": {},
+                        "Padding Supplies": {}
+                    }
                 }
             }
         },
         "Video Games": {
-            "PlayStation 4": {
+            "PlayStation 4": {  # TODO: last level remaining
                 "Accessories": {},
                 "Consoles": {},
                 "Currency & Subscription Cards": {},
