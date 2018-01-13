@@ -34,6 +34,7 @@ def return_products(category_id):
                 "Title": product[0],
                 "Price": product[1],
                 "Link": product[2],
+                "Image Link": product[5],
                 "Total Reviews": product[3],
                 "Score": product[4]
             }

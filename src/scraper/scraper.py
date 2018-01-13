@@ -29,6 +29,7 @@ class Scraper:
             "TotalReviews": None,
             "ReviewsURL": None,
             "ProductLink": None,
+            "ImageLink": None,
             "Reviews": None
         }
 
@@ -79,6 +80,14 @@ class Scraper:
             except Exception as e:
                 product["TotalReviews"] = None
                 logger.exception('{exception}'.format(exception=e.message))
+
+            try:
+                image = web_page.find('div', {'id': 'imgTagWrapperId'}).find("img")
+                product["ImageLink"] = image["src"].encode('utf-8')
+                logger.debug("Image Link: {link}".format(link=product["ImageLink"]))
+            except Exception as e:
+                product["ImageLink"] = None
+                logger.exception(e.message)
 
             self.insert_product_to_db(product, category_name)
             self.scrap_all_reviews(product)
@@ -207,7 +216,7 @@ class Scraper:
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         insert_query = QUERIES["InsertProduct"]
         query_params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
-                        category_name, product["ProductLink"], product["TotalReviews"], '0')
+                        category_name, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"])
 
         try:
             self.pg_pool.execute_query(pg_cursor, insert_query, query_params)

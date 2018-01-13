@@ -3,6 +3,6 @@ QUERIES = {
 
     "ExistsCategory": "SELECT EXISTS(SELECT category_name FROM crawper.categories WHERE category_name=%s);",
 
-    "GetCategoryProducts": "SELECT product_title, product_price, product_link, total_reviews, product_rank FROM "
-                           "crawper.products WHERE category_name=%s; "
+    "GetCategoryProducts": "SELECT product_title, product_price, product_link, total_reviews, product_rank, "
+                           "image_link FROM crawper.products WHERE category_name=%s; "
 }
