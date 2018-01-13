@@ -129,13 +129,31 @@ categories = {
                             }
                         },
                         "Caps & Hats": {
-                            "Baseball Caps": {},
-                            "Novelty Headwear": {},
-                            "Scrub Caps": {},
-                            "Skullies & Beanies": {},
-                            "Visors": {}
+                            "Baseball Caps": {
+                                "Id": "374749011",
+                                "Sub": {}
+                            },
+                            "Novelty Headwear": {
+                                "Id": "2515124011",
+                                "Sub": {}
+                            },
+                            "Scrub Caps": {
+                                "Id": "2515126011",
+                                "Sub": {}
+                            },
+                            "Skullies & Beanies": {
+                                "Id": "374752011",
+                                "Sub": {}
+                            },
+                            "Visors": {
+                                "Id": "374753011",
+                                "Sub": {}
+                            }
                         },
-                        "Cell Phone Accessories": {},
+                        "Cell Phone Accessories": {
+                            "Id": "3209246011",
+                            "Sub": {}
+                        },
                         "Clothing": {
                             "Jackets": {},
                             "Jerseys": {},

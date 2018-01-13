@@ -16,7 +16,6 @@ db_conn_params = {
     "Password": config.get('Database', 'Password')
 }
 
-app.logger.info('connecting to database')
 db_conn = PgPool()
 db_conn.create_pool(db_conn_params)
 

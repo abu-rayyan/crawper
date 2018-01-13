@@ -3,7 +3,6 @@ import json
 from flask import Response
 from server.app import app
 from server.app.models.database import *
-from server.app.models.common import find_item
 
 
 @app.route('/')
@@ -24,13 +23,30 @@ def return_categories():
         return response
 
 
-@app.route('/products/<category_name>', methods=['GET'])
-def return_products(category_name):
-    ret_data = get_products(category_name)
-    if ret_data is not None:
-        response = Response(json.dumps(ret_data), status=200, mimetype='application/json')
-        return response
+@app.route('/products/<category_id>', methods=['GET'])
+def return_products(category_id):
+    data_list = []
+    if exists_category_in_db(category_id):
+        ret_data = get_products(category_id)
+
+        for product in ret_data:
+            product_dict = {
+                "Title": product[0],
+                "Price": product[1],
+                "Link": product[2],
+                "Total Reviews": product[3],
+                "Score": product[4]
+            }
+            data_list.append(product_dict)
+
+        if ret_data is not None:
+            response = Response(json.dumps(data_list), status=200, mimetype='application/json')
+            return response
+        else:
+            ret_data = 'Products Not Found !'
+            response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
+            return response
     else:
-        ret_data = 'Category Not Found'
-        response = Response(json.dumps(ret_data), status=400, mimetype='application/json')
+        ret_data = 'Category {category} Not Found !'.format(category=category_id)
+        response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
         return response
