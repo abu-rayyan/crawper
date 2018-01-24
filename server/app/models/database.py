@@ -10,6 +10,21 @@ def get_categories(category_id):
         return Categories[category_id]
 
 
+def get_product(asin_no, category_id):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetProduct"]
+    params = (asin_no, category_id,)
+
+    try:
+        product_info = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return product_info
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
 def get_products(category_id):
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["GetCategoryProducts"]

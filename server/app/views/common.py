@@ -1,6 +1,7 @@
 import json
 
 from flask import Response
+from flask import request
 from server.app import app
 from flask_cors import CORS
 from server.app.models.database import *
@@ -24,6 +25,15 @@ def return_categories(category_id):
         ret_data = 'Categories Not found'
         response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
         return response
+
+
+@app.route('/product')
+def return_product():
+    asin_no = request.args.get('asin')
+    category_id = request.args.get('categoryId')
+    product = get_product(asin_no, category_id)
+    response = Response(json.dumps(product), status=200, mimetype='application/json')
+    return response
 
 
 @app.route('/products/<category_id>', methods=['GET'])
