@@ -6,19 +6,8 @@ pg_ = PgPool()
 
 
 def get_categories(category_id):
-    if category_id == "top":
-        return top_cat
-    elif category_id == "sporting-goods":
-        return sporting_goods
-    elif category_id == "3386071":
-        return fan_shop
-    elif category_id == "706814011":
-        return outdoor_recreation
-    elif category_id == "10971181011":
-        return sports_fitness
-    elif category_id == "374773011":
-        return auto_accessories
-
+    if category_id in Categories:
+        return Categories[category_id]
 
 
 def get_products(category_id):

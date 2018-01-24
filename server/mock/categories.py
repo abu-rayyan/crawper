@@ -1222,250 +1222,422 @@ categories = {
     }
 }
 
-top_cat = {
-    0: {
-        "Name": "Sports Outdoors",
-        "Id": "sporting-goods"
+Categories = {
+    "top": {
+        0: {
+            "Name": "Sports Outdoors",
+            "Id": "sporting-goods"
+        },
+        1: {
+            "Name": "Video Games",
+            "Id": "videogames"
+        },
+        2: {
+            "Name": "Toys & Games",
+            "Id": "toys-and-games"
+        },
+        3: {
+            "Name": "Baby",
+            "Id": "baby-products"
+        }
     },
-    1: {
-        "Name": "Video Games",
-        "Id": "videogames"
+    "sporting-goods": {
+        0: {
+            "Name": "Fan Shop",
+            "Id": "3386071"
+        },
+        1: {
+            "Name": "Outdoor Recreation",
+            "Id": "706814011"
+        },
+        2: {
+            "Name": "Sports & Fitness",
+            "Id": "10971181011"
+        }
     },
-    2: {
-        "Name": "Toys & Games",
-        "Id": "toys-and-games"
+    "3386071": {
+        0: {"Name": "Auto Accessories",
+            "Id": "374773011"
+            },
+        1: {"Name": "Bags, Packs & Accessories",
+            "Id": "5768574011"
+            },
+        2: {"Name": "Caps & Hats",
+            "Id": "5768995011"
+            },
+        3: {"Name": "Cell Phone Accessories",
+            "Id": "3209246011"
+            },
+        4: {"Name": "Clothing",
+            "Id": "374742011"
+            },
+        5: {"Name": "Clothing Accessories",
+            "Id": "2431377011"
+            },
+        6: {"Name": "Electronics",
+            "Id": "2311740011"
+            },
+        7: {"Name": "Footwear",
+            "Id": "2311740011"
+            },
+        8: {"Name": "Gameday & Tailgating",
+            "Id": "375518011"
+            },
+        9: {"Name": "Golf Store",
+            "Id": "5769001011"
+            },
+        10: {"Name": "Home & Kitchen",
+             "Id": "374819011"
+             },
+        11: {"Name": "Jewelry & Watches",
+             "Id": "374916011"
+             },
+        12: {"Name": "Office Products",
+             "Id": "2309018011"
+             },
+        13: {"Name": "Patio, Lawn & Garden",
+             "Id": "374893011"
+             },
+        14: {"Name": "Pet Gear",
+             "Id": "5769002011"
+             },
+        15: {"Name": "Sports Collectibles",
+             "Id": "3250697011"
+             },
+        16: {"Name": "Sports Equipment",
+             "Id": "74927011"
+             },
+        17: {"Name": "Sports Souvenirs",
+             "Id": "374783011"
+             },
+        18: {"Name": "Tools & Home Improvement",
+             "Id": "2309443011"
+             },
+        19: {"Name": "Toys & Game Room",
+             "Id": "375519011"
+             },
+        20: {"Name": "Video Games & Accessories",
+             "Id": "3209250011"
+             }
     },
-    3: {
-        "Name": "Baby",
-        "Id": "baby-products"
-    }
-}
+    "706814011": {
+        0: {"Name": "Outdoor Clothing",
+            "Id": "11443874011"
+            },
+        1: {"Name": "Camping & Hiking",
+            "Id": "3400371"
+            },
+        2: {"Name": "Climbing",
+            "Id": "3402401"
+            },
+        3: {"Name": "Cycling",
+            "Id": "3403201"
+            },
+        4: {"Name": "Skates, Skateboards & Scooters",
+            "Id": "11051398011"
+            },
+        5: {"Name": "Water Sports",
+            "Id": "11051399011"
+            },
+        6: {"Name": "Winter Sports",
+            "Id": "2204518011"
+            },
+        7: {"Name": "Accessories",
+            "Id": "11051400011"}
+    },
+    "10971181011": {
+        0: {"Name": "Boating & Sailing",
+            "Id": ""
+            },
+        1: {"Name": "Clothing",
+            "Id": ""
+            },
+        2: {"Name": "Exercise & Fitness",
+            "Id": ""
+            },
+        3: {"Name": "Golf",
+            "Id": ""
+            },
+        4: {"Name": "Hunting & Fishing",
+            "Id": ""
+            },
+        5: {"Name": "Leisure Sports & Game Room",
+            "Id": ""},
+        6: {"Name": "Airsoft & Paintball",
+            "Id": ""
+            },
+        7: {"Name": "Running",
+            "Id": ""
+            },
+        8: {"Name": "Swimming",
+            "Id": ""
+            },
+        9: {"Name": "Team Sports",
+            "Id": ""
+            },
+        10: {"Name": "Tennis & Racquet Sports",
+             "Id": ""
+             },
+        11: {"Name": "Yoga",
+             "Id": ""
+             },
+        12: {"Name": "Other Sports",
+             "Id": ""
+             },
+        13: {"Name": "Accessories",
+             "Id": ""
+             },
+        14: {"Name": "Sports Medicine",
+             "Id": ""}
 
-sporting_goods = {
-    0: {
-        "Name": "Fan Shop",
-        "Id": "3386071"
     },
-    1: {
-        "Name": "Outdoor Recreation",
-        "Id": "706814011"
+    "374773011": {
+        0: {
+            "Name": "Air Fresheners",
+            "Id": "5769016011"
+        },
+        1: {
+            "Name": "Antenna Toppers",
+            "Id": "5769017011"
+        },
+        2: {
+            "Name": "Car Covers",
+            "Id": "5769018011"
+        },
+        3: {
+            "Name": "Car Flags",
+            "Id": "374774011"
+        },
+        4: {
+            "Name": "Car Magnets",
+            "Id": "374775011"
+        },
+        5: {
+            "Name": "Decals & Bumper Stickers",
+            "Id": "3209245011"
+        },
+        6: {
+            "Name": "Emblems",
+            "Id": "5769019011"
+        },
+        7: {
+            "Name": "Floormats",
+            "Id": "374776011"
+        },
+        8: {
+            "Name": "Key Chains",
+            "Id": "374793011"
+        },
+        9: {
+            "Name": "License Plate Covers",
+            "Id": "721262011"
+        },
+        10: {
+            "Name": "License Plate Frames",
+            "Id": "721261011"
+        },
+        11: {
+            "Name": "Mirror Covers",
+            "Id": "5769021011"
+        },
+        12: {
+            "Name": "Seat Covers",
+            "Id": "5769022011"
+        },
+        13: {
+            "Name": "Splashguards",
+            "Id": "374778011"
+        },
+        14: {
+            "Name": "Steering Wheel Covers",
+            "Id": "5769023011"
+        },
+        15: {
+            "Name": "Tire Covers",
+            "Id": "374780011"
+        },
+        16: {
+            "Name": "Trailer Hitch Covers",
+            "Id": "374781011"
+        },
+        17: {
+            "Name": "Windshield Sun Shades",
+            "Id": "5769024011"
+        }
     },
-    2: {
-        "Name": "Sports & Fitness",
-        "Id": "10971181011"
-    }
-}
+    "5768574011": {
+        0: {
+            "Name": "Backpacks",
+            "Id": "5768575011"
+        },
+        1: {
+            "Name": "Drawstring Bags",
+            "Id": "5768576011"
+        },
+        2: {
+            "Name": "Duffle Bags",
+            "Id": "5768577011"
+        },
+        3: {
+            "Name": "Laptop & Messenger Bags",
+            "Id": "5768578011"
+        },
+        4: {
+            "Name": "Luggage",
+            "Id": "5768581011"
+        },
+        5: {
+            "Name": "Luggage Tags",
+            "Id": "5768582011"
+        },
+        6: {
+            "Name": "Lunchboxes",
+            "Id": "374878011"
+        },
+        7: {
+            "Name": "Tote Bags",
+            "Id": "5768583011"
+        },
+        8: {
+            "Name": "Wallets",
+            "Id": "374745011"
+        },
+        9: {
+            "Name": "Women's Handbags & Purses",
+            "Id": "5768584011"
+        }
+    },
+    "5768995011": {
+        0: {
+            "Name": "Baseball Caps",
+            "Id": "374749011"
+        },
+        1: {
+            "Name": "Novelty Headwear",
+            "Id": "2515124011"
+        },
+        2: {
+            "Name": "Scrub Caps",
+            "Id": "2515126011"
+        },
+        3: {
+            "Name": "Skullies & Beanies",
+            "Id": "374752011"
+        },
+        4: {
+            "Name": "Visors",
+            "Id": "374753011"
+        }
+    },
+    "374742011": {
+        0: {
+            "Name": "Jackets",
+            "Id": "3203998011"
+        },
+        1: {
+            "Name": "Jerseys",
+            "Id": "3203999011"
+        },
+        2: {
+            "Name": "Pants",
+            "Id": "3204000011"
+        },
+        3: {
+            "Name": "Polo Shirts",
+            "Id": "3204001011"
+        },
+        4: {
+            "Name": "Shorts",
+            "Id": "3204002011"
+        },
+        5: {
+            "Name": "Sweaters",
+            "Id": "3204003011"
+        },
+        6: {
+            "Name": "Sweatshirts & Hoodies",
+            "Id": "3204004011"
+        },
+        7: {
+            "Name": "T - Shirts",
+            "Id": "3204005011"
+        },
+        8: {
+            "Name": "Baby Clothing",
+            "Id": "3204006011"
+        }
+    },
+    "2431377011": {
+        0: {
+            "Name": "Belts",
+            "Id": "5768996011"
+        },
+        1: {
+            "Name": "Buckles",
+            "Id": "5768997011"
+        },
+        2: {
+            "Name": "Caps & Hats",
+            "Id": "5768995011"
+        },
+        3: {
+            "Name": "Headbands",
+            "Id": "2515125011"
+        },
+        4: {
+            "Name": "Sleeve Patches",
+            "Id": "5768999011"
+        },
+        5: {
+            "Name": "Socks",
+            "Id": "3204007011"
+        },
+        6: {
+            "Name": "Scarves",
+            "Id": "5768998011"
+        },
+        7: {
+            "Name": "Sunglasses",
+            "Id": "374744011"
+        },
+        8: {
+            "Name": "Ties",
+            "Id": "374772011"
+        },
+        9: {
+            "Name": "Wristbands",
+            "Id": "5769000011"
+        }
 
-fan_shop = {
-    0: {"Name": "Auto Accessories",
-        "Id": "374773011"
-        },
-    1: {"Name": "Bags, Packs & Accessories",
-        "Id": "5768574011"
-        },
-    2: {"Name": "Caps & Hats",
-        "Id": "5768995011"
-        },
-    3: {"Name": "Cell Phone Accessories",
-        "Id": "3209246011"
-        },
-    4: {"Name": "Clothing",
-        "Id": "374742011"
-        },
-    5: {"Name": "Clothing Accessories",
-        "Id": "2431377011"
-        },
-    6: {"Name": "Electronics",
-        "Id": "2311740011"
-        },
-    7: {"Name": "Footwear",
-        "Id": "2311740011"
-        },
-    8: {"Name": "Gameday & Tailgating",
-        "Id": "375518011"
-        },
-    9: {"Name": "Golf Store",
-        "Id": "5769001011"
-        },
-    10: {"Name": "Home & Kitchen",
-         "Id": "374819011"
-         },
-    11: {"Name": "Jewelry & Watches",
-         "Id": "374916011"
-         },
-    12: {"Name": "Office Products",
-         "Id": "2309018011"
-         },
-    13: {"Name": "Patio, Lawn & Garden",
-         "Id": "374893011"
-         },
-    14: {"Name": "Pet Gear",
-         "Id": "5769002011"
-         },
-    15: {"Name": "Sports Collectibles",
-         "Id": "3250697011"
-         },
-    16: {"Name": "Sports Equipment",
-         "Id": "74927011"
-         },
-    17: {"Name": "Sports Souvenirs",
-         "Id": "374783011"
-         },
-    18: {"Name": "Tools & Home Improvement",
-         "Id": "2309443011"
-         },
-    19: {"Name": "Toys & Game Room",
-         "Id": "375519011"
-         },
-    20: {"Name": "Video Games & Accessories",
-         "Id": "3209250011"
-         }
-}
-
-outdoor_recreation = {
-    0: {"Name": "Outdoor Clothing",
-        "Id": "11443874011"
-        },
-    1: {"Name": "Camping & Hiking",
-        "Id": "3400371"
-        },
-    2: {"Name": "Climbing",
-        "Id": "3402401"
-        },
-    3: {"Name": "Cycling",
-        "Id": "3403201"
-        },
-    4: {"Name": "Skates, Skateboards & Scooters",
-        "Id": "11051398011"
-        },
-    5: {"Name": "Water Sports",
-        "Id": "11051399011"
-        },
-    6: {"Name": "Winter Sports",
-        "Id": "2204518011"
-        },
-    7: {"Name": "Accessories",
-        "Id": "11051400011"}
-}
-
-sports_fitness = {
-    0: {"Name": "Boating & Sailing",
-        "Id": ""
-        },
-    1: {"Name": "Clothing",
-        "Id": ""
-        },
-    2: {"Name": "Exercise & Fitness",
-        "Id": ""
-        },
-    3: {"Name": "Golf",
-        "Id": ""
-        },
-    4: {"Name": "Hunting & Fishing",
-        "Id": ""
-        },
-    5: {"Name": "Leisure Sports & Game Room",
-        "Id": ""},
-    6: {"Name": "Airsoft & Paintball",
-        "Id": ""
-        },
-    7: {"Name": "Running",
-        "Id": ""
-        },
-    8: {"Name": "Swimming",
-        "Id": ""
-        },
-    9: {"Name": "Team Sports",
-        "Id": ""
-        },
-    10: {"Name": "Tennis & Racquet Sports",
-         "Id": ""
-         },
-    11: {"Name": "Yoga",
-         "Id": ""
-         },
-    12: {"Name": "Other Sports",
-         "Id": ""
-         },
-    13: {"Name": "Accessories",
-         "Id": ""
-         },
-    14: {"Name": "Sports Medicine",
-         "Id": ""}
-
-}
-
-auto_accessories = {
-    0: {
-        "Name": "Air Fresheners",
-        "Id": "5769016011"
     },
-    1: {
-        "Name": "Antenna Toppers",
-        "Id": "5769017011"
-    },
-    2: {
-        "Name": "Car Covers",
-        "Id": "5769018011"
-    },
-    3: {
-        "Name": "Car Flags",
-        "Id": "374774011"
-    },
-    4: {
-        "Name": "Car Magnets",
-        "Id": "374775011"
-    },
-    5: {
-        "Name": "Decals & Bumper Stickers",
-        "Id": "3209245011"
-    },
-    6: {
-        "Name": "Emblems",
-        "Id": "5769019011"
-    },
-    7: {
-        "Name": "Floormats",
-        "Id": "374776011"
-    },
-    8: {
-        "Name": "Key Chains",
-        "Id": "374793011"
-    },
-    9: {
-        "Name": "License Plate Covers",
-        "Id": "721262011"
-    },
-    10: {
-        "Name": "License Plate Frames",
-        "Id": "721261011"
-    },
-    11: {
-        "Name": "Mirror Covers",
-        "Id": "5769021011"
-    },
-    12: {
-        "Name": "Seat Covers",
-        "Id": "5769022011"
-    },
-    13: {
-        "Name": "Splashguards",
-        "Id": "374778011"
-    },
-    14: {
-        "Name": "Steering Wheel Covers",
-        "Id": "5769023011"
-    },
-    15: {
-        "Name": "Tire Covers",
-        "Id": "374780011"
-    },
-    16: {
-        "Name": "Trailer Hitch Covers",
-        "Id": "374781011"
-    },
-    17: {
-        "Name": "Windshield Sun Shades",
-        "Id": "5769024011"
+    "2311740011": {
+        0: {
+            "Name": "Binoculars",
+            "Id": "375521011"
+        },
+        1: {
+            "Name": "Computer Mice",
+            "Id": "374848011"
+        },
+        2: {
+            "Name": "Computer Mousepads",
+            "Id": "374849011"
+        },
+        3: {
+            "Name": "Computer Accessories",
+            "Id": "3318643011"
+        },
+        4: {
+            "Name": "Headphones",
+            "Id": "3209247011"
+        },
+        5: {
+            "Name": "MP3 Player Accessories",
+            "Id": "3209248011"
+        },
+        6: {
+            "Name": "Tablet Accessories",
+            "Id": "13227293011"
+        }
     }
 }
