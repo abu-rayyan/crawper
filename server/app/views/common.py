@@ -2,7 +2,10 @@ import json
 
 from flask import Response
 from server.app import app
+from flask_cors import CORS
 from server.app.models.database import *
+
+CORS(app)
 
 
 @app.route('/')
@@ -11,9 +14,9 @@ def test():
     return 'test route working'
 
 
-@app.route('/categories', methods=['GET'])
-def return_categories():
-    ret_data = get_categories()
+@app.route('/categories/<category_id>', methods=['GET'])
+def return_categories(category_id):
+    ret_data = get_categories(category_id)
     if ret_data is not None:
         response = Response(json.dumps(ret_data), status=200, mimetype='application/json')
         return response

@@ -1,12 +1,24 @@
 from server.app.common.db.postgres import PgPool
 from server.app.models.config.queries import QUERIES
-from server.mock.categories import categories
+from server.mock.categories import *
 
 pg_ = PgPool()
 
 
-def get_categories():
-    return categories
+def get_categories(category_id):
+    if category_id == "top":
+        return top_cat
+    elif category_id == "sporting-goods":
+        return sporting_goods
+    elif category_id == "3386071":
+        return fan_shop
+    elif category_id == "706814011":
+        return outdoor_recreation
+    elif category_id == "10971181011":
+        return sports_fitness
+    elif category_id == "374773011":
+        return auto_accessories
+
 
 
 def get_products(category_id):
