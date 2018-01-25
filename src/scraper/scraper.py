@@ -30,7 +30,8 @@ class Scraper:
             "ReviewsURL": None,
             "ProductLink": None,
             "ImageLink": None,
-            "Reviews": None
+            "Reviews": None,
+            "Rating": None
         }
 
         logger.debug('Product Dict: {prod}'.format(prod=product))
@@ -83,10 +84,17 @@ class Scraper:
 
             try:
                 image = web_page.find('div', {'id': 'imgTagWrapperId'}).find("img")
-                product["ImageLink"] = image["src"].encode('utf-8')
+                product["ImageLink"] = image["data-a-dynamic-image"].split('{')[1].split('"')[1]
                 logger.debug("Image Link: {link}".format(link=product["ImageLink"]))
             except Exception as e:
                 product["ImageLink"] = None
+                logger.exception(e.message)
+
+            try:
+                rating = web_page.find('i', {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find("span")
+                product["Rating"] = rating.text.split()[0]
+                logger.debug("Product Rating: {rate}".format(rate=product["Rating"]))
+            except Exception as e:
                 logger.exception(e.message)
 
             self.insert_product_to_db(product, category_name)
@@ -216,7 +224,8 @@ class Scraper:
         pg_conn, pg_cursor = self.pg_pool.get_conn()
         insert_query = QUERIES["InsertProduct"]
         query_params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
-                        category_name, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"])
+                        category_name, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"],
+                        product["Rating"])
 
         try:
             self.pg_pool.execute_query(pg_cursor, insert_query, query_params)
