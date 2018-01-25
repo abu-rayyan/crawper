@@ -44,11 +44,12 @@ def return_products(category_id):
 
         for product in ret_data:
             product_dict = {
+                "ASIN": product[6],
                 "Title": product[0],
                 "Price": product[1],
                 "Link": product[2],
-                "Image Link": product[5],
-                "Total Reviews": product[3],
+                "ImageLink": product[5],
+                "TotalReviews": product[3],
                 "Score": product[4]
             }
             data_list.append(product_dict)
