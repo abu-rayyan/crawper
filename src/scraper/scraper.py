@@ -91,7 +91,9 @@ class Scraper:
                 logger.exception(e.message)
 
             try:
-                rating = web_page.find('i', {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find("span")
+                rating = web_page.find('i',
+                                       {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find(
+                    "span")
                 product["Rating"] = rating.text.split()[0]
                 logger.debug("Product Rating: {rate}".format(rate=product["Rating"]))
             except Exception as e:
@@ -289,17 +291,40 @@ class Scraper:
             return None
 
     def insert_reviewer_to_db(self, review):
-        logger.debug('inserting reviewer {name} information into database'.format(name=review["ReviewerName"]))
+        success_bool = self.exists_reviewer(review["ReviewerId"])
+        if success_bool is not None:
+            if success_bool[0][0] is not True:
+                logger.debug('inserting reviewer {name} information into database'.format(name=review["ReviewerName"]))
+
+                pg_conn, pg_cursor = self.pg_pool.get_conn()
+                query = QUERIES["InsertReviewer"]
+                params = (review["ReviewerId"], review["ReviewerName"], review["ReviewerProfile"], 0, 0.0)
+
+                try:
+                    self.pg_pool.execute_query(pg_cursor, query, params)
+                    self.pg_pool.commit_changes(pg_conn)
+                    self.pg_pool.put_conn(pg_conn)
+                    return True
+                except Exception as e:
+                    logger.exception(e.message)
+                    return False
+            else:
+                logger.debug('Reviewer already exists in db')
+        else:
+            logger.error('something bad happend, success bool is None')
+
+    def exists_reviewer(self, reviewer_id):
+        logger.debug('checking if reviewer exists in db')
 
         pg_conn, pg_cursor = self.pg_pool.get_conn()
-        query = QUERIES["InsertReviewer"]
-        params = (review["ReviewerId"], review["ReviewerName"], review["ReviewerProfile"], 0, 0.0)
+        query = QUERIES["ReviewerExists"]
+        params = (reviewer_id,)
 
         try:
-            self.pg_pool.execute_query(pg_cursor, query, params)
+            exists = self.pg_pool.execute_query(pg_cursor, query, params)
             self.pg_pool.commit_changes(pg_conn)
             self.pg_pool.put_conn(pg_conn)
-            return True
+            return exists
         except Exception as e:
             logger.exception(e.message)
-            return False
+            return None

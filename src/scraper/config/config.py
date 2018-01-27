@@ -17,5 +17,7 @@ QUERIES = {
     "ProductExists": "SELECT EXISTS(SELECT product_asin FROM crawper.products WHERE product_asin=%s);",
 
     "InsertReviewer": "INSERT INTO crawper.reviewers(reviewer_id, reviewer_name, profile_link, total_reviews, "
-                      "creduality_score) VALUES (%s, %s, %s, %s, %s); "
+                      "creduality_score) VALUES (%s, %s, %s, %s, %s); ",
+
+    "ReviewerExists": "SELECT EXISTS(SELECT reviewer_id FROM crawper.reviewers WHERE reviewer_id=%s);"
 }
