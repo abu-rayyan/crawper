@@ -19,7 +19,7 @@ def start_crawper():
     logger.info('starting crawper')
     queue = Queue()
 
-    for keys, links in Products.iteritems():
+    for keys, links in Categories.iteritems():
         logger.info('starting worker threads for {work}'.format(work=keys))
         for work in range(len(links)):
             worker = Worker(queue)
@@ -72,7 +72,7 @@ def main():
     start_crawper()
     r_engine = REngine()
     r_engine.start_engine()
-    start_dev()
+    #start_dev()
 
     logger.info('closing database connection')
     db_conn.close_pool()

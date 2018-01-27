@@ -28,3 +28,11 @@ Products = {
         'Headphones': 'https://www.amazon.com/gp/new-releases/sporting-goods/3209247011/'
     }
 }
+
+Categories = {
+    'Procs': {
+        'Sports & Outdoors': 'https://www.amazon.com/gp/new-releases/sporting-goods/',
+        'Fan Shop': 'https://www.amazon.com/gp/new-releases/sporting-goods/3386071/',
+        'Electronics': 'https://www.amazon.com/gp/new-releases/sporting-goods/2311740011/'
+    }
+}
