@@ -35,14 +35,9 @@ def request_page(page_url):
         response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
         # response = requests.get(page_url, headers=headers)
         logger.debug('requests response @ {res}'.format(res=response))
-        if response.status_code == requests.codes.ok:
-            page_content = BeautifulSoup(response.content, 'lxml')
-            logger.debug('bs4 page content @ {content}'.format(content=type(page_content)))
-            return page_content
-        else:
-            logger.error("{rescode}: {msg}".format(rescode=response.status_code, msg=response.text))
-            return '{"Error":"{err}, "StatusCode":"{status_code}"}'.format(err=response.text,
-                                                                           status_code=response.status_code)
+        page_content = BeautifulSoup(response.content, 'lxml')
+        logger.debug('bs4 page content @ {content}'.format(content=type(page_content)))
+        return page_content
     except requests.exceptions.RequestException as e:
         logger.exception('{exception}'.format(exception=e))
 
