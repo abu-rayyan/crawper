@@ -1,5 +1,7 @@
 Products = {
     'NewReleases': {
+        'Sports & Outdoors': 'https://www.amazon.com/gp/new-releases/sporting-goods/',
+        'Fan Shop': 'https://www.amazon.com/gp/new-releases/sporting-goods/3386071/',
         'Auto Accessories': 'https://www.amazon.com/gp/new-releases/sporting-goods/374773011/',
         'Air Freshners': 'https://www.amazon.com/gp/new-releases/sporting-goods/5769016011/',
         'Antenna Toppers': 'https://www.amazon.com/gp/new-releases/sporting-goods/5769017011/',
@@ -19,7 +21,7 @@ Products = {
         'Tire Covers': 'https://www.amazon.com/gp/new-releases/sporting-goods/374780011/',
         'Trailer Hitch Covers': 'https://www.amazon.com/gp/new-releases/sporting-goods/374781011/',
         'Windshield Sun Shades': 'https://www.amazon.com/gp/new-releases/sporting-goods/5769024011/',
-
+        'Electronics': 'https://www.amazon.com/gp/new-releases/sporting-goods/2311740011/',
         'Headphones': 'https://www.amazon.com/gp/new-releases/sporting-goods/3209247011/'
     }
 }
