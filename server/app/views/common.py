@@ -1,3 +1,4 @@
+from __future__ import print_function
 import json
 
 from flask import Response
@@ -32,7 +33,18 @@ def return_product():
     asin_no = request.args.get('asin')
     category_id = request.args.get('categoryId')
     product = get_product(asin_no, category_id)
-    response = Response(json.dumps(product), status=200, mimetype='application/json')
+    print(product)
+
+    product_dict = {
+        "ASIN": product[0][0],
+        "Title": product[0][1],
+        "Price": product[0][2],
+        "Link": product[0][3],
+        "TotalReviews": product[0][4],
+        "Score": product[0][5],
+        "ImageLink": product[0][6]
+    }
+    response = Response(json.dumps(product_dict), status=200, mimetype='application/json')
     return response
 
 

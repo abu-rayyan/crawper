@@ -19,7 +19,7 @@ def start_crawper():
     logger.info('starting crawper')
     queue = Queue()
 
-    for keys, links in Categories.iteritems():
+    for keys, links in Products.iteritems():
         logger.info('starting worker threads for {work}'.format(work=keys))
         for work in range(len(links)):
             worker = Worker(queue)
