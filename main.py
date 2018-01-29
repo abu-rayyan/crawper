@@ -8,6 +8,7 @@ from Queue import Queue
 from src.common.proxy_rotator import ProxyRotator
 from src.r_engine.rengine import REngine
 from src.scraper import Scraper
+from src.crawler import Crawler
 
 from src.common.db.postgres_pool import PgPool
 
@@ -35,10 +36,11 @@ def start_crawper():
 
 def start_dev():
     logger.info('starting development mode')
-    links = ['https://www.amazon.com/HotHands-Hand-Warmers-Pair-Value/dp/B07962763T/',
-             'https://www.amazon.com/POY-Fitbit-Classic-Special-Replacement/dp/B076Z8S4V5/']
-    sc = Scraper()
-    sc.get_products_info(links, 'abc')
+    link = 'https://www.amazon.com/gp/new-releases/sporting-goods/ref=zg_bsnr_nav_0'
+    c = Crawler()
+    links, name = c.get_product_links(link)
+    print(len(links))
+    print(links)
 
 
 def main():
@@ -72,7 +74,7 @@ def main():
     start_crawper()
     r_engine = REngine()
     r_engine.start_engine()
-    #start_dev()
+    # start_dev()
 
     logger.info('closing database connection')
     db_conn.close_pool()

@@ -1,4 +1,3 @@
-from __future__ import print_function
 import json
 
 from flask import Response
@@ -33,7 +32,6 @@ def return_product():
     asin_no = request.args.get('asin')
     category_id = request.args.get('categoryId')
     product = get_product(asin_no, category_id)
-    print(product)
 
     product_dict = {
         "ASIN": product[0][0],

@@ -38,20 +38,16 @@ class Crawler:
         logger.debug('products category name: {file}'.format(file=category_name))
 
         if not self.exists_category(category_name):
-            if self.insert_category(category_name):
-                product_urls = self.find_urls(url)
-                return product_urls, category_name
-            else:
-                logger.debug('unknown error, in inserting category to the database')
-                return None, None
-        else:
-            product_urls = self.get_links_from_db(category_name)
-            return product_urls, category_name
+            self.insert_category(category_name)
+
+        product_urls = self.find_urls(url, category_name)
+        return product_urls, category_name
 
     # TODO: Remove & Relace hard-coded tab entries with generics
-    def find_urls(self, url):
+    def find_urls(self, url, category_id):
         """
         Finds urls of products in all 5 tabs
+        :param category_id: id of category
         :param url: url of the main page
         :return: products link
         """
@@ -66,37 +62,41 @@ class Crawler:
             links = soup.find_all('a', {'class': 'a-link-normal'})
             logger.debug('fetching links with attribute [class=a-link-normal]')
 
-            for link in links:
-                product_link = link.get('href')
-                if product_link.startswith('/') and not product_link.startswith('/product-reviews'):
-                    prod_link = '{base_url}{link}'.format(base_url=self.base_url, link=product_link)
-                    product_links.append(prod_link.encode('utf-8'))
-                else:
-                    continue
+            try:
+                for link in links:
+                    product_link = link.get('href')
+                    if product_link.startswith('/') and not product_link.startswith('/product-reviews'):
+                        prod_link = '{base_url}{link}'.format(base_url=self.base_url, link=product_link)
+                        splitted_link = prod_link.split('/')
+                        if category_id in splitted_link[6]:
+                            print(prod_link)
+                            product_asin = splitted_link[5]
+
+                            if not self.exists_product(product_asin):
+                                product_links.append(prod_link.encode('utf-8'))
+                    else:
+                        continue
+            except Exception as e:
+                logger.exception(e.message)
             tab += 1
         return product_links
 
-    def exists_product(self, product_link):
+    def exists_product(self, product_asin):
         """
         Checks if a product exists in the database
-        :param product_link: url link of the product
+        :param product_asin: asin of product
         :return: bool
         """
-        product_asin = product_link.split('/')[3]
         pg_conn, pg_cursor = self.pg_.get_conn()
         logger.debug('checking if product {asin} exists in database'.format(asin=product_asin))
         query = QUERIES["ExistsProduct"]
         params = (product_asin,)
 
         try:
-            if self.pg_.execute_query(pg_cursor, query, params):
-                logger.debug('product {asin} exists in database'.format(asin=product_asin))
-                self.pg_.put_conn(pg_conn)
-                return True
-            else:
-                logger.debug('product {asin} does not exists in database'.format(asin=product_asin))
-                self.pg_.put_conn(pg_conn)
-                return False
+            success_bool = self.pg_.execute_query(pg_cursor, query, params)
+            logger.debug('product {asin} exists in database'.format(asin=product_asin))
+            self.pg_.put_conn(pg_conn)
+            return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)
             self.pg_.put_conn(pg_conn)
