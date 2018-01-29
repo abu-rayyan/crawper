@@ -69,11 +69,13 @@ class Crawler:
                         prod_link = '{base_url}{link}'.format(base_url=self.base_url, link=product_link)
                         splitted_link = prod_link.split('/')
                         if category_id in splitted_link[6]:
-                            print(prod_link)
                             product_asin = splitted_link[5]
 
                             if not self.exists_product(product_asin):
+                                logger.debug('product does not exists in the database')
                                 product_links.append(prod_link.encode('utf-8'))
+                            else:
+                                logger.debug('product exists in the database')
                     else:
                         continue
             except Exception as e:
@@ -94,7 +96,6 @@ class Crawler:
 
         try:
             success_bool = self.pg_.execute_query(pg_cursor, query, params)
-            logger.debug('product {asin} exists in database'.format(asin=product_asin))
             self.pg_.put_conn(pg_conn)
             return success_bool[0][0]
         except Exception as e:
