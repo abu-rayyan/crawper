@@ -74,11 +74,25 @@ class Crawler:
                         if category_id in splitted_link[6]:
                             product_asin = splitted_link[5]
 
-                            if not self.utils.exists_product_in_db(product_asin):
-                                logger.debug('product does not exists in the database')
-                                product_links.append(prod_link.encode('utf-8'))
+                            exists_bool = self.utils.exists_product_in_db(product_asin)
+                            if exists_bool is not None:
+                                if not exists_bool:
+                                    logger.debug('product {asin} does not exists in database'.format(
+                                        asin=product_asin))
+                                    product_links.append(prod_link.encode('utf-8'))
+                                else:
+                                    logger.debug('product {asin} already exists in database'.format(
+                                        asin=product_asin))
+                                    total_reviews = self.utils.get_total_reviews_from_db(product_asin)
+                                    scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
+
+                                    if not int(scraped_reviews) == int(total_reviews):
+                                        logger.debug('product {asin} not scraped completely'.format(asin=product_asin))
+                                        product_links.append(prod_link.encode('utf-8'))
+                                    else:
+                                        logger.debug('ignoring product, product {asin} scraped completely')
                             else:
-                                logger.debug('product exists in the database')
+                                logger.error('Unknown error, contact respective person')
                     else:
                         continue
             except Exception as e:

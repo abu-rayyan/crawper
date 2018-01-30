@@ -120,3 +120,18 @@ class Utils:
         except Exception as e:
             logger.exception(e.message)
             return None
+
+    def get_total_reviews_from_db(self, product_asin):
+        logger.debug('getting product {asin} total no of reviews from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["GetTotalReviewCount"]
+        params = (product_asin,)
+
+        try:
+            review_count = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return review_count[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            return None
