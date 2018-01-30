@@ -1,6 +1,7 @@
 import logging
 
 from config.config import *
+from utils import Utils
 from src.common import common
 from src.common.db.postgres_pool import PgPool
 
@@ -13,6 +14,7 @@ class Crawler:
         self.base_url = URLS.get("BaseUrl")
         self.check_configs()
         self.pg_ = PgPool()
+        self.utils = Utils()
 
     # checks basic configs of crawler
     @staticmethod
@@ -34,14 +36,17 @@ class Crawler:
 
     # get sports/outdoors products links (all 5 tabs)
     def get_product_links(self, url):
-        category_name = self.get_category(url)
-        logger.debug('products category name: {file}'.format(file=category_name))
+        category_id = self.get_category(url)
+        logger.debug('products category name: {file}'.format(file=category_id))
 
-        if not self.exists_category(category_name):
-            self.insert_category(category_name)
+        if not self.utils.exists_category_in_db(category_id):
+            if self.utils.insert_category_into_db(category_id):
+                logger.debug('inserted category {id} into database'.format(id=category_id))
+            else:
+                logger.error('category {id} insertion into database failed'.format(id=category_id))
 
-        product_urls = self.find_urls(url, category_name)
-        return product_urls, category_name
+        product_urls = self.find_urls(url, category_id)
+        return product_urls, category_id
 
     # TODO: Remove & Relace hard-coded tab entries with generics
     def find_urls(self, url, category_id):
@@ -71,7 +76,7 @@ class Crawler:
                         if category_id in splitted_link[6]:
                             product_asin = splitted_link[5]
 
-                            if not self.exists_product(product_asin):
+                            if not self.utils.exists_product_in_db(product_asin):
                                 logger.debug('product does not exists in the database')
                                 product_links.append(prod_link.encode('utf-8'))
                             else:
@@ -82,90 +87,3 @@ class Crawler:
                 logger.exception(e.message)
             tab += 1
         return product_links
-
-    def exists_product(self, product_asin):
-        """
-        Checks if a product exists in the database
-        :param product_asin: asin of product
-        :return: bool
-        """
-        pg_conn, pg_cursor = self.pg_.get_conn()
-        logger.debug('checking if product {asin} exists in database'.format(asin=product_asin))
-        query = QUERIES["ExistsProduct"]
-        params = (product_asin,)
-
-        try:
-            success_bool = self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.put_conn(pg_conn)
-            return success_bool[0][0]
-        except Exception as e:
-            logger.exception(e.message)
-            self.pg_.put_conn(pg_conn)
-            return None
-
-    def exists_category(self, category_name):
-        """
-        Checks if a particular category exists in database
-        :param category_name: category name (str)
-        :return: bool
-        """
-        logger.debug('checking if category {name} exists in database'.format(name=category_name))
-        pg_conn, pg_cursor = self.pg_.get_conn()
-        query = QUERIES["ExistsCategory"]
-        params = (category_name,)
-
-        try:
-            if self.pg_.execute_query(pg_cursor, query, params)[0][0]:
-                logger.debug('category {name} exists in the database'.format(name=category_name))
-                self.pg_.put_conn(pg_conn)
-                return True
-            else:
-                logger.debug('category {name} does not exists in database')
-                self.pg_.put_conn(pg_conn)
-                return False
-        except Exception as e:
-            logger.exception(e.message)
-            self.pg_.put_conn(pg_conn)
-            return None
-
-    def insert_category(self, category_name):
-        """
-        Inserts a new category into the DB
-        :param category_name: name of the category
-        :return: bool
-        """
-        logger.debug('inserting new category {name} into the database'.format(name=category_name))
-        pg_conn, pg_cursor = self.pg_.get_conn()
-        query = QUERIES["InsertCategory"]
-        params = (category_name,)
-
-        try:
-            self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
-            return True
-        except Exception as e:
-            logger.exception(e.message)
-            self.pg_.put_conn(pg_conn)
-            return False
-
-    def get_links_from_db(self, category_name):
-        """
-        Get links of products for existing category in DB
-        :param category_name: name of the category
-        :return: product links
-        """
-        logger.debug('getting product links from database')
-        pg_conn, pg_cursor = self.pg_.get_conn()
-        query = QUERIES["SelectProductLink"]
-        params = (category_name,)
-
-        try:
-            query_responce = self.pg_.execute_query(pg_cursor, query, params)
-            product_links = [link[0] for link in query_responce]
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
-            return product_links
-        except Exception as e:
-            logger.exception(e.message)
-            return None
