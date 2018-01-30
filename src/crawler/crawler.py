@@ -86,7 +86,7 @@ class Crawler:
                                     total_reviews = self.utils.get_total_reviews_from_db(product_asin)
                                     scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
 
-                                    if not int(scraped_reviews) == int(total_reviews):
+                                    if not int(scraped_reviews) == int(total_reviews.replace(',', '')):
                                         logger.debug('product {asin} not scraped completely'.format(asin=product_asin))
                                         product_links.append(prod_link.encode('utf-8'))
                                     else:
