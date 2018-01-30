@@ -3,7 +3,6 @@ import logging
 from config.config import *
 from utils import Utils
 from src.common import common
-from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,6 @@ class Crawler:
         logger.info('initiating crawler')
         self.base_url = URLS.get("BaseUrl")
         self.check_configs()
-        self.pg_ = PgPool()
         self.utils = Utils()
 
     # checks basic configs of crawler

@@ -2,7 +2,7 @@ import logging
 
 from config.config import *
 from src.common import common
-from src.common.db.postgres_pool import PgPool
+from utils import Utils
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,7 @@ class Scraper:
     def __init__(self):
         logger.info('initiating scrapper')
         self.base_url = URLS["BaseUrl"]
-        self.pg_pool = PgPool()
+        self.utils = Utils()
 
     # scrap all products info based on links
     def get_products_info(self, links, category_name):
@@ -99,7 +99,7 @@ class Scraper:
             except Exception as e:
                 logger.exception(e.message)
 
-            self.insert_product_to_db(product, category_name)
+            self.utils.insert_product_into_db(product, category_name)
             self.scrap_all_reviews(product)
 
     def scrap_all_reviews(self, product_dict):
@@ -212,119 +212,5 @@ class Scraper:
                 review_dict["ReviewRate"] = None
                 logger.exception('{exception}'.format(exception=e.message))
         logger.debug('Review: {dict}'.format(dict=review_dict))
-        self.insert_review_to_db(review_dict, product_asin)
-        self.insert_reviewer_to_db(review_dict)
-
-    def insert_product_to_db(self, product, category_name):
-        """
-        Inserts product's data to the database
-        :param product: product data dictionary
-        :param category_name: category name of the product
-        :return: bool
-        """
-        logger.debug('inserting product info to database')
-        pg_conn, pg_cursor = self.pg_pool.get_conn()
-        insert_query = QUERIES["InsertProduct"]
-        query_params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
-                        category_name, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"],
-                        product["Rating"])
-
-        try:
-            self.pg_pool.execute_query(pg_cursor, insert_query, query_params)
-            self.pg_pool.commit_changes(pg_conn)
-            self.pg_pool.put_conn(pg_conn)
-            return True
-        except Exception as e:
-            logger.exception(e.message)
-            return False
-
-    def insert_review_to_db(self, review, product_asin):
-        """
-        Insertes review data to the database
-        :param review: review dictionary
-        :param product_asin: asin no of the product
-        :return: bool
-        """
-        logger.debug('inseritng review into the database')
-        pg_conn, pg_cursor = self.pg_pool.get_conn()
-        insert_query = QUERIES["InsertReview"]
-
-        logger.debug('insert query: {query}'.format(query=insert_query))
-
-        try:
-            self.pg_pool.execute_query(pg_cursor, insert_query, (review["ReviewLink"], product_asin,
-                                                                 review["ReviewTitle"], review["ReviewText"],
-                                                                 review["ReviewerId"], review["ReviewDate"],
-                                                                 review["ReviewRate"]))
-            self.pg_pool.commit_changes(pg_conn)
-            self.pg_pool.put_conn(pg_conn)
-            return True
-        except Exception as e:
-            logger.exception(e.message)
-            return False
-
-    def exists_product(self, asin_no):
-        """
-        Checks if a product exists in the database
-        :param asin_no: asin number of the product
-        :return: bool
-        """
-        logger.debug('checking if product {asin} exists in database'.format(asin=asin_no))
-
-        pg_conn, pg_cursor = self.pg_pool.get_conn()
-        query = QUERIES["ProductExists"]
-        params = (asin_no,)
-
-        try:
-            if self.pg_pool.execute_query(pg_cursor, query, params)[0][0]:
-                logger.debug('product {asin} exists in DB'.format(asin=asin_no))
-                self.pg_pool.commit_changes(pg_conn)
-                self.pg_pool.put_conn(pg_conn)
-                return True
-            else:
-                logger.debug('product {asin} does not exists in DB'.format(asin=asin_no))
-                self.pg_pool.put_conn(pg_conn)
-                return False
-        except Exception as e:
-            logger.exception(e.message)
-            self.pg_pool.put_conn(pg_conn)
-            return None
-
-    def insert_reviewer_to_db(self, review):
-        success_bool = self.exists_reviewer(review["ReviewerId"])
-        if success_bool is not None:
-            if success_bool[0][0] is not True:
-                logger.debug('inserting reviewer {name} information into database'.format(name=review["ReviewerName"]))
-
-                pg_conn, pg_cursor = self.pg_pool.get_conn()
-                query = QUERIES["InsertReviewer"]
-                params = (review["ReviewerId"], review["ReviewerName"], review["ReviewerProfile"], 0, 0.0)
-
-                try:
-                    self.pg_pool.execute_query(pg_cursor, query, params)
-                    self.pg_pool.commit_changes(pg_conn)
-                    self.pg_pool.put_conn(pg_conn)
-                    return True
-                except Exception as e:
-                    logger.exception(e.message)
-                    return False
-            else:
-                logger.debug('Reviewer already exists in db')
-        else:
-            logger.error('something bad happend, success bool is None')
-
-    def exists_reviewer(self, reviewer_id):
-        logger.debug('checking if reviewer exists in db')
-
-        pg_conn, pg_cursor = self.pg_pool.get_conn()
-        query = QUERIES["ReviewerExists"]
-        params = (reviewer_id,)
-
-        try:
-            exists = self.pg_pool.execute_query(pg_cursor, query, params)
-            self.pg_pool.commit_changes(pg_conn)
-            self.pg_pool.put_conn(pg_conn)
-            return exists
-        except Exception as e:
-            logger.exception(e.message)
-            return None
+        self.utils.insert_review_into_db(review_dict, product_asin)
+        self.utils.insert_reviewer_into_db(review_dict)
