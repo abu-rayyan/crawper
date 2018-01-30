@@ -122,7 +122,12 @@ class Scraper:
                 for link in review_links:
                     review_url = '{base_url}{url}'.format(base_url=self.base_url, url=link.get('href').encode('utf-8'))
                     logger.debug('review url: {url}'.format(url=review_url))
-                    self.scrap_review(review_url, product_dict["ASIN"])
+                    if not self.utils.exists_review_in_db(review_url):
+                        logger.debug('review {link} does not exists in the database'.format(link=review_url))
+                        self.scrap_review(review_url, product_dict["ASIN"])
+                    else:
+                        logger.debug('review {link} already exists in the database'.format(link=review_url))
+                        continue
 
                 next_link = next_page.find('li', {'class': 'a-last'})
                 next_url = '{base_url}{url}'.format(base_url=self.base_url,

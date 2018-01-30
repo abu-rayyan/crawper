@@ -37,10 +37,13 @@ def start_crawper():
 def start_dev():
     logger.info('starting development mode')
     link = 'https://www.amazon.com/gp/new-releases/sporting-goods/ref=zg_bsnr_nav_0'
-    c = Crawler()
-    links, name = c.get_product_links(link)
-    print(len(links))
-    print(links)
+    #c = Crawler()
+    #links, name = c.get_product_links(link)
+    #print(len(links))
+    #print(links)
+    plink = ["https://www.amazon.com/INMAKER-Shoelaces-Elastic-Sneakers-Silicone/dp/B0779ZZ5SN/ref=zg_bsnr_sporting-goods_2?_encoding=UTF8&refRID=0M97EH68TAX4D7886BVK"]
+    s = Scraper()
+    s.get_products_info(plink, 'sporting-goods')
 
 
 def main():
@@ -72,9 +75,9 @@ def main():
     rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    r_engine = REngine()
-    r_engine.start_engine()
-    # start_dev()
+    #r_engine = REngine()
+    #r_engine.start_engine()
+    #start_dev()
 
     logger.info('closing database connection')
     db_conn.close_pool()

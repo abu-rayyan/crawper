@@ -123,3 +123,23 @@ class Utils:
                 return False
         else:
             logger.debug('reviewer {id} already exists in database'.format(id=review["ReviewerId"]))
+
+    def exists_review_in_db(self, review_link):
+        """
+        Checks if a review exists in the database
+        :param review_link: review URL TODO: use review id instead
+        :return: bool
+        """
+        logger.debug('checking if review {link} exists in the database'.format(link=review_link))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["ExistsReview"]
+        params = (review_link,)
+
+        try:
+            success_bool = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return success_bool[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            return None
