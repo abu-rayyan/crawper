@@ -111,8 +111,9 @@ class Scraper:
         next_url = product_dict["ReviewsURL"]
         logger.debug('Reviews URL: {url}'.format(url=next_url))
         global next_page
+        count = 0
 
-        while True:
+        while count < 50:  # TODO: Remove 50 review scrapping limit
             logger.debug('Next URL: {url}'.format(url=next_url))
             try:
                 next_page = common.request_page(next_url)
@@ -124,6 +125,7 @@ class Scraper:
                     logger.debug('review url: {url}'.format(url=review_url))
                     if not self.utils.exists_review_in_db(review_url):
                         logger.debug('review {link} does not exists in the database'.format(link=review_url))
+                        count += 1
                         self.scrap_review(review_url, product_dict["ASIN"])
                     else:
                         logger.debug('review {link} already exists in the database'.format(link=review_url))
