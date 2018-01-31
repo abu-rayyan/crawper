@@ -125,6 +125,7 @@ class Scraper:
                     logger.debug('review url: {url}'.format(url=review_url))
                     if not self.utils.exists_review_in_db(review_url):
                         logger.debug('review {link} does not exists in the database'.format(link=review_url))
+                        count += 1
                         self.scrap_review(review_url, product_dict["ASIN"])
                     else:
                         logger.debug('review {link} already exists in the database'.format(link=review_url))
@@ -133,10 +134,11 @@ class Scraper:
                 next_link = next_page.find('li', {'class': 'a-last'})
                 next_url = '{base_url}{url}'.format(base_url=self.base_url,
                                                     url=next_link.find('a').get('href').encode('utf-8'))
-                count += 1
             except AttributeError as e:
                 logger.exception('{exception}'.format(exception=e.message))
                 break  # breaking from loop when next link not found
+            if count >= 50:
+                break
 
     def scrap_review(self, review_url, product_asin):
         """
