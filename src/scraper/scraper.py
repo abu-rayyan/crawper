@@ -136,7 +136,7 @@ class Scraper:
                                                     url=next_link.find('a').get('href').encode('utf-8'))
             except AttributeError as e:
                 logger.exception('{exception}'.format(exception=e.message))
-                break
+                break # breaking from loop when next link not found
 
     def scrap_review(self, review_url, product_asin):
         """
