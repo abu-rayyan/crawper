@@ -46,6 +46,13 @@ def return_product():
     return response
 
 
+@app.route('/search-product/<keyword>', methods=['GET'])
+def return_suggested_products(keyword):
+    res = search_product(keyword)
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+
 @app.route('/products/<category_id>', methods=['GET'])
 def return_products(category_id):
     data_list = []

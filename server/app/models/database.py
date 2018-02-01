@@ -40,6 +40,22 @@ def get_products(category_id):
         return None
 
 
+def search_product(keyword):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["SearchProduct"]
+    param = '%{key}%'.format(key=keyword)
+    params = (param,)
+
+    try:
+        products = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return products
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
 def exists_category_in_db(category_name):
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["ExistsCategory"]
