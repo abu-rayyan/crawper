@@ -72,7 +72,7 @@ def main():
 
     # TODO: Replace if found a better way of sharing same mem space
     # noinspection PyUnusedLocal
-    rotator = ProxyRotator('temp/temp/Proxies.txt')  # used as singleton obj
+    rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
     #r_engine = REngine()
