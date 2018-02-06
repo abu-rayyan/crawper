@@ -48,7 +48,7 @@ Follow these steps in order to deploy it correctly via Python VirtualEnviroment.
 #### Configuring Database
 1. Download & Install [Postgres 10.1](https://www.postgresql.org/download/), set database name as postgres, username as postgres and password as postgres
 2. Locate the database schema file "crawper_db_schema.sql" in project directory
-3. Use Restore Database option in PgAdmin4 App to restore the database from schema file
+3. See [Database Configurations](docs/database.md)
     
 ## Build Using
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
