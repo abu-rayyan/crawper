@@ -6,7 +6,7 @@ from app.common.db.postgres import PgPool
 app.config.from_object('config.DevelopmentConfig')
 
 config = ConfigParser.ConfigParser()
-config.read("config.ini")
+config.read("../config.ini")
 
 db_conn_params = {
     "Host": config.get('Database', 'Host'),

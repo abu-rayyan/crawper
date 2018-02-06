@@ -69,3 +69,33 @@ def exists_category_in_db(category_name):
     except Exception as e:
         pg_.put_conn(pg_conn)  # TODO: generate exception logs here
         return None
+
+
+def get_sentiment_label(product_id):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetSentimentLabels"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
+def get_word_category(product_id):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetWordCategory"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None

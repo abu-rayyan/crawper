@@ -53,6 +53,97 @@ def return_suggested_products(keyword):
     return response
 
 
+@app.route('/get-word-category/<product_id>', methods=['GET'])
+def return_word_category(product_id):
+    word_categories = get_word_category(product_id)
+    category_a = 0
+    category_b = 0
+    category_c = 0
+
+    try:
+        for category in word_categories:
+            if category[0] == 'A':
+                category_a += 1
+            elif category[0] == 'B':
+                category_b += 1
+            elif category[0] == 'C':
+                category_c += 1
+            else:
+                continue
+    except Exception as e:
+        print(e.message)
+
+    res = [
+        {
+            "Category": "A",
+            "Count": category_a
+         },
+        {
+            "Category": "B",
+            "Count": category_b
+        },
+        {
+            "Category": "C",
+            "Count": category_c
+        }
+    ]
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+
+@app.route('/get-sentiment-label/<product_id>', methods=['GET'])
+def return_sentiment_labels(product_id):
+    labels = get_sentiment_label(product_id)
+    labels_angry = 0
+    labels_dissatisfied = 0
+    labels_neutral = 0
+    labels_staisfied = 0
+    labels_happy = 0
+
+    try:
+        for label in labels:
+            if label[0] == "angry":
+                labels_angry += 1
+            elif label[0] == "dissatisfied":
+                labels_dissatisfied += 1
+            elif label[0] == "neutral":
+                labels_neutral += 1
+            elif label[0] == "satisfied":
+                labels_staisfied += 1
+            elif label[0] == "happy":
+                labels_happy += 1
+            else:
+                continue
+    except Exception as e:
+        print(e.message)
+
+    res = [
+        {
+            "Label": "Angry",
+            "Count": labels_angry
+        },
+        {
+            "Label": "Dissatisfied",
+            "Count": labels_dissatisfied
+        },
+        {
+            "Label": "Neutral",
+            "Count": labels_neutral
+        },
+        {
+            "Label": "Satisfied",
+            "Count": labels_staisfied
+        },
+        {
+            "Label": "Happy",
+            "Count": labels_happy
+        }
+    ]
+
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+
 @app.route('/products/<category_id>', methods=['GET'])
 def return_products(category_id):
     data_list = []
