@@ -1,7 +1,7 @@
 import ConfigParser
 
-from server.app import app
-from server.app.common.db.postgres import PgPool
+from app import app
+from app.common.db.postgres import PgPool
 
 app.config.from_object('config.DevelopmentConfig')
 

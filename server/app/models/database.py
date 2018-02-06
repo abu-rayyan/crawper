@@ -1,6 +1,6 @@
-from server.app.common.db.postgres import PgPool
-from server.app.models.config.queries import QUERIES
-from server.mock.categories import *
+from app.common.db.postgres import PgPool
+from app.models.config.queries import QUERIES
+from mock.categories import *
 
 pg_ = PgPool()
 

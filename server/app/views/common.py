@@ -2,9 +2,9 @@ import json
 
 from flask import Response
 from flask import request
-from server.app import app
+from app import app
 from flask_cors import CORS
-from server.app.models.database import *
+from app.models.database import *
 
 CORS(app)
 
