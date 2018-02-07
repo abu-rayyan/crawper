@@ -27,7 +27,7 @@ def request_page(page_url):
     sleep_time = randint(1, 5)
     user_agent = UserAgent()
     logger.debug('fake_useragent initialized: {addr}'.format(addr=user_agent))
-    #time.sleep(sleep_time)
+    time.sleep(sleep_time)
     headers = {'User-Agent': str(user_agent.random)}
     logger.debug('Headers: {head}'.format(head=headers))
 
