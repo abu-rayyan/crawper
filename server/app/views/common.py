@@ -90,20 +90,12 @@ def return_word_category(product_id):
     except Exception as e:
         print(e.message)
 
-    res = [
-        {
-            "Category": "A",
-            "Count": category_a
-        },
-        {
-            "Category": "B",
-            "Count": category_b
-        },
-        {
-            "Category": "C",
-            "Count": category_c
-        }
-    ]
+    res = {
+        "A": category_a,
+        "B": category_b,
+        "C": category_c
+    }
+
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
@@ -138,28 +130,13 @@ def return_sentiment_labels(product_id):
     except Exception as e:
         print(e.message)
 
-    res = [
-        {
-            "Label": "Angry",
-            "Count": labels_angry
-        },
-        {
-            "Label": "Dissatisfied",
-            "Count": labels_dissatisfied
-        },
-        {
-            "Label": "Neutral",
-            "Count": labels_neutral
-        },
-        {
-            "Label": "Satisfied",
-            "Count": labels_staisfied
-        },
-        {
-            "Label": "Happy",
-            "Count": labels_happy
-        }
-    ]
+    res = {
+        "Angry": labels_angry,
+        "Dissatisfied": labels_dissatisfied,
+        "Neutral": labels_neutral,
+        "Satisfied": labels_staisfied,
+        "Happy": labels_happy
+    }
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
