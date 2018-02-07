@@ -5,18 +5,23 @@ from flask import request
 from app import app
 from flask_cors import CORS
 from app.models.database import *
+from flask_autodoc import Autodoc
 
 CORS(app)
+auto = Autodoc(app)
 
 
 @app.route('/')
-def test():
-    var = '3386071'
-    return 'test route working'
+def index_reoute():
+    return '/'
 
 
 @app.route('/categories/<category_id>', methods=['GET'])
+@auto.doc()
 def return_categories(category_id):
+    """
+    Returns category and sub-categories
+    """
     ret_data = get_categories(category_id)
     if ret_data is not None:
         response = Response(json.dumps(ret_data), status=200, mimetype='application/json')
@@ -28,7 +33,11 @@ def return_categories(category_id):
 
 
 @app.route('/product')
+@auto.doc()
 def return_product():
+    """
+    Returns a product's complete information
+    """
     asin_no = request.args.get('asin')
     category_id = request.args.get('categoryId')
     product = get_product(asin_no, category_id)
@@ -47,14 +56,22 @@ def return_product():
 
 
 @app.route('/search-product/<keyword>', methods=['GET'])
+@auto.doc()
 def return_suggested_products(keyword):
+    """
+    Searches sub-strings in product labels in database and returns
+    """
     res = search_product(keyword)
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
 
 @app.route('/get-word-category/<product_id>', methods=['GET'])
+@auto.doc()
 def return_word_category(product_id):
+    """
+    Returns number of word count categories of product
+    """
     word_categories = get_word_category(product_id)
     category_a = 0
     category_b = 0
@@ -77,7 +94,7 @@ def return_word_category(product_id):
         {
             "Category": "A",
             "Count": category_a
-         },
+        },
         {
             "Category": "B",
             "Count": category_b
@@ -92,7 +109,11 @@ def return_word_category(product_id):
 
 
 @app.route('/get-sentiment-label/<product_id>', methods=['GET'])
+@auto.doc()
 def return_sentiment_labels(product_id):
+    """
+    Returns total number of different sentiment label of product
+    """
     labels = get_sentiment_label(product_id)
     labels_angry = 0
     labels_dissatisfied = 0
@@ -145,7 +166,11 @@ def return_sentiment_labels(product_id):
 
 
 @app.route('/products/<category_id>', methods=['GET'])
+@auto.doc()
 def return_products(category_id):
+    """
+    Returns all products in a category
+    """
     data_list = []
     if exists_category_in_db(category_id):
         ret_data = get_products(category_id)
@@ -173,3 +198,8 @@ def return_products(category_id):
         ret_data = 'Category {category} Not Found !'.format(category=category_id)
         response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
         return response
+
+
+@app.route('/docs')
+def return_api_docs():
+    return auto.html()

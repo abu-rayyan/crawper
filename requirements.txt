@@ -19,4 +19,5 @@ python-dateutil
 # Server
 Flask
 flask-cors
+flask-autodoc
 # Others
