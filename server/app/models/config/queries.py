@@ -7,7 +7,8 @@ QUERIES = {
                            "image_link, product_asin FROM crawper.products WHERE category_name=%s; ",
     "GetProduct": "SELECT product_asin, product_title, product_price, product_link, total_reviews, product_rank, "
                   "image_link FROM crawper.products WHERE product_asin=%s AND category_name=%s; ",
-    "SearchProduct": "SELECT product_title FROM crawper.products Where product_title LIKE %s;",
+    "SearchProduct": "SELECT product_asin, product_title, category_name FROM crawper.products Where product_title "
+                     "LIKE %s;",
     "GetSentimentLabels": "SELECT reviews_analysis.sentiment_label FROM crawper.reviews, crawper.reviews_analysis "
                           "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
                           "crawper.reviews.product_asin=%s; ",
