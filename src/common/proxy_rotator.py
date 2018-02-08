@@ -41,10 +41,10 @@ class ProxyRotator:
                 for proxy in proxy_list:
                     content = proxy.split()
                     proxy = {
-                        'http': 'http://{user}:{passwd}@{ip}:{port}'.format(user=content[0], passwd=content[1],
-                                                                            ip=content[2], port=content[3]),
-                        'https': 'socks5://{user}:{passwd}@{ip}:{port}'.format(user=content[0], passwd=content[1],
-                                                                               ip=content[2], port=content[4])
+                        'http': 'http://{user}:{passwd}@{ip}:{port}'.format(user=content[3], passwd=content[4],
+                                                                            ip=content[0], port=content[1]),
+                        'https': 'socks5://{user}:{passwd}@{ip}:{port}'.format(user=content[3], passwd=content[4],
+                                                                               ip=content[0], port=content[2])
                     }
                     self.proxies.append(proxy)
                 proxy_file.close()

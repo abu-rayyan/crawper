@@ -75,8 +75,8 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    #r_engine = REngine()
-    #r_engine.start_engine()
+    r_engine = REngine()
+    r_engine.start_engine()
     #start_dev()
 
     logger.info('closing database connection')

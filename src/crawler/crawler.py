@@ -80,23 +80,17 @@ class Crawler:
                                     logger.debug('product {asin} does not exists in database'.format(
                                         asin=product_asin))
                                     product_links.append(prod_link.encode('utf-8'))
-                                # else:
-                                #     logger.debug('product {asin} already exists in database'.format(
-                                #         asin=product_asin))
-                                #     total_reviews = self.utils.get_total_reviews_from_db(product_asin)
-                                #     scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
-                                #
-                                #     if not int(scraped_reviews) == int(total_reviews.replace(',', '')):
-                                #         if not int(scraped_reviews) >= 50:  # TODO: remove 50 reviews limit
-                                #             logger.debug('product {asin} not scraped completely'.format(
-                                #                         asin=product_asin))
-                                #             product_links.append(prod_link.encode('utf-8'))
-                                #         else:
-                                #             logger.debug('ignoring product {asin} with 50 scraped reviews'.format(
-                                #                         asin=product_asin))
-                                #     else:
-                                #         logger.debug('ignoring product, product {asin} scraped completely'.format(
-                                #             asin=product_asin))
+                                else:
+                                    logger.debug('product {asin} already exists in database'.format(
+                                        asin=product_asin))
+                                    total_reviews = self.utils.get_total_reviews_from_db(product_asin)
+                                    scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
+
+                                    if not int(scraped_reviews) == int(total_reviews.replace(',', '')):
+                                        product_links.append(prod_link.encode('utf-8'))
+                                    else:
+                                        logger.debug('ignoring product, product {asin} scraped completely'.format(
+                                            asin=product_asin))
                             else:
                                 logger.error('Unknown error, contact respective person')
                     else:

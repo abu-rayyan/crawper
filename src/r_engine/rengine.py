@@ -29,13 +29,16 @@ class REngine:
         Calls all product analysis functionality of REngine
         """
         logger.info('analyzing products information')
-        asins = self.utility_method.get_products_asin_from_db()
-        for asin in asins:
-            try:
-                self.analyze_product(asin[0])
-                self.generate_product_triggers(asin[0])
-            except Exception as e:
-                logger.exception(e.message)
+        asins = self.utility_method.get_zero_rank_asins_from_db()
+        if asins is not None:
+            for asin in asins:
+                try:
+                    self.analyze_product(asin[0])
+                    self.generate_product_triggers(asin[0])
+                except Exception as e:
+                    logger.exception(e.message)
+        else:
+            logger.error('something bad happened')
 
     def analyze_product(self, asin):
         """

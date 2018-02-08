@@ -72,6 +72,24 @@ class UtilityFunctions:
             logger.debug(e.message)
             return None
 
+    def get_zero_rank_asins_from_db(self):
+        """
+        Return asins with ranking = 0
+        :return:
+        """
+        logger.debug('getting all asins with zero ranks')
+        pg_conn, pg_cursor = self.pg_pool.get_conn()
+        query = QUERIES["GetAsinsWithZeroRank"]
+
+        try:
+            res = self.pg_pool.execute_query(pg_cursor, query, params='')
+            self.pg_pool.commit_changes(pg_conn)
+            self.pg_pool.put_conn(pg_conn)
+            return res
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
     def get_products_asin_from_db(self):
         """
         Returns asin no of all products from database

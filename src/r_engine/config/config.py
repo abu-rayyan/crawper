@@ -6,6 +6,7 @@ QUERIES = {
                          "review_date FROM crawper.reviews WHERE product_asin=%s; ",
 
     "GetProductsAsin": "SELECT product_asin FROM crawper.products;",
+    "GetAsinsWithZeroRank": "SELECT product_asin FROM crawper.products WHERE product_rank = '0';",
 
     "InsertReviewStat": "INSERT INTO crawper.reviews_analysis(review_link, review_length, word_count_category, "
                         "sentiment_score, sentiment_label, common_phrase, credulity_score, review_scores) VALUES (%s, "
