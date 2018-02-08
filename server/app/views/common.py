@@ -49,7 +49,8 @@ def return_product():
         "Link": product[0][3],
         "TotalReviews": product[0][4],
         "Score": product[0][5],
-        "ImageLink": product[0][6]
+        "ImageLink": product[0][6],
+        "Rate": product[0][7]
     }
     response = Response(json.dumps(product_dict), status=200, mimetype='application/json')
     return response
