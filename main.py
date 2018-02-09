@@ -54,7 +54,7 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read("config.ini")
 
-    logging.basicConfig(level=logging.getLevelName(config.get('App', 'Mode')))
+    logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
 
     db_conn_params = {
         "Host": config.get('Database', 'Host'),

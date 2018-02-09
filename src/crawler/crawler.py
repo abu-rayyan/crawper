@@ -32,6 +32,70 @@ class Crawler:
         logger.debug('category: {category}'.format(category=category[-2]))
         return category[-2]
 
+    def validate_product(self, product_asin):
+        logger.debug('checking if product {asin} validates for being scraped'.format(asin=product_asin))
+        global validate_bool
+        try:
+            exists = self.utils.exists_product_in_db(product_asin)
+            if exists is not None:
+                if exists:
+                    logger.debug('product {asin} exists in database'.format(asin=product_asin))
+                    total_reviews = self.utils.get_total_reviews_from_db(product_asin).replace(',', '')
+                    scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
+                    global percent_scraped_reviews
+                    if total_reviews is not None & scraped_reviews is not None:
+                        if not total_reviews == 0:
+                            percent_scraped_reviews = (float(scraped_reviews) / float(total_reviews)) * 100
+
+                    if 0 <= int(total_reviews) <= 100:
+                        logger.debug('checking if scraped reviews are more then 90%')
+                        if percent_scraped_reviews >= 90:
+                            logger.debug('scraped reviews >= 90% True')
+                            validate_bool = False
+                        else:
+                            logger.debug('scraped reviews >= 90% False')
+                            validate_bool = True
+                    elif 101 <= int(total_reviews) <= 1000:
+                        logger.debug('checking if scraped reviews are more then 50%')
+                        if percent_scraped_reviews >= 50:
+                            logger.debug('scraped reviews >= 50% True')
+                            validate_bool = False
+                        else:
+                            logger.debug('scraped reviews >= 50% False')
+                            validate_bool = True
+                    elif 1001 <= int(total_reviews) <= 5000:
+                        logger.debug('checking if scraped reviews are more then 25%')
+                        if percent_scraped_reviews >= 25:
+                            logger.debug('scraped reviews >= 25% True')
+                            validate_bool = False
+                        else:
+                            logger.debug('scraped reviews >= 25% False')
+                            validate_bool = True
+                    elif 5001 <= int(total_reviews) <= 10000:
+                        logger.debug('checking if scraped reviews are more then 10%')
+                        if percent_scraped_reviews >= 10:
+                            logger.debug('scraped reviews >= 10% True')
+                            validate_bool = False
+                        else:
+                            logger.debug('scraped reviews >= 10% False')
+                            validate_bool = True
+                    else:
+                        logger.debug('checking if scraped reviews are more then 1%')
+                        if percent_scraped_reviews >= 1:
+                            logger.debug('scraped reviews >= 1% True')
+                            validate_bool = False
+                        else:
+                            logger.debug('scraped reviews >= 1% False')
+                            validate_bool = True
+                else:
+                    logger.debug('product does not exists in database')
+                    validate_bool = True
+            else:
+                logger.error('something bad happened')
+        except Exception as e:
+            logger.exception(e.message)
+        return validate_bool
+
     # get sports/outdoors products links (all 5 tabs)
     def get_product_links(self, url):
         category_id = self.get_category(url)
@@ -73,26 +137,11 @@ class Crawler:
                         splitted_link = prod_link.split('/')
                         if category_id in splitted_link[6]:
                             product_asin = splitted_link[5]
-
-                            exists_bool = self.utils.exists_product_in_db(product_asin)
-                            if exists_bool is not None:
-                                if not exists_bool:
-                                    logger.debug('product {asin} does not exists in database'.format(
-                                        asin=product_asin))
-                                    product_links.append(prod_link.encode('utf-8'))
-                                else:
-                                    logger.debug('product {asin} already exists in database'.format(
-                                        asin=product_asin))
-                                    total_reviews = self.utils.get_total_reviews_from_db(product_asin)
-                                    scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
-
-                                    if not int(scraped_reviews) == int(total_reviews.replace(',', '')):
-                                        product_links.append(prod_link.encode('utf-8'))
-                                    else:
-                                        logger.debug('ignoring product, product {asin} scraped completely'.format(
-                                            asin=product_asin))
+                            if self.validate_product(product_asin):
+                                logger.debug('product {asin} needs to be scraped'.format(asin=product_asin))
+                                product_links.append(prod_link.decode('utf-8'))
                             else:
-                                logger.error('Unknown error, contact respective person')
+                                logger.debug('product {asin} doesnot validated to be scraped')
                     else:
                         continue
             except Exception as e:
