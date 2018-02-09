@@ -62,8 +62,21 @@ def return_suggested_products(keyword):
     """
     Searches sub-strings in product labels in database and returns
     """
+    results = []
     res = search_product(keyword)
-    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    for item in res:
+        product = {
+            "ASIN": item[0],
+            "Title": item[1],
+            "Price": item[2],
+            "Score": item[3],
+            "ImageLink": item[4],
+            "Link": item[5],
+            "CategoryId": item[6]
+        }
+        results.append(product)
+
+    response = Response(json.dumps(results), status=200, mimetype='application/json')
     return response
 
 
