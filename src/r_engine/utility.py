@@ -246,24 +246,28 @@ class UtilityFunctions:
         :return: participation history label
         """
         logger.debug('calculating reviewer participation hisotry')
-        if 0 <= no_of_reviews <= 1:
-            return 'R1'
-        elif 2 <= no_of_reviews <= 5:
-            return 'R2'
-        elif 6 <= no_of_reviews <= 10:
-            return 'R3'
-        elif 11 <= no_of_reviews <= 20:
-            return 'R4'
-        elif 21 <= no_of_reviews <= 30:
-            return 'R5'
-        elif 31 <= no_of_reviews <= 40:
-            return 'R6'
-        elif 41 <= no_of_reviews <= 50:
-            return 'R7'
-        elif 51 <= no_of_reviews <= 60:
-            return 'R8'
-        else:
-            return 'R9'
+        try:
+            if 0 <= no_of_reviews <= 1:
+                return 'R1'
+            elif 2 <= no_of_reviews <= 5:
+                return 'R2'
+            elif 6 <= no_of_reviews <= 10:
+                return 'R3'
+            elif 11 <= no_of_reviews <= 20:
+                return 'R4'
+            elif 21 <= no_of_reviews <= 30:
+                return 'R5'
+            elif 31 <= no_of_reviews <= 40:
+                return 'R6'
+            elif 41 <= no_of_reviews <= 50:
+                return 'R7'
+            elif 51 <= no_of_reviews <= 60:
+                return 'R8'
+            else:
+                return 'R9'
+        except Exception as e:
+            logger.exception(e.message)
+            return None
 
     def get_reviewers_from_db(self, product_asin):
         """
@@ -293,13 +297,17 @@ class UtilityFunctions:
         :return: reviewers list
         """
         logger.debug('getting reviewers of all products from db')
-        products_asin = self.get_products_asin_from_db()
-        all_product_reviews = []
-        for asin in products_asin:
-            if not asin == product_asin:
-                product_reviews = self.get_reviewers_from_db(asin[0])
-                all_product_reviews.append(product_reviews)
-        return all_product_reviews
+        try:
+            products_asin = self.get_products_asin_from_db()
+            all_product_reviews = []
+            for asin in products_asin:
+                if not asin == product_asin:
+                    product_reviews = self.get_reviewers_from_db(asin[0])
+                    all_product_reviews.append(product_reviews)
+            return all_product_reviews
+        except Exception as e:
+            logger.exception(e.message)
+            return None
 
     def get_product_reviews_with_four_five_stars(self, product_asin):
         """
@@ -388,14 +396,18 @@ class UtilityFunctions:
         :param item_list: items list
         :return: total no of duplicates
         """
-        new_list = []
-        no_duplicates = 0
-        for item in item_list:
-            if item not in new_list:
-                new_list.append(item)
-            else:
-                no_duplicates += 1
-        return no_duplicates
+        try:
+            new_list = []
+            no_duplicates = 0
+            for item in item_list:
+                if item not in new_list:
+                    new_list.append(item)
+                else:
+                    no_duplicates += 1
+            return no_duplicates
+        except Exception as e:
+            logger.exception(e.message)
+            return None
 
     def get_total_no_of_reviewes_of_reviewer_from_db(self, reviewer_id):
         """
