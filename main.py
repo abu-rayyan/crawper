@@ -3,12 +3,11 @@ import ConfigParser
 
 from src.common import common
 from src.common.thread import Worker
+from src.r_engine.threader.thread import AnalysisWorker
 from src.common.config.urls import *
 from Queue import Queue
 from src.common.proxy_rotator import ProxyRotator
 from src.r_engine.rengine import REngine
-from src.scraper import Scraper
-from src.crawler import Crawler
 
 from src.common.db.postgres_pool import PgPool
 
@@ -34,16 +33,22 @@ def start_crawper():
         queue.join()
 
 
-def start_dev():
-    logger.info('starting development mode')
-    link = 'https://www.amazon.com/gp/new-releases/sporting-goods/ref=zg_bsnr_nav_0'
-    #c = Crawler()
-    #links, name = c.get_product_links(link)
-    #print(len(links))
-    #print(links)
-    plink = ["https://www.amazon.com/INMAKER-Shoelaces-Elastic-Sneakers-Silicone/dp/B0779ZZ5SN/ref=zg_bsnr_sporting-goods_2?_encoding=UTF8&refRID=0M97EH68TAX4D7886BVK"]
-    s = Scraper()
-    s.get_products_info(plink, 'sporting-goods')
+def start_rengine():
+    logger.info('starting threaded REngine')
+    queue = Queue()
+    r_engine = REngine()
+    asins = r_engine.analyze_products()
+
+    for work in range(len(asins)):
+        logger.debug('starting analysis worker')
+        worker = AnalysisWorker(queue)
+        worker.daemon = True
+        worker.start()
+
+    logger.info('sending input data to workers')
+    for asin in asins:
+        queue.put(asin)
+    queue.join()
 
 
 def main():
@@ -75,9 +80,7 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    r_engine = REngine()
-    r_engine.start_engine()
-    #start_dev()
+    start_rengine()
 
     logger.info('closing database connection')
     db_conn.close_pool()

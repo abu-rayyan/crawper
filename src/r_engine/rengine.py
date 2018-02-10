@@ -30,15 +30,21 @@ class REngine:
         """
         logger.info('analyzing products information')
         asins = self.utility_method.get_zero_rank_asins_from_db()
+        asin_list = []
+
         if asins is not None:
             for asin in asins:
-                try:
-                    self.analyze_product(asin[0])
-                    self.generate_product_triggers(asin[0])
-                except Exception as e:
-                    logger.exception(e.message)
-        else:
-            logger.error('something bad happened')
+                asin_list.append(asin[0])
+        # if asins is not None:
+        #     for asin in asins:
+        #         try:
+        #             self.analyze_product(asin[0])
+        #             self.generate_product_triggers(asin[0])
+        #         except Exception as e:
+        #             logger.exception(e.message)
+        # else:
+        #     logger.error('something bad happened')
+        return asin_list
 
     def analyze_product(self, asin):
         """
