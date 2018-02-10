@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 # start threaded version of crawper for new releases
 def start_crawper():
+    print('* starting crawper')
     logger.info('starting crawper')
     queue = Queue()
 
@@ -35,6 +36,7 @@ def start_crawper():
 
 def start_rengine():
     logger.info('starting threaded REngine')
+    print('* starting REngine')
     queue = Queue()
     r_engine = REngine()
     asins = r_engine.analyze_products()
@@ -53,9 +55,11 @@ def start_rengine():
 
 def main():
     logger.info('checking configs')
+    print('* checking configs')
     if not common.exists_dir("temp"):
         common.make_dir("temp")
 
+    print('* loading project configs')
     config = ConfigParser.ConfigParser()
     config.read("config.ini")
 
@@ -70,6 +74,7 @@ def main():
     }
 
     logger.info('connecting to database')
+    print('* connecting to database')
     db_conn = PgPool()  # TODO: Replace if found better way for singleton mem sharing
     db_conn.create_pool(db_conn_params)
 
@@ -83,6 +88,7 @@ def main():
     start_rengine()
 
     logger.info('closing database connection')
+    print('* closing database pool')
     db_conn.close_pool()
 
 

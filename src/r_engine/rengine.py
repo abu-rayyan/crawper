@@ -29,6 +29,7 @@ class REngine:
         Calls all product analysis functionality of REngine
         """
         logger.info('analyzing products information')
+        print('* applying analysis to data')
         asins = self.utility_method.get_zero_rank_asins_from_db()
         asin_list = []
 

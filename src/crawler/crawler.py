@@ -98,6 +98,7 @@ class Crawler:
 
     # get sports/outdoors products links (all 5 tabs)
     def get_product_links(self, url):
+        print('* crawling products')
         category_id = self.get_category(url)
         logger.debug('products category name: {file}'.format(file=category_id))
 

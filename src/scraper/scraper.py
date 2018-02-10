@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 class Scraper:
     def __init__(self):
         logger.info('initiating scrapper')
+        print('* scraping products')
         self.base_url = URLS["BaseUrl"]
         self.utils = Utils()
 
