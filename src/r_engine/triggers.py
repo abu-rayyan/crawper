@@ -9,6 +9,7 @@ from utility import UtilityFunctions
 from dateutil import parser
 from datetime import timedelta
 
+nltk.download('punkt')
 logger = logging.getLogger(__name__)
 
 

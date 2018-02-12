@@ -63,7 +63,8 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read("config.ini")
 
-    logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
+    #logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
+    logging.basicConfig(level=logging.getLevelName(config.get('App', 'Mode')))
 
     db_conn_params = {
         "Host": config.get('Database', 'Host'),
@@ -85,7 +86,8 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    start_rengine()
+    engine = REngine()
+    engine.start_engine()
 
     logger.info('closing database connection')
     print('* closing database pool')
