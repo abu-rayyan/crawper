@@ -1,6 +1,7 @@
 import logging
 import psycopg2
 import psycopg2.extras
+import time
 
 from psycopg2.pool import ThreadedConnectionPool
 from singleton_decorator import singleton
@@ -59,13 +60,27 @@ class PgPool:
         :return: conn, cursor
         """
         logger.debug('getting connection from pool')
-        try:
-            conn = self.pool.getconn()
-            cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            return conn, cursor
-        except Exception as e:
-            logger.exception(e.message)
-            return None, None
+        global conn, cursor
+
+        while True:
+            try:
+                conn = self.pool.getconn()
+                cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+                break
+            except Exception as e:
+                logger.exception(e.message)
+                logger.debug('waiting for connection')
+                time.sleep(5)
+                continue
+        return conn, cursor
+
+        # try:
+        #     conn = self.pool.getconn()
+        #     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        #     return conn, cursor
+        # except Exception as e:
+        #     logger.exception(e.message)
+        #     return None, None
 
     @staticmethod
     def execute_query(cursor, query, params):

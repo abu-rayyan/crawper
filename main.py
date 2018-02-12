@@ -1,7 +1,9 @@
 import logging
 import ConfigParser
+import threading
 
 from src.common import common
+from src.r_engine.utility import UtilityFunctions
 from src.common.thread import Worker
 from src.r_engine.threader.thread import AnalysisWorker
 from src.common.config.urls import *
@@ -38,18 +40,20 @@ def start_rengine():
     logger.info('starting threaded REngine')
     print('* starting REngine')
     queue = Queue()
-    r_engine = REngine()
-    asins = r_engine.analyze_products()
+    #r_engine = REngine()
+    utils = UtilityFunctions()
+    #asins = utils.get_products_asin_from_db()
+    asins = utils.get_zero_rank_asins_from_db()
+    print(len(asins))
 
     for work in range(len(asins)):
-        logger.debug('starting analysis worker')
         worker = AnalysisWorker(queue)
         worker.daemon = True
         worker.start()
 
-    logger.info('sending input data to workers')
     for asin in asins:
-        queue.put(asin)
+        queue.put(asin[0])
+
     queue.join()
 
 
@@ -63,7 +67,7 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read("config.ini")
 
-    #logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
+    # logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
     logging.basicConfig(level=logging.getLevelName(config.get('App', 'Mode')))
 
     db_conn_params = {
@@ -86,9 +90,7 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    engine = REngine()
-    engine.start_engine()
-
+    start_rengine()
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()

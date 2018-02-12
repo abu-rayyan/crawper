@@ -17,4 +17,5 @@ class AnalysisWorker(Thread):
         while True:
             product_asin = self.queue.get()
             self.r_engine.analyze_product(product_asin)
+            self.r_engine.generate_product_triggers(product_asin)
             self.queue.task_done()
