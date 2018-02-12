@@ -50,7 +50,7 @@ class PgPool:
 
         try:
             logger.debug('creating pool')
-            self.pool = ThreadedConnectionPool(1, 50, conn_params)
+            self.pool = ThreadedConnectionPool(1, 2000, conn_params)
         except Exception as e:
             logger.exception(e.message)
 
