@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class Triggers:
-    def __init__(self):
+    def __init__(self, conn, cursor, pool):
         logger.debug('initializing triggers generator')
-        self.utility_methods = UtilityFunctions()
+        self.utility_methods = UtilityFunctions(conn, cursor, pool)
 
     def get_overlapping_trigger(self, product_asin):
         """

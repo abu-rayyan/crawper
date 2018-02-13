@@ -6,6 +6,7 @@ from nltk.util import ngrams
 from utility import UtilityFunctions
 from textblob import TextBlob
 from triggers import Triggers
+from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +14,15 @@ logger = logging.getLogger(__name__)
 class REngine:
     def __init__(self):
         logger.debug('initiating AEngine')
-        self.utility_method = UtilityFunctions()
-        self.triggers = Triggers()
+        self.pg_pool = PgPool()
+        self.pg_conn, self.pg_cursor = self.pg_pool.get_conn()
+        self.utility_method = UtilityFunctions(self.pg_conn, self.pg_cursor, self.pg_pool)
+        self.triggers = Triggers(self.pg_conn, self.pg_cursor, self.pg_pool)
+
+    def put_db_connection_back(self):
+        logger.debug('putting database connection object back in pool')
+        self.pg_pool.commit_changes(self.pg_conn)
+        self.pg_pool.put_conn(self.pg_conn)
 
     def start_engine(self):
         """

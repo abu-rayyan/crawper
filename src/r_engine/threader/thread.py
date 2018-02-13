@@ -1,8 +1,11 @@
 import logging
+import threading
 from threading import Thread
 from src.r_engine.rengine import REngine
 
 logger = logging.getLogger(__name__)
+MAX_THREADS = 50
+thread_limiter = threading.BoundedSemaphore(MAX_THREADS)
 
 
 class AnalysisWorker(Thread):
@@ -10,12 +13,15 @@ class AnalysisWorker(Thread):
         logger.debug('starting AnalysisWorker')
         Thread.__init__(self)
         self.queue = queue
-        self.r_engine = REngine()
+        #self.r_engine = REngine()
 
     def run(self):
         logger.debug('AnalysisWorker started')
         while True:
             product_asin = self.queue.get()
-            self.r_engine.analyze_product(product_asin)
-            self.r_engine.generate_product_triggers(product_asin)
+            r_engine = REngine()
+            r_engine.start_engine()
+            r_engine.analyze_product(product_asin)
+            r_engine.generate_product_triggers(product_asin)
+            r_engine.put_db_connection_back()
             self.queue.task_done()

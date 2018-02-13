@@ -36,15 +36,17 @@ def start_crawper():
         queue.join()
 
 
-def start_rengine():
+def start_rengine(db_pool):
     logger.info('starting threaded REngine')
     print('* starting REngine')
+
     queue = Queue()
-    #r_engine = REngine()
-    utils = UtilityFunctions()
-    #asins = utils.get_products_asin_from_db()
+    pg_conn, pg_cursor = db_pool.get_conn()
+    utils = UtilityFunctions(pg_conn, pg_cursor, db_pool)
+
     asins = utils.get_zero_rank_asins_from_db()
-    print(len(asins))
+    db_pool.commit_changes(pg_conn)
+    db_pool.put_conn(pg_conn)
 
     for work in range(len(asins)):
         worker = AnalysisWorker(queue)
@@ -90,7 +92,7 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     start_crawper()
-    start_rengine()
+    start_rengine(db_conn)
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()
