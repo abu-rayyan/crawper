@@ -17,26 +17,35 @@ logger = logging.getLogger(__name__)
 
 
 # start threaded version of crawper for new releases
-def start_crawper():
+def start_crawper(threads):
     print('* starting crawper')
     logger.info('starting crawper')
     queue = Queue()
+    links_list = []
 
     for keys, links in Products.iteritems():
-        logger.info('starting worker threads for {work}'.format(work=keys))
-        for work in range(len(links)):
+        links_list.extend(links.values())
+
+    MAX_THREADS = int(threads)
+    while MAX_THREADS is not 0:
+        for work in range(MAX_THREADS):
             worker = Worker(queue)
             logger.debug('starting worker {index} @ {worker}'.format(index=work, worker=worker))
             worker.daemon = True
             worker.start()
 
-        logger.info('sending input data to workers')
-        for key, link in links.iteritems():
-            queue.put(link)
+        logger.debug('sending input data to worker thread')
+        for link in links_list:
+            queue.put(links_list.pop())
         queue.join()
 
+        if len(links_list) < MAX_THREADS:
+            MAX_THREADS = len(links_list)
+        else:
+            continue
 
-def start_rengine(db_pool):
+
+def start_rengine(db_pool, threads):
     logger.info('starting threaded REngine')
     print('* starting REngine')
 
@@ -48,7 +57,7 @@ def start_rengine(db_pool):
     db_pool.commit_changes(pg_conn)
     db_pool.put_conn(pg_conn)
 
-    MAX_THREADS = 99
+    MAX_THREADS = int(threads)
 
     while MAX_THREADS is not 0:
         for work in range(MAX_THREADS):
@@ -99,8 +108,11 @@ def main():
     # noinspection PyUnusedLocal
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
-    start_crawper()
-    start_rengine(db_conn)
+    rengine_threads = config.get('REngine', 'Max Threads')
+    crawper_threads = config.get('Crawper', 'Max Threads')
+
+    start_crawper(crawper_threads)
+    start_rengine(db_conn, rengine_threads)
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()

@@ -2,6 +2,7 @@ import logging
 
 from config.config import *
 from src.common import common
+from src.common.db.postgres_pool import PgPool
 from utils import Utils
 
 logger = logging.getLogger(__name__)
@@ -11,14 +12,21 @@ class Scraper:
     def __init__(self):
         logger.info('initiating scrapper')
         print('* scraping products')
+        self.pg_pool = PgPool()
+        self.pg_conn, self.pg_cursor = self.pg_pool.get_conn()
         self.base_url = URLS["BaseUrl"]
-        self.utils = Utils()
+        self.utils = Utils(self.pg_conn, self.pg_cursor, self.pg_pool)
+
+    def put_db_connection_back(self):
+        logger.debug('putting database connection back into pool')
+        self.pg_pool.commit_changes(self.pg_conn)
+        self.pg_pool.put_conn(self.pg_conn)
 
     # scrap all products info based on links
-    def get_products_info(self, links, category_name):
+    def get_products_info(self, link, category_name):
         """
         Scraps all products information
-        :param links:
+        :param link:
         :param category_name:
         """
         logger.info('scraping products info')
@@ -37,71 +45,71 @@ class Scraper:
 
         logger.debug('Product Dict: {prod}'.format(prod=product))
 
-        for link in links:
-            logger.debug('fetching product info @ {link}'.format(link=link))
+        #for link in links:
+        logger.debug('fetching product info @ {link}'.format(link=link))
 
-            try:
-                product["ASIN"] = link.split('/')[5]
-                product["ProductLink"] = link
-                logger.debug('ASIN: {asin}'.format(asin=product["ASIN"]))
-            except Exception as e:
-                logger.exception(e.message)
+        try:
+            product["ASIN"] = link.split('/')[5]
+            product["ProductLink"] = link
+            logger.debug('ASIN: {asin}'.format(asin=product["ASIN"]))
+        except Exception as e:
+            logger.exception(e.message)
 
-            web_page = common.request_page(link)
+        web_page = common.request_page(link)
 
-            try:
-                price = web_page.find('span', {'id': 'priceblock_ourprice'})
-                product["Price"] = price.text.encode('utf-8')
-                logger.debug("Price: {price}".format(price=price.text))
-            except Exception as e:
-                product["Price"] = None
-                logger.exception('{exception}'.format(exception=e.message))
+        try:
+            price = web_page.find('span', {'id': 'priceblock_ourprice'})
+            product["Price"] = price.text.encode('utf-8')
+            logger.debug("Price: {price}".format(price=price.text))
+        except Exception as e:
+            product["Price"] = None
+            logger.exception('{exception}'.format(exception=e.message))
 
-            try:
-                title = web_page.find('span', {'id': 'productTitle'})
-                label = ' '.join(title.text.split())
-                product["Title"] = label.encode('utf-8')
-                logger.debug("Title: {title}".format(title=label))
-            except Exception as e:
-                product["Title"] = None
-                logger.exception('{exception}'.format(exception=e.message))
+        try:
+            title = web_page.find('span', {'id': 'productTitle'})
+            label = ' '.join(title.text.split())
+            product["Title"] = label.encode('utf-8')
+            logger.debug("Title: {title}".format(title=label))
+        except Exception as e:
+            product["Title"] = None
+            logger.exception('{exception}'.format(exception=e.message))
 
-            try:
-                reviews_url = web_page.find('a', {'id': 'dp-summary-see-all-reviews'})
-                product["ReviewsURL"] = "{base}{url}".format(base=self.base_url,
+        try:
+            reviews_url = web_page.find('a', {'id': 'dp-summary-see-all-reviews'})
+            product["ReviewsURL"] = "{base}{url}".format(base=self.base_url,
                                                              url=reviews_url.get('href').encode('utf-8'))
-                logger.debug("Review URL: {url}".format(url=reviews_url.get('href').encode('utf-8')))
-            except Exception as e:
-                product["ReviewsURL"] = None
-                logger.exception('{exception}'.format(exception=e.message))
+            logger.debug("Review URL: {url}".format(url=reviews_url.get('href').encode('utf-8')))
+        except Exception as e:
+            product["ReviewsURL"] = None
+            logger.exception('{exception}'.format(exception=e.message))
 
-            try:
-                total_reviews = web_page.find('span', {'class': 'a-size-medium totalReviewCount'})
-                product["TotalReviews"] = total_reviews.text.encode('utf-8')
-                logger.debug("Total Reviews: {rev}".format(rev=total_reviews.text))
-            except Exception as e:
-                product["TotalReviews"] = None
-                logger.exception('{exception}'.format(exception=e.message))
+        try:
+            total_reviews = web_page.find('span', {'class': 'a-size-medium totalReviewCount'})
+            product["TotalReviews"] = total_reviews.text.encode('utf-8')
+            logger.debug("Total Reviews: {rev}".format(rev=total_reviews.text))
+        except Exception as e:
+            product["TotalReviews"] = None
+            logger.exception('{exception}'.format(exception=e.message))
 
-            try:
-                image = web_page.find('div', {'id': 'imgTagWrapperId'}).find("img")
-                product["ImageLink"] = image["data-a-dynamic-image"].split('{')[1].split('"')[1]
-                logger.debug("Image Link: {link}".format(link=product["ImageLink"]))
-            except Exception as e:
-                product["ImageLink"] = None
-                logger.exception(e.message)
+        try:
+            image = web_page.find('div', {'id': 'imgTagWrapperId'}).find("img")
+            product["ImageLink"] = image["data-a-dynamic-image"].split('{')[1].split('"')[1]
+            logger.debug("Image Link: {link}".format(link=product["ImageLink"]))
+        except Exception as e:
+            product["ImageLink"] = None
+            logger.exception(e.message)
 
-            try:
-                rating = web_page.find('i',
+        try:
+            rating = web_page.find('i',
                                        {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find(
                     "span")
-                product["Rating"] = rating.text.split()[0]
-                logger.debug("Product Rating: {rate}".format(rate=product["Rating"]))
-            except Exception as e:
-                logger.exception(e.message)
+            product["Rating"] = rating.text.split()[0]
+            logger.debug("Product Rating: {rate}".format(rate=product["Rating"]))
+        except Exception as e:
+            logger.exception(e.message)
 
-            self.utils.insert_product_into_db(product, category_name)
-            self.scrap_all_reviews(product)
+        self.utils.insert_product_into_db(product, category_name)
+        self.scrap_all_reviews(product)
 
     def scrap_all_reviews(self, product_dict):
         """

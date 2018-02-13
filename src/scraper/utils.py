@@ -7,9 +7,11 @@ logger = logging.getLogger(__name__)
 
 
 class Utils:
-    def __init__(self):
+    def __init__(self, conn, cursor, pool):
         logger.debug('initiating scraper utils')
-        self.pg_ = PgPool()
+        self.pg_ = pool
+        self.pg_conn = conn
+        self.pg_cursor = cursor
 
     def insert_product_into_db(self, product, category_id):
         """
@@ -19,16 +21,14 @@ class Utils:
         :return: bool
         """
         logger.debug('inserting product {asin} into database'.format(asin=product["ASIN"]))
-        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["InsertProduct"]
         params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
                   category_id, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"],
                   product["Rating"],)
 
         try:
-            self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
+            self.pg_.execute_query(self.pg_cursor, query, params)
+            self.pg_.commit_changes(self.pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
@@ -42,7 +42,6 @@ class Utils:
         :return: bool
         """
         logger.debug('inserting review {id} into database'.format(id=review["ReviewLink"]))
-        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["InsertReview"]
         params = (review["ReviewLink"], product_asin,
                   review["ReviewTitle"], review["ReviewText"],
@@ -50,13 +49,11 @@ class Utils:
                   review["ReviewRate"],)
 
         try:
-            self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
+            self.pg_.execute_query(self.pg_cursor, query, params)
+            self.pg_.commit_changes(self.pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
-            self.pg_.put_conn(pg_conn)
             return False
 
     def exists_product_in_db(self, product_asin):
@@ -66,18 +63,15 @@ class Utils:
         :return: bool
         """
         logger.debug('checking if product {asin} exists in database'.format(asin=product_asin))
-        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["ProductExists"]
         params = (product_asin,)
 
         try:
-            success_bool = self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
+            success_bool = self.pg_.execute_query(self.pg_cursor, query, params)
+            self.pg_.commit_changes(self.pg_conn)
             return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)
-            self.pg_.put_conn(pg_conn)
             return None
 
     def exists_reviewer_in_db(self, reviewer_id):
@@ -87,14 +81,12 @@ class Utils:
         :return: bool
         """
         logger.debug('checking if reviewer {id} exists in database'.format(id=reviewer_id))
-        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["ReviewerExists"]
         params = (reviewer_id,)
 
         try:
-            success_bool = self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
+            success_bool = self.pg_.execute_query(self.pg_cursor, query, params)
+            self.pg_.commit_changes(self.pg_conn)
             return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)
@@ -109,14 +101,12 @@ class Utils:
         if not self.exists_reviewer_in_db(review["ReviewerId"]):
             logger.debug('reviewer not exists in db, inserting reviewer {id} into database'.format(
                 id=review["ReviewerId"]))
-            pg_conn, pg_cursor = self.pg_.get_conn()
             query = QUERIES["InsertReviewer"]
             params = (review["ReviewerId"], review["ReviewerName"], review["ReviewerProfile"], 0, 0.0,)
 
             try:
-                self.pg_.execute_query(pg_cursor, query, params)
-                self.pg_.commit_changes(pg_conn)
-                self.pg_.put_conn(pg_conn)
+                self.pg_.execute_query(self.pg_cursor, query, params)
+                self.pg_.commit_changes(self.pg_conn)
                 return True
             except Exception as e:
                 logger.exception(e.message)
@@ -131,14 +121,12 @@ class Utils:
         :return: bool
         """
         logger.debug('checking if review {link} exists in the database'.format(link=review_link))
-        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["ExistsReview"]
         params = (review_link,)
 
         try:
-            success_bool = self.pg_.execute_query(pg_cursor, query, params)
-            self.pg_.commit_changes(pg_conn)
-            self.pg_.put_conn(pg_conn)
+            success_bool = self.pg_.execute_query(self.pg_cursor, query, params)
+            self.pg_.commit_changes(self.pg_conn)
             return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)

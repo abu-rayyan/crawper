@@ -14,19 +14,23 @@ class Worker(Thread):
         Thread.__init__(self)
         logger.debug('initializing queue')
         self.queue = queue
-        self.scraper = Scraper()
+        self.crawler = Crawler()
 
 # over-ridden run method as per requirements
     def run(self):
         logger.debug('worker started')
         while True:
             link = self.queue.get()
-            crawler = Crawler()
             logger.debug('link to crawl @ {link}'.format(link=link))
             links, file_name = self.crawler.get_product_links(link)
-            crawler.put_db_connection_back()
+            self.crawler.put_db_connection_back()
 
             logger.debug('links @ {links} file name @ {file}'.format(links=type(links), file=file_name))
             logger.debug('starting scraper')
-            self.scraper.get_products_info(links, file_name)
+            scraper = Scraper()
+
+            for link in links:
+                scraper.get_products_info(link, file_name)
+                scraper.put_db_connection_back()
+
             self.queue.task_done()
