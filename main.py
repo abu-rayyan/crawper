@@ -48,15 +48,23 @@ def start_rengine(db_pool):
     db_pool.commit_changes(pg_conn)
     db_pool.put_conn(pg_conn)
 
-    for work in range(len(asins)):
-        worker = AnalysisWorker(queue)
-        worker.daemon = True
-        worker.start()
+    MAX_THREADS = 99
 
-    for asin in asins:
-        queue.put(asin[0])
+    while MAX_THREADS is not 0:
+        for work in range(MAX_THREADS):
+            worker = AnalysisWorker(queue)
+            logger.debug('started AnalysisWorker {w} @ {id}'.format(w=work, id=worker))
+            worker.daemon = True
+            worker.start()
 
-    queue.join()
+        for asin in asins:
+            queue.put(asins.pop()[0])
+        queue.join()
+
+        if len(asins) < MAX_THREADS:
+            MAX_THREADS = len(asins)
+        else:
+            continue
 
 
 def main():
