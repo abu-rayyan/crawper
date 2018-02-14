@@ -12,7 +12,12 @@ auto = Autodoc(app)
 
 
 @app.route('/')
-def index_reoute():
+def index_route():
+    """
+    Index route
+    TODO: Need to handle it properly
+    :return:
+    """
     return '/'
 
 
@@ -193,4 +198,8 @@ def return_products(category_id):
 
 @app.route('/docs')
 def return_api_docs():
+    """
+    api docs route
+    :return:
+    """
     return auto.html()

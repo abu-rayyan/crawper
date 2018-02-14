@@ -1,6 +1,5 @@
 import logging
 import ConfigParser
-import threading
 
 from src.common import common
 from src.r_engine.utility import UtilityFunctions
@@ -9,15 +8,17 @@ from src.r_engine.threader.thread import AnalysisWorker
 from src.common.config.urls import *
 from Queue import Queue
 from src.common.proxy_rotator import ProxyRotator
-from src.r_engine.rengine import REngine
-
 from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
 
-# start threaded version of crawper for new releases
+# noinspection PyPep8Naming,SpellCheckingInspection
 def start_crawper(threads):
+    """
+    Starts threaded crawper
+    :param threads: no of max threads
+    """
     print('* starting crawper')
     logger.info('starting crawper')
     queue = Queue()
@@ -35,6 +36,7 @@ def start_crawper(threads):
             worker.start()
 
         logger.debug('sending input data to worker thread')
+        # noinspection PyUnusedLocal
         for link in links_list:
             queue.put(links_list.pop())
         queue.join()
@@ -45,7 +47,13 @@ def start_crawper(threads):
             continue
 
 
+# noinspection PyPep8Naming,SpellCheckingInspection
 def start_rengine(db_pool, threads):
+    """
+    Starts threaded REngine
+    :param db_pool: database pool connection
+    :param threads: no of max threads
+    """
     logger.info('starting threaded REngine')
     print('* starting REngine')
 
@@ -66,6 +74,7 @@ def start_rengine(db_pool, threads):
             worker.daemon = True
             worker.start()
 
+        # noinspection PyUnusedLocal
         for asin in asins:
             queue.put(asins.pop()[0])
         queue.join()
@@ -86,6 +95,8 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read("config.ini")
 
+    # TODO: Use logs file & Normal Mode when deployed in production
+    # TODO: App Mode can be passed through args, use whatever is better
     # logging.basicConfig(filename='logs.log', level=logging.getLevelName(config.get('App', 'Mode')))
     logging.basicConfig(level=logging.getLevelName(config.get('App', 'Mode')))
 
@@ -105,10 +116,12 @@ def main():
     logger.info('assembling proxy rotator')
 
     # TODO: Replace if found a better way of sharing same mem space
-    # noinspection PyUnusedLocal
+    # noinspection PyUnusedLocal,SpellCheckingInspection
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
+    # noinspection SpellCheckingInspection
     rengine_threads = config.get('REngine', 'Max Threads')
+    # noinspection SpellCheckingInspection
     crawper_threads = config.get('Crawper', 'Max Threads')
 
     start_crawper(crawper_threads)

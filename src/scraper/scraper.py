@@ -8,6 +8,7 @@ from utils import Utils
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class Scraper:
     def __init__(self):
         logger.info('initiating scrapper')
@@ -18,11 +19,13 @@ class Scraper:
         self.utils = Utils(self.pg_conn, self.pg_cursor, self.pg_pool)
 
     def put_db_connection_back(self):
+        """
+        Puts db connections back in pool
+        """
         logger.debug('putting database connection back into pool')
         self.pg_pool.commit_changes(self.pg_conn)
         self.pg_pool.put_conn(self.pg_conn)
 
-    # scrap all products info based on links
     def get_products_info(self, link, category_name):
         """
         Scraps all products information
@@ -45,7 +48,6 @@ class Scraper:
 
         logger.debug('Product Dict: {prod}'.format(prod=product))
 
-        #for link in links:
         logger.debug('fetching product info @ {link}'.format(link=link))
 
         try:
@@ -77,7 +79,7 @@ class Scraper:
         try:
             reviews_url = web_page.find('a', {'id': 'dp-summary-see-all-reviews'})
             product["ReviewsURL"] = "{base}{url}".format(base=self.base_url,
-                                                             url=reviews_url.get('href').encode('utf-8'))
+                                                         url=reviews_url.get('href').encode('utf-8'))
             logger.debug("Review URL: {url}".format(url=reviews_url.get('href').encode('utf-8')))
         except Exception as e:
             product["ReviewsURL"] = None
@@ -101,8 +103,8 @@ class Scraper:
 
         try:
             rating = web_page.find('i',
-                                       {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find(
-                    "span")
+                                   {'class': 'a-icon a-icon-star-medium a-star-medium-4-5 averageStarRating'}).find(
+                "span")
             product["Rating"] = rating.text.split()[0]
             logger.debug("Product Rating: {rate}".format(rate=product["Rating"]))
         except Exception as e:

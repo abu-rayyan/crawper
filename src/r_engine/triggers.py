@@ -4,15 +4,16 @@ import nltk
 import datetime
 
 from textblob import TextBlob
-from nltk.util import ngrams
 from utility import UtilityFunctions
 from dateutil import parser
 from datetime import timedelta
 
+# noinspection SpellCheckingInspection
 nltk.download('punkt')
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class Triggers:
     def __init__(self, conn, cursor, pool):
         logger.debug('initializing triggers generator')
@@ -201,6 +202,11 @@ class Triggers:
             return None
 
     def get_abnormal_review_trigger(self, product_asin):
+        """
+        Calculates abnormal reviews trigger
+        :param product_asin: product asin
+        :return: bool
+        """
         logger.debug('generating abormal review category participation trigger for product {asin}'.format(
             asin=product_asin.decode('utf-8')))
         try:
@@ -223,6 +229,11 @@ class Triggers:
             return None
 
     def get_review_spikes_trigger(self, product_asin):
+        """
+        Calculates review spikes trigger
+        :param product_asin: product asin
+        :return: bool
+        """
         logger.debug('generating review spikes trigger for product {asin}'.format(asin=product_asin.decode('utf-8')))
         try:
             dates_list = self.utility_methods.get_product_reviews_dates_from_db(product_asin)

@@ -1,11 +1,11 @@
 import logging
 
 from config.config import *
-from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class Utils:
     def __init__(self, conn, cursor, pool):
         logger.debug('initiating scraper utils')

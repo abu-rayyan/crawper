@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 # Single threaded postgres driver wrapper
+# noinspection SpellCheckingInspection
 class Pg:
     def __init__(self):
         logger.debug('initializing postgres')

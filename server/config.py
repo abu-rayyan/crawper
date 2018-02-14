@@ -1,5 +1,5 @@
 class BaseConfig(object):
-    'Base Configurations'
+    """Base Configurations"""
     SECRET_KEY = 'secret'
     DEBUG = True
     TESTING = False
@@ -7,18 +7,18 @@ class BaseConfig(object):
 
 
 class ProductionConfig(BaseConfig):
-    'Production Specific Configurations'
+    """Production Specific Configurations"""
     DEBUG = False
     SECRET_KEY = 'secret'  # TODO: supply a secret key file here
 
 
 class StagingConfig(BaseConfig):
-    'Staging Specific Configurations'
+    """Staging Specific Configurations"""
     DEBUG = True
 
 
 class DevelopmentConfig(BaseConfig):
-    'Development Specific Configurations'
+    """Development Specific Configurations"""
     DEBUG = True
     TESTING = True
     SECRET_KEY = 'secret'

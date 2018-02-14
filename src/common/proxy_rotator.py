@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 # get list of proxies and rotate
+# this should be singleton
+# noinspection SpellCheckingInspection
 @singleton
 class ProxyRotator:
     def __init__(self, file_name=None):

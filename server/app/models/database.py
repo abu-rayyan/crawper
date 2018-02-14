@@ -6,11 +6,22 @@ pg_ = PgPool()
 
 
 def get_categories(category_id):
+    """
+    Returns categories/sub-categories to categories route
+    :param category_id: id of category
+    :return: list of categories/sub-categories
+    """
     if category_id in Categories:
         return Categories[category_id]
 
 
 def get_product(asin_no, category_id):
+    """
+    Returns a product information to product route
+    :param asin_no: product asin
+    :param category_id: id of category
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["GetProduct"]
     params = (asin_no, category_id,)
@@ -26,6 +37,11 @@ def get_product(asin_no, category_id):
 
 
 def get_products(category_id):
+    """
+    Returns all products of a category
+    :param category_id: id of category
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["GetCategoryProducts"]
     params = (category_id,)
@@ -41,6 +57,11 @@ def get_products(category_id):
 
 
 def search_product(keyword):
+    """
+    Searches and returns products info where the keyword in matched
+    :param keyword:
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["SearchProduct"]
     param = '%{key}%'.format(key=keyword)
@@ -56,10 +77,15 @@ def search_product(keyword):
         return None
 
 
-def exists_category_in_db(category_name):
+def exists_category_in_db(category_id):
+    """
+    Checks if a category exists in db
+    :param category_id: id of category
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["ExistsCategory"]
-    params = (category_name,)
+    params = (category_id,)
 
     try:
         res = pg_.execute_query(pg_cursor, query, params)
@@ -72,6 +98,11 @@ def exists_category_in_db(category_name):
 
 
 def get_sentiment_label(product_id):
+    """
+    Returns sentiment labels of product
+    :param product_id: id of product
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["GetSentimentLabels"]
     params = (product_id,)
@@ -87,6 +118,11 @@ def get_sentiment_label(product_id):
 
 
 def get_word_category(product_id):
+    """
+    Returns word count categories of product
+    :param product_id: id of product
+    :return:
+    """
     pg_conn, pg_cursor = pg_.get_conn()
     query = QUERIES["GetWordCategory"]
     params = (product_id,)

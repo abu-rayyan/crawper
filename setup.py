@@ -163,7 +163,7 @@ setup(
               'server.app.common', 'server.app.common.db', 'server.app.models', 'server.app.models.config',
               'server.mock'],
     url='https://github.com/ExpertsVision/crawper',
-    license='GPL',
+    license='MIT',
     author='awakeel',
     author_email='awkhan978@gmail.com',
     description='Amazon Scraper based on BS4, Flask and PostgreSQL'

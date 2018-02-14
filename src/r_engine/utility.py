@@ -5,11 +5,10 @@ from config.config import QUERIES
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class UtilityFunctions:
     def __init__(self, conn, cursor, pool):
         logger.debug('initializing utility functions')
-        # self.pg_pool = PgPool()
-        # self.pg_conn, self.pg_cursor = self.pg_pool.get_conn()
         self.pg_pool = pool
         self.pg_conn = conn
         self.pg_cursor = cursor
@@ -32,14 +31,12 @@ class UtilityFunctions:
             "TotalReviews": None
         }
 
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProduct"]
         params = (product_asin,)
 
         try:
             product = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
 
             product_info["ASIN"] = product[0][0]
             product_info["Title"] = product[0][1]
@@ -62,14 +59,12 @@ class UtilityFunctions:
         :return: product reviews
         """
         logger.debug('getting product {asin} reviews from database'.format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductReviews"]
         params = (product_asin,)
 
         try:
             reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews
         except Exception as e:
             logger.debug(e.message)
@@ -81,13 +76,11 @@ class UtilityFunctions:
         :return:
         """
         logger.debug('getting all asins with zero ranks')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetAsinsWithZeroRank"]
 
         try:
             res = self.pg_pool.execute_query(self.pg_cursor, query, params='')
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return res
         except Exception as e:
             logger.exception(e.message)
@@ -99,13 +92,11 @@ class UtilityFunctions:
         :return: asin no list
         """
         logger.debug('getting all products asin from database')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductsAsin"]
 
         try:
             res_data = self.pg_pool.execute_query(self.pg_cursor, query, params='')
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return res_data
         except Exception as e:
             logger.exception(e.message)
@@ -118,7 +109,6 @@ class UtilityFunctions:
         :return: success bool
         """
         logger.debug('inserting review analysis into database')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["InsertReviewStat"]
         params = (review_stat["ReviewLink"], review_stat["ReviewLength"],
                   review_stat["WordCountCategory"], review_stat["SentimentScore"],
@@ -128,7 +118,6 @@ class UtilityFunctions:
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
@@ -140,18 +129,14 @@ class UtilityFunctions:
         :return: reviewer ids list
         """
         logger.debug('getting reviewers information from database')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerIds"]
 
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params='')
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviewer_ids
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.commit_changes(pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviewers_total_reviews_from_db(self, reviewer_id):
@@ -161,19 +146,15 @@ class UtilityFunctions:
         :return: total reviews
         """
         logger.debug('getting reviewer {id} total no of reviews  and ratings from database'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetTotalReviewsOfReviewer"]
         params = (reviewer_id,)
 
         try:
             reviews_rate = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews_rate
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.commit_changes(pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def update_reviewer_creduality_in_db(self, reviewer_data):
@@ -183,7 +164,6 @@ class UtilityFunctions:
         :return: success bool
         """
         logger.debug('updating reviewer {id} creduality score'.format(id=reviewer_data["ReviewerId"]))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["UpdateReviewerCredualityScore"]
         params = (
             reviewer_data["TotalReviews"], reviewer_data["CredualityScore"], reviewer_data["ParticipationHistory"],
@@ -192,11 +172,9 @@ class UtilityFunctions:
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return False
 
     def get_product_reviews_text_from_db(self, asin):
@@ -206,18 +184,15 @@ class UtilityFunctions:
         :return: review text list
         """
         logger.debug('getting product {asin} all reviews text from database'.format(asin=asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductReviewsText"]
         params = (asin,)
 
         try:
             reviews_text = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews_text
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviewer_creduality_from_db(self, reviewer_id):
@@ -227,18 +202,15 @@ class UtilityFunctions:
         :return: creduality score
         """
         logger.debug('getting reviewer {id} creaduality from database'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerCreaduality"]
         params = (reviewer_id,)
 
         try:
             creduality = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return creduality
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     @staticmethod
@@ -279,18 +251,15 @@ class UtilityFunctions:
         :return: product reviewer's information
         """
         logger.debug('getting reviewrs info of product {product}'.format(product=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductReviewers"]
         params = (product_asin,)
 
         try:
             product_reviewers_info = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return product_reviewers_info
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_all_reviewers_from_db(self, product_asin):
@@ -319,18 +288,15 @@ class UtilityFunctions:
         :return: reviews list
         """
         logger.debug('getting 4-5 star reviews of product {asin} from database'.format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["Get45StarProductReviews"]
         params = (product_asin,)
 
         try:
             reviews_text = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews_text
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviewers_with_one_review_from_db(self):
@@ -339,17 +305,14 @@ class UtilityFunctions:
         :return: reviewer ids list
         """
         logger.debug('getting reviewers with one review from database')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewersWithOneReview"]
 
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params='')
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviewer_ids
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_all_reviewers_with_four_five_stars(self):
@@ -358,17 +321,14 @@ class UtilityFunctions:
         :return: reviewer ids list
         """
         logger.debug('getting reviewers of 4-5 star reviews from database')
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["Get45StarReviewers"]
 
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params='')
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviewer_ids
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviewer_reviewes_date_from_db(self, reviewer_id):
@@ -378,18 +338,15 @@ class UtilityFunctions:
         :return: dates list
         """
         logger.debug('getting reviews date of reviewer {id}'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerReviewsDate"]
         params = (reviewer_id,)
 
         try:
             reviews_dates = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews_dates
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     @staticmethod
@@ -419,18 +376,15 @@ class UtilityFunctions:
         :return: total no of reviews
         """
         logger.debug('getting total no of reviewes of reviewer {id} from database'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetTotalNoReviewesOfReviewer"]
         params = (reviewer_id,)
 
         try:
             total_reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return total_reviews
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_four_five_star_reviews_of_reviewer_from_db(self, reviewer_id):
@@ -440,18 +394,15 @@ class UtilityFunctions:
         :return: reviews list
         """
         logger.debug('getting 4-5 star reviews of reviewer {id} from database'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewer45StarReviews"]
         params = (reviewer_id,)
 
         try:
             reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_review_rate_of_reviews_of_product(self, product_asin):
@@ -461,18 +412,15 @@ class UtilityFunctions:
         :return: rates list
         """
         logger.debug('getting review rates of reviews of product {asin}'.format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetRatesOfReviewsOfProduct"]
         params = (product_asin,)
 
         try:
             review_rates = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return review_rates
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_total_no_three_star_reviews_of_product_from_db(self, product_asin):
@@ -482,18 +430,15 @@ class UtilityFunctions:
         :return: total no of reviews
         """
         logger.debug("getting total no of 3 star reviews of product {asin}".format(asin=product_asin.decode('utf-8')))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetNoOf3StarReviewsOfProduct"]
         params = (product_asin,)
 
         try:
             total_reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return total_reviews
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_total_no_one_two_star_reviews_of_product_from_db(self, product_asin):
@@ -503,18 +448,15 @@ class UtilityFunctions:
         :return: total no of reviews
         """
         logger.debug("getting total no of 1-2 star reviews of product {asin}".format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetNoOf1to2StarReviewsOfProduct"]
         params = (product_asin,)
 
         try:
             total_reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return total_reviews
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviews_reviewer_ids_from_db(self, product_asin):
@@ -525,18 +467,15 @@ class UtilityFunctions:
         """
         logger.debug('getting reviewer ids of product {asin} reviews from database'.format(
             asin=product_asin.decode('utf-8')))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerIdsOfProductReviews"]
         params = (product_asin,)
 
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviewer_ids
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_reviewers_participation_from_db(self, reviewer_id):
@@ -546,18 +485,15 @@ class UtilityFunctions:
         :return: participation history label
         """
         logger.debug('getting reviewer {reviewer_id} participation history from db'.format(reviewer_id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewerParticipationHistory"]
         params = (reviewer_id,)
 
         try:
             participt_history = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return participt_history
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_product_reviews_dates_from_db(self, product_asin):
@@ -567,18 +503,15 @@ class UtilityFunctions:
         :return: dates list
         """
         logger.debug('getting product {asin} reviews dates from database'.format(asin=product_asin.decode('utf-8')))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductReviewsDates"]
         params = (product_asin,)
 
         try:
             reviews_dates = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return reviews_dates
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_product_today_reviews_from_db(self, product_asin, t_date):
@@ -589,18 +522,15 @@ class UtilityFunctions:
         :return: total no of reviews
         """
         logger.debug('getting today reviews of product {asin} from database'.format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetNoOfTodayReviewsOfProduct"]
         params = (product_asin, t_date,)
 
         try:
             total_reviews = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return total_reviews
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_review_ids_of_reviewer_from_db(self, reviewer_id):
@@ -610,18 +540,15 @@ class UtilityFunctions:
         :return: reviewer ids
         """
         logger.debug('getting reviews ids of reviewer {id} from database'.format(id=reviewer_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewsIdsOfReviewer"]
         params = (reviewer_id,)
 
         try:
             review_ids = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return review_ids
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def get_review_score_from_db(self, review_id):
@@ -631,18 +558,15 @@ class UtilityFunctions:
         :return: review score
         """
         logger.debug('getting review {id} score from database'.format(id=review_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewScore"]
         params = (review_id,)
 
         try:
             review_score = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return review_score
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def update_review_score_in_db(self, review_id, score):
@@ -653,18 +577,15 @@ class UtilityFunctions:
         :return: success bool
         """
         logger.debug('updating review {id} score in database'.format(id=review_id))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["UpdateReviewScore"]
         params = (score, review_id,)
 
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return False
 
     def get_product_rank_from_db(self, product_asin):
@@ -674,18 +595,15 @@ class UtilityFunctions:
         :return:
         """
         logger.debug('getting product {id} rank from database'.format(id=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetProductRank"]
         params = (product_asin,)
 
         try:
             product_score = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return product_score
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None
 
     def update_product_rank_in_db(self, product_asin, score):
@@ -696,18 +614,15 @@ class UtilityFunctions:
         :return: success bool
         """
         logger.debug('updating product {asin} rank in database'.format(asin=product_asin))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["UpdateProductRank"]
         params = (score, product_asin,)
 
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return False
 
     def get_review_text_from_db(self, review_id):
@@ -717,16 +632,13 @@ class UtilityFunctions:
         :return: review text
         """
         logger.debug('getting review {link} text from database'.format(link=review_id.decode('utf-8')))
-        # pg_conn, pg_cursor = self.pg_pool.get_conn()
         query = QUERIES["GetReviewText"]
         params = (review_id,)
 
         try:
             review_text = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
-            # self.pg_pool.put_conn(pg_conn)
             return review_text
         except Exception as e:
             logger.exception(e.message)
-            # self.pg_pool.put_conn(pg_conn)
             return None

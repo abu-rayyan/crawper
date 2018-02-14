@@ -8,6 +8,7 @@ from src.common.db.postgres_pool import PgPool
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class Crawler:
     def __init__(self):
         logger.info('initiating crawler')
@@ -18,13 +19,18 @@ class Crawler:
         self.utils = Utils(self.pg_conn, self.pg_cursor, self.pg_pool)
 
     def put_db_connection_back(self):
+        """
+        Puts db connections back in pool
+        """
         logger.debug('putting database connection back into pool')
         self.pg_pool.commit_changes(self.pg_conn)
         self.pg_pool.put_conn(self.pg_conn)
 
-    # checks basic configs of crawler
     @staticmethod
     def check_configs():
+        """
+        Checks crawler configs (temp dirs for now)
+        """
         logger.debug('checking crawler configs')
 
         if not common.exists_dir('temp/crawler'):
@@ -32,15 +38,28 @@ class Crawler:
         else:
             logger.debug('crawler dir [/temp/crawler/] exists')
 
-    # get product category name from url
     @staticmethod
     def get_category(url):  # TODO: Replace with category name from thread
+        """
+        Extracts category id from url
+        :param url: url
+        :return:
+        """
         logger.debug('getting category name @ {url}'.format(url=url))
-        category = url.split('/')
-        logger.debug('category: {category}'.format(category=category[-2]))
-        return category[-2]
+        try:
+            category = url.split('/')
+            logger.debug('category: {category}'.format(category=category[-2]))
+            return category[-2]
+        except Exception as e:
+            logger.exception(e.message)
+            return None
 
     def validate_product(self, product_asin):
+        """
+        Validates a product weather it should be scraped or not
+        :param product_asin: product asin
+        :return: validate bool
+        """
         logger.debug('checking if product {asin} validates for being scraped'.format(asin=product_asin))
         global validate_bool
         try:
@@ -104,8 +123,12 @@ class Crawler:
             logger.exception(e.message)
         return validate_bool
 
-    # get sports/outdoors products links (all 5 tabs)
     def get_product_links(self, url):
+        """
+        Crawls and extracts product links from the page
+        :param url: url of the page
+        :return: urls list
+        """
         print('* crawling products')
         category_id = self.get_category(url)
         logger.debug('products category name: {file}'.format(file=category_id))

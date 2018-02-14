@@ -11,6 +11,7 @@ from src.common.db.postgres_pool import PgPool
 logger = logging.getLogger(__name__)
 
 
+# noinspection SpellCheckingInspection
 class REngine:
     def __init__(self):
         logger.debug('initiating AEngine')
@@ -20,6 +21,9 @@ class REngine:
         self.triggers = Triggers(self.pg_conn, self.pg_cursor, self.pg_pool)
 
     def put_db_connection_back(self):
+        """
+        Puts db connections back to pool
+        """
         logger.debug('putting database connection object back in pool')
         self.pg_pool.commit_changes(self.pg_conn)
         self.pg_pool.put_conn(self.pg_conn)
@@ -30,7 +34,6 @@ class REngine:
         """
         logger.info('starting analysis engine')
         self.calculate_reviewer_creduality()
-        #self.analyze_products()
 
     def analyze_products(self):
         """
@@ -39,11 +42,6 @@ class REngine:
         logger.info('analyzing products information')
         print('* applying analysis to data')
         asins = self.utility_method.get_products_asin_from_db()
-        # asin_list = []
-        #
-        # if asins is not None:
-        #     for asin in asins:
-        #         asin_list.append(asin[0])
         if asins is not None:
             for asin in asins:
                 try:
@@ -53,7 +51,6 @@ class REngine:
                     logger.exception(e.message)
         else:
             logger.error('something bad happened')
-        #return asin_list
 
     def analyze_product(self, asin):
         """
@@ -413,7 +410,7 @@ class REngine:
 
     def get_repeated_remarks_trigger(self, review_id, product_asin):
         """
-        Get repeeated remarks trigger for a review and product
+        Get repeated remarks trigger for a review and product
         :param review_id: review id or link
         :param product_asin: asin no of product being reviewed
         :return: success bool

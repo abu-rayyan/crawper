@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 # Utility methods for crawler
+# noinspection SpellCheckingInspection
 class Utils:
     def __init__(self, conn, cursor, pool):
         logger.debug('initiating crawler utils')
@@ -110,6 +111,11 @@ class Utils:
             return None
 
     def get_total_reviews_from_db(self, product_asin):
+        """
+        Returns total no of reviews of product from db
+        :param product_asin: product asin
+        :return:
+        """
         logger.debug('getting product {asin} total no of reviews from database'.format(asin=product_asin))
         query = QUERIES["GetTotalReviewCount"]
         params = (product_asin,)

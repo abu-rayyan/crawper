@@ -8,12 +8,12 @@ MAX_THREADS = 50
 thread_limiter = threading.BoundedSemaphore(MAX_THREADS)
 
 
+# noinspection SpellCheckingInspection
 class AnalysisWorker(Thread):
     def __init__(self, queue):
         logger.debug('starting AnalysisWorker')
         Thread.__init__(self)
         self.queue = queue
-        #self.r_engine = REngine()
 
     def run(self):
         logger.debug('AnalysisWorker started')

@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 # Multi-threaded & Singleton wrapper to the postgres driver
+# noinspection SpellCheckingInspection
 @singleton
 class PgPool:
     def __init__(self):
@@ -74,20 +75,12 @@ class PgPool:
                 continue
         return conn, cursor
 
-        # try:
-        #     conn = self.pool.getconn()
-        #     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        #     return conn, cursor
-        # except Exception as e:
-        #     logger.exception(e.message)
-        #     return None, None
-
     @staticmethod
-    def execute_query(cursor, query, params):
+    def execute_query(cursor_, query, params):
         """
         Execute a query on database
 
-        :param cursor: cursor object
+        :param cursor_: cursor object
         :param query: database query
         :type query: str
         :param params: query parameters
@@ -96,44 +89,44 @@ class PgPool:
         """
         logger.info('executing query')
         logger.debug('Cursor: {cursor}, Query: {query}'.format(
-            cursor=cursor, query=query))
+            cursor=cursor_, query=query))
 
         try:
             if query.split()[0].lower() == 'select':
-                cursor.execute(query, params)
-                return cursor.fetchall()
+                cursor_.execute(query, params)
+                return cursor_.fetchall()
             else:
-                return cursor.execute(query, params)
+                return cursor_.execute(query, params)
         except Exception as e:
             logger.exception(e.message)
             return False
 
     # commit changes to db permanently
     @staticmethod
-    def commit_changes(conn):
+    def commit_changes(conn_):
         """
         Commit changes to the databse permanently
 
-        :param conn: connection object
+        :param conn_: connection object
         :return: bool
         """
         logger.debug('commiting changes to database')
         try:
-            return conn.commit()
+            return conn_.commit()
         except Exception as e:
             logger.exception(e.message)
             return False
 
-    def put_conn(self, conn):
+    def put_conn(self, conn_):
         """
         Put connection back to the pool
 
-        :param conn: connection object
+        :param conn_: connection object
         :return: bool
         """
-        logger.debug('putting connection {conn} back to pool'.format(conn=conn))
+        logger.debug('putting connection {conn} back to pool'.format(conn=conn_))
         try:
-            return self.pool.putconn(conn)
+            return self.pool.putconn(conn_)
         except Exception as e:
             logger.exception(e.message)
             return False

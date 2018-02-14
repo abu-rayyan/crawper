@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # Common functions used in the app
 # TODO: Adopt OO Paradigm here
 
+# noinspection SpellCheckingInspection
 def request_page(page_url):
     """
     Sends get request and return page
@@ -33,7 +34,6 @@ def request_page(page_url):
 
     try:
         response = requests.get(page_url, headers=headers, proxies=rotator.get_proxy())
-        # response = requests.get(page_url, headers=headers)
         logger.debug('requests response @ {res}'.format(res=response))
         page_content = BeautifulSoup(response.content, 'lxml')
         logger.debug('bs4 page content @ {content}'.format(content=type(page_content)))
@@ -66,13 +66,13 @@ def exists_file(file_path):
     return os.path.isfile(file_path)
 
 
-# return creation time of file (depretiated)
+# return creation time of file (depreciated)
 # TODO: Remove if not needed any more
 def get_creation_time(file_path):
     return os.path.getctime(file_path)
 
 
-# return current system time (depritiated)
+# return current system time (depreciated)
 # TODO: Remove if not needed any more
 def get_current_time():
     return time.time()
