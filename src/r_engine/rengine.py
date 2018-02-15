@@ -34,7 +34,7 @@ class REngine:
         """
         logger.info('starting analysis engine')
         self.calculate_reviewer_creduality()
-        self.analyze_products()
+        # self.analyze_products()
 
     def analyze_products(self):
         """
