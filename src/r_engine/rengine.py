@@ -34,6 +34,7 @@ class REngine:
         """
         logger.info('starting analysis engine')
         self.calculate_reviewer_creduality()
+        self.analyze_products()
 
     def analyze_products(self):
         """
@@ -41,7 +42,7 @@ class REngine:
         """
         logger.info('analyzing products information')
         print('* applying analysis to data')
-        asins = self.utility_method.get_products_asin_from_db()
+        asins = self.utility_method.get_zero_rank_asins_from_db()
         if asins is not None:
             for asin in asins:
                 try:

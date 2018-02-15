@@ -2,6 +2,7 @@ import logging
 import ConfigParser
 
 from src.common import common
+from src.r_engine.rengine import REngine
 from src.r_engine.utility import UtilityFunctions
 from src.common.thread import Worker
 from src.r_engine.threader.thread import AnalysisWorker
@@ -124,8 +125,11 @@ def main():
     # noinspection SpellCheckingInspection
     crawper_threads = config.get('Crawper', 'Max Threads')
 
-    start_crawper(crawper_threads)
-    start_rengine(db_conn, rengine_threads)
+    #start_crawper(crawper_threads)
+    #start_rengine(db_conn, rengine_threads)
+    r_engine = REngine()
+    r_engine.start_engine()
+    r_engine.put_db_connection_back()
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()
