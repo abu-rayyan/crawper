@@ -19,4 +19,4 @@ db_conn_params = {
 db_conn = PgPool()
 db_conn.create_pool(db_conn_params)
 
-app.run(host='0.0.0.0', port=9000)
+app.run(host='0.0.0.0', port=9000, threaded=True)
