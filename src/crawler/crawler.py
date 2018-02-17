@@ -14,17 +14,7 @@ class Crawler:
         logger.info('initiating crawler')
         self.base_url = URLS.get("BaseUrl")
         self.check_configs()
-        self.pg_pool = PgPool()
-        self.pg_conn, self.pg_cursor = self.pg_pool.get_conn()
-        self.utils = Utils(self.pg_conn, self.pg_cursor, self.pg_pool)
-
-    def put_db_connection_back(self):
-        """
-        Puts db connections back in pool
-        """
-        logger.debug('putting database connection back into pool')
-        self.pg_pool.commit_changes(self.pg_conn)
-        self.pg_pool.put_conn(self.pg_conn)
+        self.utils = Utils()
 
     @staticmethod
     def check_configs():

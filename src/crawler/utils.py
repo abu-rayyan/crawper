@@ -1,6 +1,7 @@
 import logging
 
 from config.config import *
+from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
@@ -8,11 +9,9 @@ logger = logging.getLogger(__name__)
 # Utility methods for crawler
 # noinspection SpellCheckingInspection
 class Utils:
-    def __init__(self, conn, cursor, pool):
+    def __init__(self):
         logger.debug('initiating crawler utils')
-        self.pg_ = pool
-        self.pg_conn = conn
-        self.pg_cursor = cursor
+        self.pg_ = PgPool()
 
     def get_no_of_scraped_reviews_from_db(self, product_asin):
         """
@@ -22,15 +21,18 @@ class Utils:
         """
         logger.debug('getting product {asin} total no of scraped reviews from database'.format(
             asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["GetProductReviewCount"]
         params = (product_asin,)
 
         try:
-            reviews_count = self.pg_.execute_query(self.pg_cursor, query, params)[0][0]
-            self.pg_.commit_changes(self.pg_conn)
+            reviews_count = self.pg_.execute_query(pg_cursor, query, params)[0][0]
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return reviews_count
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return None
 
     def exists_product_in_db(self, product_asin):
@@ -41,15 +43,18 @@ class Utils:
         """
         logger.debug('checking if product {asin} exsists in database'.format(
             asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["ExistsProduct"]
         params = (product_asin,)
 
         try:
-            success_bool = self.pg_.execute_query(self.pg_cursor, query, params)
-            self.pg_.commit_changes(self.pg_conn)
+            success_bool = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return None
 
     def exists_category_in_db(self, category_id):
@@ -60,15 +65,18 @@ class Utils:
         """
         logger.debug('checking if category {id} exists in database'.format(
             id=category_id))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["ExistsCategory"]
         params = (category_id,)
 
         try:
-            success_bool = self.pg_.execute_query(self.pg_cursor, query, params)
-            self.pg_.commit_changes(self.pg_conn)
+            success_bool = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return success_bool[0][0]
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return None
 
     def insert_category_into_db(self, category_id):
@@ -79,15 +87,18 @@ class Utils:
         """
         logger.debug('inserting new category {id} into database'.format(
             id=category_id))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["InsertCategory"]
         params = (category_id,)
 
         try:
-            self.pg_.execute_query(self.pg_cursor, query, params)
-            self.pg_.commit_changes(self.pg_conn)
+            self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return True
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return False
 
     def get_product_links_from_db(self, category_id):
@@ -98,16 +109,19 @@ class Utils:
         """
         logger.debug('getting product links for category {id}'.format(
             id=category_id))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["SelectProductLink"]
         params = (category_id,)
 
         try:
-            response = self.pg_.execute_query(self.pg_cursor, query, params)
+            response = self.pg_.execute_query(pg_cursor, query, params)
             product_links = [link[0] for link in response]
-            self.pg_.commit_changes(self.pg_conn)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return product_links
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return None
 
     def get_total_reviews_from_db(self, product_asin):
@@ -117,13 +131,16 @@ class Utils:
         :return:
         """
         logger.debug('getting product {asin} total no of reviews from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
         query = QUERIES["GetTotalReviewCount"]
         params = (product_asin,)
 
         try:
-            review_count = self.pg_.execute_query(self.pg_cursor, query, params)
-            self.pg_.commit_changes(self.pg_conn)
+            review_count = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
             return review_count[0][0]
         except Exception as e:
             logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
             return None

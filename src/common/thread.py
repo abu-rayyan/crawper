@@ -15,6 +15,7 @@ class Worker(Thread):
         logger.debug('initializing queue')
         self.queue = queue
         self.crawler = Crawler()
+        self.scraper = Scraper()
 
 # over-ridden run method as per requirements
     def run(self):
@@ -27,10 +28,8 @@ class Worker(Thread):
 
             logger.debug('links @ {links} file name @ {file}'.format(links=type(links), file=file_name))
             logger.debug('starting scraper')
-            scraper = Scraper()
 
             for link in links:
-                scraper.get_products_info(link, file_name)
-                scraper.put_db_connection_back()
+                self.scraper.get_products_info(link, file_name)
 
             self.queue.task_done()

@@ -13,18 +13,8 @@ class Scraper:
     def __init__(self):
         logger.info('initiating scrapper')
         print('* scraping products')
-        self.pg_pool = PgPool()
-        self.pg_conn, self.pg_cursor = self.pg_pool.get_conn()
         self.base_url = URLS["BaseUrl"]
-        self.utils = Utils(self.pg_conn, self.pg_cursor, self.pg_pool)
-
-    def put_db_connection_back(self):
-        """
-        Puts db connections back in pool
-        """
-        logger.debug('putting database connection back into pool')
-        self.pg_pool.commit_changes(self.pg_conn)
-        self.pg_pool.put_conn(self.pg_conn)
+        self.utils = Utils()
 
     def get_products_info(self, link, category_name):
         """
