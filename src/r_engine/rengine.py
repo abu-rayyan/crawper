@@ -342,18 +342,24 @@ class REngine:
                     review_links = self.utility_method.get_review_ids_of_reviewer_from_db(reviewer_id[0])
 
                     for link in review_links:
-                        review_score = self.utility_method.get_review_score_from_db(link[0])[0][0]
-                        if self.get_repeated_remarks_trigger(link[0], product_asin):
-                            trigger_list.append(1)
-                        updated_score = self.get_review_score(int(review_score), status)
-                        self.utility_method.update_review_score_in_db(link[0], updated_score)
+                        try:
+                            review_score = self.utility_method.get_review_score_from_db(link[0])[0][0]
+                            if self.get_repeated_remarks_trigger(link[0], product_asin):
+                                trigger_list.append(1)
+                            updated_score = self.get_review_score(int(review_score), status)
+                            self.utility_method.update_review_score_in_db(link[0], updated_score)
+                        except Exception as e:
+                            logger.exception(e.message)
 
                 reviews_score = 0
                 product_score = self.utility_method.get_product_rank_from_db(product_asin)[0][0]
                 product_reviews = self.utility_method.get_product_reviews_from_db(product_asin)
                 for review in product_reviews:
-                    score = self.utility_method.get_review_score_from_db(review[0])[0][0]
-                    reviews_score += score
+                    try:
+                        score = self.utility_method.get_review_score_from_db(review[0])[0][0]
+                        reviews_score += score
+                    except Exception as e:
+                        logger.exception(e.message)
                 product_score += reviews_score
                 self.utility_method.update_product_rank_in_db(product_asin, product_score)
             except Exception as e:
