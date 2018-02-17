@@ -24,7 +24,6 @@ class Worker(Thread):
             link = self.queue.get()
             logger.debug('link to crawl @ {link}'.format(link=link))
             links, file_name = self.crawler.get_product_links(link)
-            self.crawler.put_db_connection_back()
 
             logger.debug('links @ {links} file name @ {file}'.format(links=type(links), file=file_name))
             logger.debug('starting scraper')

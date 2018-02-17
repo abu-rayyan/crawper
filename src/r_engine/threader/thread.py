@@ -21,7 +21,7 @@ class AnalysisWorker(Thread):
             product_asin = self.queue.get()
             r_engine = REngine()
             r_engine.start_engine()
-            #r_engine.analyze_product(product_asin)
+            r_engine.analyze_product(product_asin)
             r_engine.generate_product_triggers(product_asin)
             r_engine.put_db_connection_back()
             self.queue.task_done()
