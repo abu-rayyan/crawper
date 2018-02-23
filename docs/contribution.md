@@ -12,6 +12,7 @@ In order to contribute to this code, follow the following rules:
 10. Strictly follow the best practices in use
 11. Don't **copy & paste** from online sources such as **stack overflow**
 12. Always give credits
+13. Always use application logger instead of direct print to stdout
 
 These are not just the only rules, there can be more. Professionals have a professional attitude.
 
