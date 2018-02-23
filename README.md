@@ -13,7 +13,9 @@ For deployment of the project follow [Deployment Guide](docs/deployment.md)
 1. Download & Install [Postgres 10.1](https://www.postgresql.org/download/), set database name as postgres, username as postgres and password as postgres
 2. Locate the database schema file "crawper_db_schema.sql" in project directory
 3. See [Database Configurations](docs/database.md)
-    
+
+### Contribution
+For contribution guideline follow [here](docs/contribution.md)
 ## Build Using
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
 * [PostgresSql 10.1](https://www.postgresql.org/download/)
