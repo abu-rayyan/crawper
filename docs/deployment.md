@@ -3,6 +3,7 @@ Follow these steps in order to deploy it correctly via Python VirtualEnviroment.
  1. Setup and configure [Python 2.7](https://www.python.org/download/releases/2.7/) and python-pip
  2. Install NLP lib requirements 
     ```python
+        pip install textblob
         python -m textblob.download_corpora
     ```
  3. Install Virtual Enviroment globally
