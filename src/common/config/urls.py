@@ -510,11 +510,3 @@ Products = {
         'Padding Supplies': 'https://www.amazon.com/gp/new-releases/sporting-goods/3422511/'
     }
 }
-
-Categories = {
-    'Procs': {
-        'Sports & Outdoors': 'https://www.amazon.com/gp/new-releases/sporting-goods/',
-        'Fan Shop': 'https://www.amazon.com/gp/new-releases/sporting-goods/3386071/',
-        'Electronics': 'https://www.amazon.com/gp/new-releases/sporting-goods/2311740011/'
-    }
-}

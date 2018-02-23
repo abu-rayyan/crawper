@@ -15,6 +15,8 @@ For deployment of the project follow [Deployment Guide](docs/deployment.md)
 2. Locate the database schema file "crawper_db_schema.sql" in project directory
 3. See [Database Configurations](docs/database.md)
 
+#### Project Configuration
+For project configuration follow [here](docs/configuration.md)
 ### Contribution
 For contribution guideline follow [here](docs/contribution.md)
 
