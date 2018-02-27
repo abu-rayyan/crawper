@@ -11,7 +11,7 @@ Use the following steps to create backup of the existing database.
    ```
    2. Use **pg_dump** command to create backup.
    ```bash
-        pg_dump postgres > postgres_db_backup.bak
+        pg_dump dbname > outfile
    ```
    3. To create a backup on a remote system use:
    ```bash
@@ -31,3 +31,7 @@ To restore backup to the postgres follow the following steps:
     ```bash
     pg_restore -U <username> -d <dbname> -1 <filename>.dump
     ```
+4. For Automatic create Schema and restore Data
+   ```bash
+   psql dbname < infile
+   ```
