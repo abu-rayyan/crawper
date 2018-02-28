@@ -5,15 +5,12 @@ Tested on **Ubuntu**.
 
 ### Creating backup
 Use the following steps to create backup of the existing database.
-   1. Log in to the user **postgres**
+   1. Log in to the user **postgres and dump records**
    ```bash
-      sudo su postgres  
+      sudo -u postgres pg_dump dbname > outfile
    ```
-   2. Use **pg_dump** command to create backup.
-   ```bash
-        pg_dump dbname > outfile
-   ```
-   3. To create a backup on a remote system use:
+   
+   2. To create a backup on a remote system use:
    ```bash
     pg_dump -h remote_host -p remote_port name_of_database > name_of_backup_file
    ```
