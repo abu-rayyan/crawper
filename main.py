@@ -126,7 +126,7 @@ def main():
     # noinspection SpellCheckingInspection
     crawper_threads = config.get('Crawper', 'Max Threads')
 
-    #start_crawper(crawper_threads)
+    start_crawper(crawper_threads)
     start_rengine(db_conn, rengine_threads)
     logger.info('closing database connection')
     print('* closing database pool')
