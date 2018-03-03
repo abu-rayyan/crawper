@@ -19,7 +19,7 @@ class Triggers:
         logger.debug('initializing triggers generator')
         self.utility_methods = UtilityFunctions(conn, cursor, pool)
 
-    #Trigger is activated if the same reviewers of a product were also the reviewers of 10 or more other products that they also gave 4-5 stars    
+    # Trigger is activated if the same reviewers of a product were also the reviewers of 10 or more other products that they also gave 4-5 stars
     def get_overlapping_trigger(self, product_asin):
 
         """
@@ -30,11 +30,11 @@ class Triggers:
         logger.debug('generating overlapping reviews trigger')
         try:
             product_reviewers = self.utility_methods.get_reviewers_from_db(product_asin)
-             #fetch all reviiews from database and check if their length is greater than 4 otherwise remove them
+            # fetch all reviiews from database and check if their length is greater than 4 otherwise remove them
             for item in product_reviewers:
                 if not float(item[0]) >= 4:
                     product_reviewers.remove(item)
-             #fetch all reviiews from database       
+            # fetch all reviiews from database
             all_product_reviewers = self.utility_methods.get_all_reviewers_from_db(product_asin)
             count = 0  # TODO: Consider 4 to 5 star reviews only, need change in DB as well
             for reviewer in product_reviewers:
@@ -49,7 +49,8 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
-    #Trigger is activated if the length of a 4-5 star review is less than 25% or more than double the length of the average review of the product        
+
+    # Trigger is activated if the length of a 4-5 star review is less than 25% or more than double the length of the average review of the product
     def get_words_vol_comparison_trigger(self, product_asin):
         """
         Checks and generates Words-Volume-Comparison trigger
@@ -78,7 +79,7 @@ class Triggers:
             logger.exception(e.message)
             return None
 
-    #Trigger is activated for reviewers giving only 1 review that is also a 4-5 star review        
+    # Trigger is activated for reviewers giving only 1 review that is also a 4-5 star review
     def get_one_off_trigger(self):
         """
         Checks and generates One-Off-Review trigger
@@ -93,7 +94,8 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
-    #Trigger is activated if there are more than 3 same-day 4-5 star reviews from the same reviewer        
+
+    # Trigger is activated if there are more than 3 same-day 4-5 star reviews from the same reviewer
     def get_multiple_single_day_reviews_trigger(self, reviewer_id):
         """
         Checks and generates Multiple-Single-Day-Review trigger
@@ -116,7 +118,10 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
-    #Trigger is activated if more than 5% of a reviewer’s total reviews are 4-5 stars and are also word-for-word duplicates        
+
+        # Trigger is activated if more than 5% of a reviewers total reviews are 4-5 stars and
+        # are also word-for-word duplicates
+
     def get_duplicated_reviews_trigger(self, reviewer_id):
         """
         Checks and generates Duplicated-Reviews trigger
@@ -140,8 +145,10 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return False
-    #Trigger is activated if the first 5% of the ratings a product received were (1-2 stars) were followed by a  \
-    #sudden increase of (4-5 stars) ratings of more than 80% of the total number of initial (1-2 star) ratings the product received        
+
+        # Trigger is activated if the first 5% of the ratings a product received were (1-2 stars) were followed by a  \
+        # sudden increase of (4-5 stars) ratings of more than 80% of the total number of initial (1-2 star) ratings
+        # the product received
     def get_rating_trend_trigger(self, product_asin):
         """
         Checks and generates Rating-Trend trigger
@@ -179,7 +186,8 @@ class Triggers:
             logger.exception(e.message)
             return None
 
-    #Trigger is activated if trigger # 9 is activated and the percentage of 3 star ratings for a product is less than 20% of the total 1-2 star ratings
+        # Trigger is activated if trigger # 9 is activated and the percentage of 3 star ratings for a
+        # product is less than 20% of the total 1-2 star ratings
     def get_three_star_ratio_check_trigger(self, product_asin):
         """
         Get three star reviews check trigger based on rating trend trigger
@@ -205,8 +213,9 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
-    #Trigger is activated if the concentration of 4-5 star ratings is more than what we’d expect to see from a reviewer \
-    #for any category based on their participation history from column R
+
+        # Trigger is activated if the concentration of 4-5 star ratings is more than what would expect to see from a
+        # reviewer for any category based on their participation history from column R
     def get_abnormal_review_trigger(self, product_asin):
         """
         Calculates abnormal reviews trigger
@@ -234,7 +243,6 @@ class Triggers:
             logger.exception(e.message)
             return None
 
-            
     def get_review_spikes_trigger(self, product_asin):
         """
         Calculates review spikes trigger
