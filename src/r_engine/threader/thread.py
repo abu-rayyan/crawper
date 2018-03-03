@@ -4,7 +4,7 @@ from threading import Thread
 from src.r_engine.rengine import REngine
 
 logger = logging.getLogger(__name__)
-MAX_THREADS = 50
+MAX_THREADS = 100
 thread_limiter = threading.BoundedSemaphore(MAX_THREADS)
 
 
