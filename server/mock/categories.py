@@ -1278,7 +1278,7 @@ Categories = {
          "Id": "2311740011"
          },
         {"Name": "Footwear",
-         "Id": "2311740011"
+         "Id": "374747011"
          },
         {"Name": "Gameday & Tailgating",
          "Id": "375518011"
