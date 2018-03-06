@@ -60,7 +60,7 @@ class Crawler:
                     total_reviews = self.utils.get_total_reviews_from_db(product_asin).replace(',', '')
                     scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
                     global percent_scraped_reviews
-                    if total_reviews is not None & scraped_reviews is not None:
+                    if total_reviews is not None and scraped_reviews is not None:
                         if not total_reviews == 0:
                             percent_scraped_reviews = (float(scraped_reviews) / float(total_reviews)) * 100
 
