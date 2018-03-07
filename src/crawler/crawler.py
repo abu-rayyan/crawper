@@ -66,7 +66,7 @@ class Crawler:
 
                     if 0 <= int(total_reviews) <= 100:
                         logger.debug('checking if scraped reviews are more then 90%')
-                        if percent_scraped_reviews >= 10:
+                        if percent_scraped_reviews >= 5:
                             logger.debug('scraped reviews >= 90% True')
                             validate_bool = False
                         else:
@@ -74,7 +74,7 @@ class Crawler:
                             validate_bool = True
                     elif 101 <= int(total_reviews) <= 1000:
                         logger.debug('checking if scraped reviews are more then 50%')
-                        if percent_scraped_reviews >= 5:
+                        if percent_scraped_reviews >= 2:
                             logger.debug('scraped reviews >= 50% True')
                             validate_bool = False
                         else:
@@ -90,7 +90,7 @@ class Crawler:
                             validate_bool = True
                     elif 5001 <= int(total_reviews) <= 10000:
                         logger.debug('checking if scraped reviews are more then 10%')
-                        if percent_scraped_reviews >= 1:
+                        if percent_scraped_reviews >= 0.5:
                             logger.debug('scraped reviews >= 10% True')
                             validate_bool = False
                         else:
@@ -98,7 +98,7 @@ class Crawler:
                             validate_bool = True
                     else:
                         logger.debug('checking if scraped reviews are more then 1%')
-                        if percent_scraped_reviews >= 1:
+                        if percent_scraped_reviews >= 0.7:
                             logger.debug('scraped reviews >= 1% True')
                             validate_bool = False
                         else:
@@ -162,6 +162,7 @@ class Crawler:
                             if self.validate_product(product_asin):
                                 logger.debug('product {asin} needs to be scraped'.format(asin=product_asin))
                                 product_links.append(prod_link.decode('utf-8'))
+                                print("link/urls", product_links)
                             else:
                                 logger.debug('product {asin} doesnot validated to be scraped')
                     else:
