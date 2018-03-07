@@ -100,7 +100,9 @@ class Scraper:
         except Exception as e:
             logger.exception(e.message)
 
+        print('Inserted ito db')
         self.utils.insert_product_into_db(product, category_name)
+        print('inserted in db')
         self.scrap_all_reviews(product)
 
     def scrap_all_reviews(self, product_dict):
@@ -113,29 +115,34 @@ class Scraper:
         logger.debug('Reviews URL: {url}'.format(url=next_url))
         global next_page
 
-        while True:
-            logger.debug('Next URL: {url}'.format(url=next_url))
-            try:
-                next_page = common.request_page(next_url)
-                review_links = next_page.find_all('a', {
-                    'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'})
+        #while True:
+            #logger.debug('Next URL: {url}'.format(url=next_url))
+        try:
+            next_page = common.request_page(next_url)
+            review_links = next_page.find_all('a', {
+                'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'})
+            print(review_links)
+            count = 0
+            for link in review_links:
+                count = count + 1
+                print(count)
+                review_url = '{base_url}{url}'.format(base_url=self.base_url, url=link.get('href').encode('utf-8'))
+                print(review_url)
+                logger.debug('review url: {url}'.format(url=review_url))
+                if not self.utils.exists_review_in_db(review_url):
+                    logger.debug('review {link} does not exists in the database'.format(link=review_url))
+                    self.scrap_review(review_url, product_dict["ASIN"])
+                else:
+                    logger.debug('review {link} already exists in the database'.format(link=review_url))
+                    # continue
 
-                for link in review_links:
-                    review_url = '{base_url}{url}'.format(base_url=self.base_url, url=link.get('href').encode('utf-8'))
-                    logger.debug('review url: {url}'.format(url=review_url))
-                    if not self.utils.exists_review_in_db(review_url):
-                        logger.debug('review {link} does not exists in the database'.format(link=review_url))
-                        self.scrap_review(review_url, product_dict["ASIN"])
-                    else:
-                        logger.debug('review {link} already exists in the database'.format(link=review_url))
-                        continue
+            # next_link = next_page.find('li', {'class': 'a-last'})
+            # next_url = '{base_url}{url}'.format(base_url=self.base_url,
+            #                                    url=next_link.find('a').get('href').encode('utf-8'))
+        except AttributeError as e:
+            logger.exception('{exception}'.format(exception=e.message))
+            #break  # breaking from loop when next link not found
 
-                next_link = next_page.find('li', {'class': 'a-last'})
-                next_url = '{base_url}{url}'.format(base_url=self.base_url,
-                                                    url=next_link.find('a').get('href').encode('utf-8'))
-            except AttributeError as e:
-                logger.exception('{exception}'.format(exception=e.message))
-                break  # breaking from loop when next link not found
 
     def scrap_review(self, review_url, product_asin):
         """
