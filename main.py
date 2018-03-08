@@ -64,6 +64,7 @@ def start_rengine(db_pool, threads):
     utils = UtilityFunctions(pg_conn, pg_cursor, db_pool)
 
     asins = utils.get_zero_rank_asins_from_db()
+    print(asins)
     db_pool.commit_changes(pg_conn)
     db_pool.put_conn(pg_conn)
 
@@ -119,7 +120,7 @@ def main():
 
     # TODO: Replace if found a better way of sharing same mem space
     # noinspection PyUnusedLocal,SpellCheckingInspection
-    rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
+    #rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     # noinspection SpellCheckingInspection
     rengine_threads = config.get('REngine', 'Max Threads')
