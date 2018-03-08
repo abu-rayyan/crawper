@@ -46,6 +46,7 @@ class REngine:
         if asins is not None:
             for asin in asins:
                 try:
+                    print(asin)
                     self.analyze_product(asin[0])
                     self.generate_product_triggers(asin[0])
                 except Exception as e:
