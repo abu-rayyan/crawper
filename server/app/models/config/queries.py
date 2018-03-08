@@ -14,5 +14,7 @@ QUERIES = {
                           "crawper.reviews.product_asin=%s; ",
     "GetWordCategory": "SELECT reviews_analysis.word_count_category FROM crawper.reviews, crawper.reviews_analysis "
                        "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
-                       "crawper.reviews.product_asin=%s; "
+                       "crawper.reviews.product_asin=%s; ",
+
+    "Sum_of_total_num_of_reviews": "SELECT total_reviews from crawper.products;"
 }

@@ -1,5 +1,4 @@
 import json
-
 from flask import Response
 from flask import request
 from app import app
@@ -170,6 +169,7 @@ def return_products(category_id):
     data_list = []
     if exists_category_in_db(category_id):
         ret_data = get_products(category_id)
+        print(ret_data)
 
         for product in ret_data:
             product_dict = {
@@ -195,6 +195,21 @@ def return_products(category_id):
         response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
         return response
 
+@app.route('/total-review-sum')
+@auto.doc()
+def return_sum_of_total_number_of_reviews():
+    """
+    Return sum of total number of reviews of products
+
+    """
+    sum_num_reviews = sum_of_total_num_of_reviews()
+    s = 0
+    for x in sum_num_reviews:
+        for y in x:
+            if ',' in y:
+                y = y.replace(',', '')
+            s = int(y) + s
+    return str(s)
 
 @app.route('/docs')
 def return_api_docs():
@@ -203,3 +218,4 @@ def return_api_docs():
     :return:
     """
     return auto.html()
+

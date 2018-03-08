@@ -5,6 +5,7 @@ from psycopg2.pool import ThreadedConnectionPool
 from singleton_decorator import singleton
 
 
+# Write wrapper on postgres library to get multi thread connection and stop database leaking written by wakeel
 # Multi-threaded & Singleton wrapper to the postgres driver
 @singleton
 class PgPool:
@@ -83,7 +84,7 @@ class PgPool:
     @staticmethod
     def commit_changes(conn):
         """
-        Commit changes to the databse permanently
+        Commit changes to the database permanently
 
         :param conn: connection object
         :return: bool
