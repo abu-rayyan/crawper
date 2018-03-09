@@ -130,7 +130,7 @@ class UtilityFunctions:
         """
         logger.debug('getting reviewers information from database')
         query = QUERIES["GetReviewerIds"]
-        params = [194627]
+        params = [116400]
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
