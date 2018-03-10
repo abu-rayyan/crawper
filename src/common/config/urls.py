@@ -244,12 +244,12 @@ Products = {
         'Magnifying Tools':'https://www.amazon.com/Best-Sellers-Toys-Games-Hobby-Tool-Magnifiers/zgbs/toys-and-games/2236129011/',
         'Hobby Tool Sets':'https://www.amazon.com/Best-Sellers-Toys-Games-Hobby-Tool-Sets/zgbs/toys-and-games/2236132011/',
         
-        'Kids Furniture & Room Décor':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Furniture-D%C3%A9cor/zgbs/toys-and-games/166210011/',
+        'Kids Furniture & Room Decor':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Furniture-D%C3%A9cor/zgbs/toys-and-games/166210011/',
         'Backpacks & Lunch Boxes':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Backpacks-Lunch-Boxes/zgbs/toys-and-games/6498203011/',
         'Bedding & Slumber Bags':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Bedding/zgbs/toys-and-games/1063268/',
         'Indoor Furniture':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Furniture/zgbs/toys-and-games/1063314/',
         'Outdoor Furniture':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Outdoor-Furniture/zgbs/toys-and-games/166216011/',
-        'Room Décor':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Room-D%C3%A9cor/zgbs/toys-and-games/404454011/',
+        'Room Decor':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Room-D%C3%A9cor/zgbs/toys-and-games/404454011/',
         'Tents & Tunnels':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Play-Tents-Tunnels/zgbs/toys-and-games/166434011/',
         'Toy Chests & Storage':'https://www.amazon.com/Best-Sellers-Toys-Games-Toy-Chests-Storage/zgbs/toys-and-games/10140592011/',
         'Toy Bags & Nets':'https://www.amazon.com/Best-Sellers-Toys-Games-Toy-Bags-Nets/zgbs/toys-and-games/16184243011/',
@@ -347,7 +347,7 @@ Products = {
         'Party Hats':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Party-Hats/zgbs/toys-and-games/274325011/',
         'Party Packs':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Party-Supply-Packs/zgbs/toys-and-games/274328011/',
         'Party Tableware':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Party-Tableware/zgbs/toys-and-games/274330011/',
-        'Piñatas':'https://www.amazon.com/Best-Sellers-Toys-Games-Pi%C3%B1atas/zgbs/toys-and-games/274329011/',
+        'Pinatas':'https://www.amazon.com/Best-Sellers-Toys-Games-Pi%C3%B1atas/zgbs/toys-and-games/274329011/',
         'Tablecovers':'https://www.amazon.com/Best-Sellers-Toys-Games-Kids-Party-Tablecovers/zgbs/toys-and-games/2528083011/',
         
         'Play Vehicles':'https://www.amazon.com/Best-Sellers-Toys-Games-Toy-Remote-Control-Play-Vehicles/zgbs/toys-and-games/166508011/',
