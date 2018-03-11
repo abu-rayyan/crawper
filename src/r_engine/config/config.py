@@ -19,11 +19,11 @@ QUERIES = {
     "UpdateReviewerCredualityScore": "UPDATE crawper.reviewers SET total_reviews=%s, creduality_score=%s, "
                                      "participation_history=%s WHERE reviewer_id=%s;",
 
-    "GetProductReviewsText": "SELECT review_text FROM crawper.reviews where product_asin=%s;",
+    "GetProductReviewsText": "SELECT review_text FROM crawper.reviews where product_asin=%s limit 5;",
 
     "GetReviewerCreaduality": "SELECT creduality_score FROM crawper.reviewers where reviewer_id = %s;",
 
-    "GetProductReviewers": "SELECT review_rate, reviewer_id FROM crawper.reviews where product_asin=%s;",
+    "GetProductReviewers": "SELECT review_rate, reviewer_id FROM crawper.reviews where product_asin=%s limit 5;",
 
     "Get45StarProductReviews": "SELECT review_text FROM crawper.reviews where product_asin=%s AND review_rate >= '4.0';",
 
