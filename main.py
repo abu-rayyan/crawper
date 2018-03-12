@@ -123,6 +123,7 @@ def main():
     rotator = ProxyRotator('assets/Proxies.txt')  # used as singleton obj
 
     # noinspection SpellCheckingInspection
+    # disable r_Engine
     rengine_threads = config.get('REngine', 'Max Threads')
     # noinspection SpellCheckingInspection
     crawper_threads = config.get('Crawper', 'Max Threads')
