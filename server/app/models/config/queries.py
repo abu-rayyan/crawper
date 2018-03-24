@@ -20,5 +20,9 @@ QUERIES = {
 
     "GetCredulityScoreOfProduct": "SELECT reviews_analysis.credulity_score FROM crawper.reviews, crawper.reviews_analysis "
                        "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
+                       "crawper.reviews.product_asin=%s;",
+
+    "GetParticipationHistory": "SELECT reviewers.participation_history FROM crawper.reviewers, crawper.reviews "
+                       "WHERE crawper.reviews.reviewer_id = crawper.reviewers.reviewer_id AND "
                        "crawper.reviews.product_asin=%s;"
 }
