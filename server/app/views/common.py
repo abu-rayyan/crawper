@@ -152,11 +152,11 @@ def return_credulity_score(product_id):
 
     res = [
         {
-            1: (credulity_1/total_score)*100,
-            2: (credulity_2/total_score)*100,
-            3: (credulity_3/total_score)*100,
-            4: (credulity_4/total_score)*100,
-            5: (credulity_5/total_score)*100
+            'c1': (credulity_1/total_score)*100,
+            'c2': (credulity_2/total_score)*100,
+            'c3': (credulity_3/total_score)*100,
+            'c4': (credulity_4/total_score)*100,
+            'c5': (credulity_5/total_score)*100
     }
     ]
 
@@ -229,11 +229,11 @@ def return_common_phrase(product_id):
         print(e.message)
 
     res = {
-            5: cp_5,
-            4: cp_4,
-            3: cp_3,
-            2: cp_2,
-            1: cp_1
+            'r5': cp_5,
+            'r4': cp_4,
+            'r3': cp_3,
+            'r2': cp_2,
+            'r1': cp_1
     }
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
