@@ -1,3 +1,4 @@
+from __future__ import division
 import json
 from flask import Response
 from flask import request
@@ -5,6 +6,7 @@ from app import app
 from flask_cors import CORS
 from app.models.database import *
 from flask_autodoc import Autodoc
+import math
 
 CORS(app)
 auto = Autodoc(app)
@@ -117,6 +119,58 @@ def return_word_category(product_id):
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
+@app.route('/get-credulity-score/<product_id>', methods=['GET'])
+@auto.doc()
+def return_credulity_score(product_id):
+    """
+    Returns number of word count categories of product
+    """
+    credulity_score = get_credulity_score(product_id)
+    credulity_1 = 0
+    credulity_2 = 0
+    credulity_3 = 0
+    credulity_4 = 0
+    credulity_5 = 0
+
+    try:
+        for score in credulity_score:
+            if math.floor(score[0]) == 1:
+                credulity_1 += 1
+            elif math.floor(score[0]) == 2:
+                credulity_2 += 1
+            elif math.floor(score[0]) == 3:
+                credulity_3 += 1
+            elif math.floor(score[0]) == 4:
+                credulity_4 += 1
+            elif math.floor(score[0]) == 5:
+                credulity_5 += 1
+            else:
+                continue
+    except Exception as e:
+        print(e.message)
+    total_score = credulity_1+credulity_2+credulity_3+credulity_4+credulity_5
+
+    res = [
+        {
+            'cred': 1,
+            'percent': (credulity_1/total_score)*100
+    },{
+        'cred': 2,
+        'percent': (credulity_2/total_score)*100
+    },{
+        'cred': 3,
+        'percent': (credulity_3/total_score)*100
+    },{
+        'cred': 4,
+        'percent': (credulity_4/total_score)*100
+    },{
+        'cred': 5,
+        'percent': (credulity_5/total_score)*100
+    }
+    ]
+
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
 
 @app.route('/get-sentiment-label/<product_id>', methods=['GET'])
 @auto.doc()

@@ -16,5 +16,9 @@ QUERIES = {
                        "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
                        "crawper.reviews.product_asin=%s; ",
 
-    "Sum_of_total_num_of_reviews": "SELECT total_reviews from crawper.products;"
+    "Sum_of_total_num_of_reviews": "SELECT total_reviews from crawper.products;",
+
+    "GetCredulityScoreOfProduct": "SELECT reviews_analysis.credulity_score FROM crawper.reviews, crawper.reviews_analysis "
+                       "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
+                       "crawper.reviews.product_asin=%s;"
 }
