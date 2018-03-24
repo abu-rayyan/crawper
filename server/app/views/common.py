@@ -173,6 +173,8 @@ def return_participation_history(product_id):
     r_1 = 0
     r_2 = 0
     r_3 = 0
+    r_4 = 0
+    r_5 = 0
 
     try:
         for p_h in participation_history:
@@ -182,16 +184,22 @@ def return_participation_history(product_id):
                 r_2 += 1
             elif p_h[0] == 'R3':
                 r_3 += 1
+            elif p_h[0] == 'R4':
+                r_4 += 1
+            elif p_h[0] == 'R5':
+                r_5 += 1
             else:
                 continue
     except Exception as e:
         print(e.message)
-    total_score = r_1+r_2+r_3
+    total_score = r_1+r_2+r_3+r_4+r_5
 
     res = {
             'R1': (r_1/total_score)*100,
             'R2': (r_2/total_score)*100,
-            'R3': (r_3/total_score)*100
+            'R3': (r_3/total_score)*100,
+            'R4': (r_4/total_score)*100,
+            'R5': (r_5/total_score)*100
     }
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
