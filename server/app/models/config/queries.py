@@ -24,5 +24,9 @@ QUERIES = {
 
     "GetParticipationHistory": "SELECT reviewers.participation_history FROM crawper.reviewers, crawper.reviews "
                        "WHERE crawper.reviews.reviewer_id = crawper.reviewers.reviewer_id AND "
+                       "crawper.reviews.product_asin=%s;",
+
+    "GetCommonPhrase": "SELECT reviews_analysis.common_phrase, reviews.review_rate FROM crawper.reviews_analysis, crawper.reviews "
+                       "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
                        "crawper.reviews.product_asin=%s;"
 }

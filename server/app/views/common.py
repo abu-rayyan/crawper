@@ -152,20 +152,11 @@ def return_credulity_score(product_id):
 
     res = [
         {
-            'cred': 1,
-            'percent': (credulity_1/total_score)*100
-    },{
-        'cred': 2,
-        'percent': (credulity_2/total_score)*100
-    },{
-        'cred': 3,
-        'percent': (credulity_3/total_score)*100
-    },{
-        'cred': 4,
-        'percent': (credulity_4/total_score)*100
-    },{
-        'cred': 5,
-        'percent': (credulity_5/total_score)*100
+            1: (credulity_1/total_score)*100,
+            2: (credulity_2/total_score)*100,
+            3: (credulity_3/total_score)*100,
+            4: (credulity_4/total_score)*100,
+            5: (credulity_5/total_score)*100
     }
     ]
 
@@ -201,6 +192,48 @@ def return_participation_history(product_id):
             'R1': (r_1/total_score)*100,
             'R2': (r_2/total_score)*100,
             'R3': (r_3/total_score)*100
+    }
+
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+@app.route('/get-common-phrase/<product_id>', methods=['GET'])
+@auto.doc()
+def return_common_phrase(product_id):
+    """
+    Returns number of word count categories of product
+    """
+    common_phrase = get_common_phrase(product_id)
+
+    cp_5 = 0
+    cp_4 = 0
+    cp_3 = 0
+    cp_2 = 0
+    cp_1 = 0
+
+    try:
+        for c_p in common_phrase:
+            if c_p[0] == True and math.floor(c_p[1]) == 5.0:
+                cp_5 += 1
+            elif c_p[0] == True and math.floor(c_p[1]) == 4.0:
+                cp_4 += 1
+            elif c_p[0] == True and math.floor(c_p[1]) == 3.0:
+                cp_3 += 1
+            elif c_p[0] == True and math.floor(c_p[1]) == 2.0:
+                cp_2 += 1
+            elif c_p[0] == True and math.floor(c_p[1]) == 1.0:
+                cp_1 += 1
+            else:
+                continue
+    except Exception as e:
+        print(e.message)
+
+    res = {
+            5: cp_5,
+            4: cp_4,
+            3: cp_3,
+            2: cp_2,
+            1: cp_1
     }
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
