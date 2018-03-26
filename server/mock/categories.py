@@ -2455,7 +2455,7 @@ Categories = {
             "Id": "166216011"
         },
         {
-            "Name": "Room Décor",
+            "Name": "Room Decor",
             "Id": "404454011"
         },
         {
@@ -2692,7 +2692,7 @@ Categories = {
             "Id": "274330011"
         },
         {
-            "Name": "Piñatas",
+            "Name": "Pinatas",
             "Id": "274329011"
         },
         {
