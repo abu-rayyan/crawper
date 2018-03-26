@@ -2522,7 +2522,6 @@ Categories = {
         }
     ],
     "166326011":[
-        ,
         {
             "Name": "Accessories",
             "Id": "166328011"
