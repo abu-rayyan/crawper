@@ -28,5 +28,7 @@ QUERIES = {
 
     "GetCommonPhrase": "SELECT reviews_analysis.common_phrase, reviews.review_rate FROM crawper.reviews_analysis, crawper.reviews "
                        "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
-                       "crawper.reviews.product_asin=%s;"
+                       "crawper.reviews.product_asin=%s;",
+
+    "MissingMiddle": "SELECT reviews.review_rate FROM crawper.reviews WHERE crawper.reviews.product_asin=%s;"
 }

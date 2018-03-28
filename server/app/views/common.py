@@ -247,6 +247,40 @@ def return_common_phrase(product_id):
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
+@app.route('/get-missing-middle/<product_id>', methods=['GET'])
+@auto.doc()
+def return_missing_middle(product_id):
+    """
+    Returns number of word count categories of product
+    """
+    middle_missing = get_missing_middle(product_id)
+
+    star_1_2 = 0
+    star_3 = 0
+
+    try:
+        for m_m in middle_missing:
+            if m_m[0] == 1:
+                star_1_2 += 1
+            elif m_m[0] == 2:
+                star_1_2 += 1
+            elif m_m[0] == 3:
+                star_3 += 1
+            else:
+                continue
+    except Exception as e:
+        print(e.message)
+    total = star_3 + star_1_2
+
+    res = {
+            'star1_2': (star_1_2/total)*100,
+            'star3': (star_3/total)*100
+    }
+
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+
 @app.route('/get-sentiment-label/<product_id>', methods=['GET'])
 @auto.doc()
 def return_sentiment_labels(product_id):
