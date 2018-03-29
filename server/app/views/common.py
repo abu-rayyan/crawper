@@ -257,6 +257,7 @@ def return_missing_middle(product_id):
 
     star_1_2 = 0
     star_3 = 0
+    star_4_5 = 0
 
     try:
         for m_m in middle_missing:
@@ -266,12 +267,19 @@ def return_missing_middle(product_id):
                 star_1_2 += 1
             elif m_m[0] == 3:
                 star_3 += 1
+            elif m_m[0] == 4:
+                star_4_5 += 1
+            elif m_m[0] == 5:
+                star_4_5 += 1
             else:
                 continue
     except Exception as e:
         print(e.message)
-    total = star_3 + star_1_2
 
+    total = star_3 + star_1_2 + star_4_5
+
+    if total == 0:
+        return "There are no reviews related to this product"
     res = {
             'star1_2': (star_1_2/total)*100,
             'star3': (star_3/total)*100
