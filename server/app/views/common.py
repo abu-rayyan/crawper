@@ -282,7 +282,8 @@ def return_missing_middle(product_id):
         return "There are no reviews related to this product"
     res = {
             'star1_2': (star_1_2/total)*100,
-            'star3': (star_3/total)*100
+            'star3': (star_3/total)*100,
+            'star4_5': (star_4_5/total)*100
     }
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
