@@ -383,6 +383,12 @@ def return_sum_of_total_number_of_reviews():
             s = int(y) + s
     return str(s)
 
+@app.route('/update_database')
+@auto.doc()
+def set_value_in_database():
+    get_data()
+    return "true"
+
 @app.route('/docs')
 def return_api_docs():
     """
@@ -390,4 +396,5 @@ def return_api_docs():
     :return:
     """
     return auto.html()
+
 
