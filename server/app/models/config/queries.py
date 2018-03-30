@@ -30,5 +30,7 @@ QUERIES = {
                        "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link AND "
                        "crawper.reviews.product_asin=%s;",
 
-    "MissingMiddle": "SELECT reviews.review_rate FROM crawper.reviews WHERE crawper.reviews.product_asin=%s;"
+    "MissingMiddle": "SELECT reviews.review_rate FROM crawper.reviews WHERE crawper.reviews.product_asin=%s;",
+
+    "GetMSDR": "SELECT msdr from crawper.products where product_asin=%s;"
 }

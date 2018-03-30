@@ -383,11 +383,26 @@ def return_sum_of_total_number_of_reviews():
             s = int(y) + s
     return str(s)
 
-@app.route('/update_database')
+@app.route('/get-msdr/<product_id>', methods=['GET'])
 @auto.doc()
-def set_value_in_database():
-    get_data()
-    return "true"
+def return_msdr(product_id):
+    """
+    Return multiple single day review
+
+    """
+    g_m = get_msdr(product_id)
+    for x in g_m:
+        y = x[0]
+    remaining = 100 - y
+
+    res = {
+        'ms': y,
+        'rem': remaining
+    }
+
+    response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
 
 @app.route('/docs')
 def return_api_docs():
@@ -397,4 +412,7 @@ def return_api_docs():
     """
     return auto.html()
 
-
+@app.route('/update_database')
+def set_value_in_database():
+    get_data()
+    return "true"

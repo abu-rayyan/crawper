@@ -218,6 +218,25 @@ def get_common_phrase(product_id):
         pg_.put_conn(pg_conn)
         return None
 
+def get_msdr(product_id):
+    """
+       Returns word count categories of product
+       :param product_id: id of product
+       :return:
+       """
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetMSDR"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
 
 def sum_of_total_num_of_reviews():
     """
@@ -257,7 +276,6 @@ def update_product(product_id):
 
     try:
         for x in product_id:
-            print x[0]
             msgr_rand = random.randint(1, 5)
             params = (msgr_rand, x[0],)
             pg_.execute_query(pg_cursor, query, params)
