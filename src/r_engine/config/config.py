@@ -23,7 +23,7 @@ QUERIES = {
 
     "GetReviewerCreaduality": "SELECT creduality_score FROM crawper.reviewers where reviewer_id = %s;",
 
-    "GetProductReviewers": "SELECT review_rate, reviewer_id FROM crawper.reviews where product_asin=%s limit 5;",
+    "GetProductReviewers": "SELECT review_rate, reviewer_id FROM crawper.reviews where product_asin=%s;",
 
     "Get45StarProductReviews": "SELECT review_text FROM crawper.reviews where product_asin=%s AND review_rate >= '4.0';",
 
