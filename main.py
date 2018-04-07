@@ -126,9 +126,9 @@ def main():
     # disable r_Engine
     rengine_threads = config.get('REngine', 'Max Threads')
     # noinspection SpellCheckingInspection
-    #crawper_threads = config.get('Crawper', 'Max Threads')
+    crawper_threads = config.get('Crawper', 'Max Threads')
 
-    #start_crawper(crawper_threads)
+    start_crawper(crawper_threads)
     start_rengine(db_conn, rengine_threads)
     logger.info('closing database connection')
     print('* closing database pool')

@@ -66,7 +66,7 @@ class Crawler:
 
                     if 0 <= int(total_reviews) <= 100:
                         logger.debug('checking if scraped reviews are more then 90%')
-                        if percent_scraped_reviews >= 5:
+                        if percent_scraped_reviews >= 50:
                             logger.debug('scraped reviews >= 90% True')
                             validate_bool = False
                         else:
@@ -74,7 +74,7 @@ class Crawler:
                             validate_bool = True
                     elif 101 <= int(total_reviews) <= 1000:
                         logger.debug('checking if scraped reviews are more then 50%')
-                        if percent_scraped_reviews >= 2:
+                        if percent_scraped_reviews >= 20:
                             logger.debug('scraped reviews >= 50% True')
                             validate_bool = False
                         else:
