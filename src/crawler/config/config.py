@@ -15,5 +15,7 @@ QUERIES = {
     "SelectProductLink": "SELECT product_link FROM crawper.products WHERE category_name=%s;",
     "ExistsProduct": "SELECT EXISTS(SELECT product_asin FROM crawper.products WHERE product_asin=%s);",
     "GetProductReviewCount": "SELECT COUNT(*) FROM crawper.reviews WHERE product_asin=%s;",
-    "GetTotalReviewCount": "SELECT total_reviews FROM crawper.products WHERE product_asin=%s;"
+    "GetTotalReviewCount": "SELECT total_reviews FROM crawper.products WHERE product_asin=%s;",
+    "GetTotalReviewAndStatus": "SELECT total_reviews, status FROM crawper.products WHERE product_asin=%s;",
+    "UpdateLinkInCategory": "UPDATE crawper.categories SET category_link=%s WHERE category_name=%s;"
 }
