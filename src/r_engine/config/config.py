@@ -61,5 +61,50 @@ QUERIES = {
 
     "UpdateProductRank": "UPDATE crawper.products SET product_rank=%s WHERE product_asin=%s;",
 
-    "GetReviewText": "SELECT review_text FROM crawper.reviews WHERE review_link=%s;"
+    "GetReviewText": "SELECT review_text FROM crawper.reviews WHERE review_link=%s;",
+
+    "GetDistinctCategories": "SELECT DISTINCT(category_name) FROM crawper.products;",
+
+    "CheckCategories": "SELECT no_of_products FROM crawper.word_volume_comparison WHERE category_name=%s;",
+
+    "GetProductasinFromProducts": "SELECT product_asin FROM crawper.products WHERE category_name=%s;",
+
+    "GetReviewsUsingProductasin": "SELECT review_text FROM crawper.reviews WHERE product_asin=%s;",
+
+    "InsertAvgWordLen": "INSERT INTO crawper.word_volume_comparison(category_name, avg_word_len, no_of_products)\
+    VALUES (%s,%s, %s);",
+
+    "GetReviewsProductasin": "SELECT reviews_analysis.review_length, reviews.product_asin, reviews_analysis.review_link "
+                       "FROM crawper.reviews, crawper.reviews_analysis "
+                       "WHERE crawper.reviews.review_link = crawper.reviews_analysis.review_link;",
+
+    "GetCategoryUsingProductasin": "SELECT category_name FROM crawper.products WHERE product_asin=%s;",
+
+    "GetAvgWordLengthUsingCategory": "SELECT avg_word_len FROM crawper.word_volume_comparison WHERE category_name=%s;",
+
+    "InsertTriggerInReviewAnalysis": "UPDATE crawper.reviews_analysis SET word_volume_comp_trigger=%s "
+                "WHERE crawper.reviews_analysis.review_link=%s;",
+
+    "GetDistinctProductAsin": "SELECT DISTINCT(product_asin) from crawper.reviews;",
+
+    "GetMinMaxDate": "SELECT  crawper.products.total_reviews, COUNT(reviews.review_text), "
+                              "MAX(to_date(nullif(reviews.review_date,''), 'Month DD, YYYY')), "
+                              "MIN(to_date(nullif(reviews.review_date,''), 'Month DD, YYYY')) "
+                              "FROM crawper.products, crawper.reviews "
+                              "WHERE crawper.reviews.product_asin=%s AND crawper.products.product_asin=%s "
+	                          "Group By crawper.products.total_reviews;",
+
+    "GetReviewRate": "SELECT review_rate FROM crawper.reviews where product_asin=%s;",
+
+    "InsertAbnormalReview": "INSERT INTO crawper.abnormal_review_analysis(product_asin, total_reviews, total_review_scraped, "
+                        "min_date, max_date, no_of_1star, no_of_2star, no_of_3star, no_of_4star, no_of_5star, abnormal_trigger) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); ",
+
+    "GetProductAsin": "SELECT product_asin from crawper.products;",
+
+    "UpdateStatus": "UPDATE crawper.products SET status=%s WHERE product_asin=%s;",
+
+    "GetTotalReviews": "SELECT total_reviews FROM crawper.products WHERE product_asin=%s;",
+    "GetTotalScraped": "SELECT COUNT(*) FROM crawper.reviews WHERE product_asin=%s;"
+
 }

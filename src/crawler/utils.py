@@ -136,10 +136,42 @@ class Utils:
         params = (product_asin,)
 
         try:
-            review_count = self.pg_.execute_query(pg_cursor, query, params)
+            total_reviews = self.pg_.execute_query(pg_cursor, query, params)
             self.pg_.commit_changes(pg_conn)
             self.pg_.put_conn(pg_conn)
-            return review_count[0][0]
+            return total_reviews[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def get_total_reviews_and_status(self, product_asin):
+        logger.debug('getting product {asin} total no of reviews from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["GetTotalReviewAndStatus"]
+        params = (product_asin, )
+
+        try:
+            reviews_and_status = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return reviews_and_status
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def update_link_in_category(self, url, category_name):
+        logger.debug('Update product_asin')
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["UpdateLinkInCategory"]
+        params = (url, category_name,)
+
+        try:
+            results = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return results
         except Exception as e:
             logger.exception(e.message)
             self.pg_.put_conn(pg_conn)

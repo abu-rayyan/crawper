@@ -1,5 +1,5 @@
 import logging
-
+import datetime
 from config.config import *
 from src.common import common
 from src.common.db.postgres_pool import PgPool
@@ -33,7 +33,8 @@ class Scraper:
             "ProductLink": None,
             "ImageLink": None,
             "Reviews": None,
-            "Rating": None
+            "Rating": None,
+            "TodayDate": None
         }
 
         logger.debug('Product Dict: {prod}'.format(prod=product))
@@ -100,7 +101,15 @@ class Scraper:
         except Exception as e:
             logger.exception(e.message)
 
-        self.utils.insert_product_into_db(product, category_name)
+        today_date = datetime.date.today()
+        product["TodayDate"] = today_date.strftime("%B %d, %Y")
+
+        exists = self.utils.exists_product_in_db(product["ASIN"])
+        if exists:
+            print "update database in inserting products"
+            self.utils.update_product_into_db(product, category_name)
+        else:
+            self.utils.insert_product_into_db(product, category_name)
         self.scrap_all_reviews(product)
 
     def scrap_all_reviews(self, product_dict):
@@ -116,16 +125,18 @@ class Scraper:
         while True:
             logger.debug('Next URL: {url}'.format(url=next_url))
             try:
+                most_recent = '&sortBy=recent'
+                next_url = next_url + most_recent
                 next_page = common.request_page(next_url)
                 review_links = next_page.find_all('a', {
                     'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'})
-
                 for link in review_links:
                     review_url = '{base_url}{url}'.format(base_url=self.base_url, url=link.get('href').encode('utf-8'))
                     logger.debug('review url: {url}'.format(url=review_url))
                     if not self.utils.exists_review_in_db(review_url):
                         logger.debug('review {link} does not exists in the database'.format(link=review_url))
                         self.scrap_review(review_url, product_dict["ASIN"])
+
                     else:
                         logger.debug('review {link} already exists in the database'.format(link=review_url))
                         continue
@@ -133,6 +144,78 @@ class Scraper:
                 next_link = next_page.find('li', {'class': 'a-last'})
                 next_url = '{base_url}{url}'.format(base_url=self.base_url,
                                                     url=next_link.find('a').get('href').encode('utf-8'))
+                total_reviews = self.utils.get_total_num_reviews(product_dict["ASIN"]).replace(',', '')
+                scraped_reviews = self.utils.get_scraped_reviews(product_dict["ASIN"])
+                global percent_scraped_reviews
+                global status
+                print product_dict["ASIN"]
+                print total_reviews
+                print scraped_reviews
+                if total_reviews is not None and scraped_reviews is not None:
+                    if not total_reviews == 0:
+                        percent_scraped_reviews = (float(scraped_reviews) / float(total_reviews)) * 100
+                        print percent_scraped_reviews
+                if 0 <= int(total_reviews) <= 100:
+                    logger.debug('checking if scraped reviews are more then 90%')
+                    if percent_scraped_reviews >= 90:
+                        logger.debug('scraped reviews >= 90% True')
+                        status = 1
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        break
+                    else:
+                        logger.debug('scraped reviews >= 90% False')
+                        status = 0
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        continue
+                elif 101 <= int(total_reviews) <= 1000:
+                    logger.debug('checking if scraped reviews are more then 50%')
+                    if percent_scraped_reviews >= 50:
+                        logger.debug('scraped reviews >= 50% True')
+                        status = 1
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        break
+                    else:
+                        logger.debug('scraped reviews >= 50% False')
+                        status = 0
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        continue
+                elif 1001 <= int(total_reviews) <= 5000:
+                    logger.debug('checking if scraped reviews are more then 25%')
+                    if percent_scraped_reviews >= 25:
+                        logger.debug('scraped reviews >= 25% True')
+                        status = 1
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        break
+                    else:
+                        logger.debug('scraped reviews >= 25% False')
+                        status = 0
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        continue
+                elif 5001 <= int(total_reviews) <= 10000:
+                    logger.debug('checking if scraped reviews are more then 10%')
+                    if percent_scraped_reviews >= 1:
+                        logger.debug('scraped reviews >= 10% True')
+                        status = 1
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        break
+                    else:
+                        logger.debug('scraped reviews >= 10% False')
+                        status = 0
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        continue
+                else:
+                    logger.debug('checking if scraped reviews are more then 1%')
+                    if percent_scraped_reviews >= 0.5:
+                        logger.debug('scraped reviews >= 1% True')
+                        status = 1
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        break
+                    else:
+                        logger.debug('scraped reviews >= 1% False')
+                        status = 0
+                        self.utils.update_status(product_dict["ASIN"], status)
+                        continue
+
             except AttributeError as e:
                 logger.exception('{exception}'.format(exception=e.message))
                 break  # breaking from loop when next link not found

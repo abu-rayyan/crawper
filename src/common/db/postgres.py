@@ -16,8 +16,8 @@ class Pg:
         self.conn, self.cursor = None, None
 
         logger.debug('Server Addr: {host}:{port}; Database: {db}; User: {user}; Password: {passwd}'.format(
-            host=self.host, port=self.port,
-            db=self.database, user=self.user, passwd=self.passwd
+            host='localhost', port=5432,
+            db='postgres', user='postgres', passwd='postgres'
         ))
 
     def connect(self, conn_dict):
@@ -43,7 +43,7 @@ class Pg:
         self.passwd = conn_dict["Password"]
 
         conn_params = "host='{host}' dbname='{db}' user='{user}' password='{passwd}' port='{port}'".format(
-            host=self.host, db=self.database, user=self.user, passwd=self.passwd, port=self.port
+            host='localhost', port=5432, db='postgres', user='postgres', passwd='postgres'
         )
 
         try:

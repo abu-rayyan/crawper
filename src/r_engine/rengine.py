@@ -1,3 +1,4 @@
+from __future__ import print_function
 import logging
 import nltk
 import math
@@ -433,3 +434,178 @@ class REngine:
         except Exception as e:
             logger.exception(e.message)
             return False
+
+    def avg_word_len_category(self):
+        categories = self.utility_method.get_distinct_category_from_products()
+        for category in categories:
+            AvgLength = {
+                    "CategeoryName": None,
+                    "AvgWordLength": None,
+                    "NoOfProducts": None
+                }
+            reviews_length = []
+            if not self.utility_method.check_category_in_avg_word_len(category[0]):
+                product_asin = self.utility_method.get_product_asin_from_products(category[0])
+                no_of_products = len(product_asin)
+                for pa in product_asin:
+                    reviews = self.utility_method.get_product_reviews(pa[0])
+                    for review in reviews:
+                        blob = TextBlob(review[0].decode('utf-8'))
+                        reviews_length.append(len(blob.words))
+
+                AvgLength["AvgWordLength"] = sum(reviews_length) / len(reviews_length)
+                AvgLength["NoOfProducts"] = no_of_products
+                AvgLength["CategeoryName"] = category[0]
+                print(AvgLength)
+                self.utility_method.insert_in_avg_word_len(AvgLength)
+            else:
+                print("not success yet")
+
+    def word_volume_trigger(self):
+        review_productasin = self.utility_method.get_reviewlength_productasin()
+        for rp in review_productasin:
+            print(rp[0], rp[1], rp[2])
+            categories = self.utility_method.get_category_using_productasin(rp[1])
+            for category in categories:
+                avg_review_length = self.utility_method.get_avg_word_length(category[0])
+                print (avg_review_length)
+                trigger = ""
+                if avg_review_length:
+                    if int(rp[0]) < 0.2 * avg_review_length[0][0] or int(rp[0]) > 2.5 * avg_review_length[0][0]:
+                        trigger = '1'
+                        self.utility_method.insert_trigger_in_review_analysis(trigger, rp[2])
+                    else:
+                        trigger = '0'
+                        self.utility_method.insert_trigger_in_review_analysis(trigger, rp[2])
+                print (trigger)
+
+    def get_abnormal_reviews(self):
+        distinct_product_asin = self.utility_method.get_distinct_product_asin()
+        
+        for product_asin in distinct_product_asin:
+            ProductAnalysis = {
+                "ProductAsin": None,
+                "TotatReviews": None,
+                "TotalReviewsScraped": None,
+                "MaxDate": None,
+                "MinDate": None,
+                "NoOf5star": None,
+                "NoOf4star": None,
+                "NoOf3star": None,
+                "NoOf2star": None,
+                "NoOf1star": None,
+                "trigger": None
+            }
+            rating = self.utility_method.get_all_rating_stars(product_asin[0])
+            print (rating)
+            r_5 = 0
+            r_4 = 0
+            r_3 = 0
+            r_2 = 0
+            r_1 = 0
+            try:
+                for rate in rating:
+                    if math.floor(rate[0]) == 5.0:
+                        r_5 += 1
+                    elif math.floor(rate[0]) == 4.0:
+                        r_4 += 1
+                    elif math.floor(rate[0]) == 3.0:
+                        r_3 += 1
+                    elif math.floor(rate[0]) == 2.0:
+                        r_2 += 1
+                    elif math.floor(rate[0]) == 1.0:
+                        r_1 += 1
+                    else:
+                        continue
+            except Exception as e:
+                print(e.message)
+            counttext_max_min_date = self.utility_method.get_min_max_date(product_asin[0])
+            
+            ProductAnalysis["ProductAsin"] = product_asin
+            ProductAnalysis["TotatReviews"] = (counttext_max_min_date[0][0])
+            ProductAnalysis["TotalReviewsScraped"] = (counttext_max_min_date[0][1])
+            ProductAnalysis["MaxDate"] = (counttext_max_min_date[0][2])
+            ProductAnalysis["MinDate"] = (counttext_max_min_date[0][3])
+            ProductAnalysis["NoOf1star"] = r_1
+            ProductAnalysis["NoOf2star"] = r_2
+            ProductAnalysis["NoOf3star"] = r_3
+            ProductAnalysis["NoOf4star"] = r_4
+            ProductAnalysis["NoOf5star"] = r_5
+            if ProductAnalysis["NoOf3star"] or ProductAnalysis["NoOf2star"] or ProductAnalysis["NoOf1star"]:
+                trigger = '0'
+            else:
+                trigger = '1'
+            ProductAnalysis["trigger"] = trigger
+            self.utility_method.insert_in_abnormal_review_table(ProductAnalysis)
+            print(ProductAnalysis)
+
+
+
+    ######### Temporary ########
+
+    def insert_status(self):
+        product_asin = self.utility_method.get_distinct_product_asin()
+        for product in product_asin:
+            total_reviews = self.utility_method.get_total_reviews(product[0])[0][0].replace(',', '')
+            scraped_reviews = self.utility_method.get_total_scraped(product[0])[0][0]
+            print (total_reviews, scraped_reviews)
+            global percent_scraped_reviews
+            global status
+            if total_reviews is not None and scraped_reviews is not None:
+                if not total_reviews == 0:
+                    percent_scraped_reviews = (float(scraped_reviews) / float(total_reviews)) * 100
+            # if status == 0 which means it need to be scraped and if status == 1 which means no need to be scraped
+            if 0 <= int(total_reviews) <= 100:
+                logger.debug('checking if scraped reviews are more then 90%')
+                if percent_scraped_reviews >= 50:
+                    logger.debug('scraped reviews >= 90% True')
+                    status = 1
+                    self.utility_method.update_status(product[0], status)
+                else:
+                    logger.debug('scraped reviews >= 90% False')
+                    status = 0
+                    self.utility_method.update_status(product[0], status)
+
+            elif 101 <= int(total_reviews) <= 1000:
+                logger.debug('checking if scraped reviews are more then 50%')
+                if percent_scraped_reviews >= 20:
+                    logger.debug('scraped reviews >= 50% True')
+                    status = 1
+                    self.utility_method.update_status(product[0], status)
+                else:
+                    logger.debug('scraped reviews >= 50% False')
+                    status = 0
+                    self.utility_method.update_status(product[0], status)
+            elif 1001 <= int(total_reviews) <= 5000:
+                logger.debug('checking if scraped reviews are more then 25%')
+                if percent_scraped_reviews >= 1:
+                    logger.debug('scraped reviews >= 25% True')
+                    status = 1
+                    self.utility_method.update_status(product[0], status)
+                else:
+                    logger.debug('scraped reviews >= 25% False')
+                    status = 0
+                    self.utility_method.update_status(product[0], status)
+            elif 5001 <= int(total_reviews) <= 10000:
+                logger.debug('checking if scraped reviews are more then 10%')
+                if percent_scraped_reviews >= 0.5:
+                    logger.debug('scraped reviews >= 10% True')
+                    status = 1
+                    self.utility_method.update_status(product[0], status)
+                else:
+                    logger.debug('scraped reviews >= 10% False')
+                    status = 0
+                    self.utility_method.update_status(product[0], status)
+            else:
+                logger.debug('checking if scraped reviews are more then 1%')
+                if percent_scraped_reviews >= 0.7:
+                    logger.debug('scraped reviews >= 1% True')
+                    status = 1
+                    self.utility_method.update_status(product[0], status)
+                else:
+                    logger.debug('scraped reviews >= 1% False')
+                    status = 0
+                    self.utility_method.update_status(product[0], status)
+
+
+    ######## Temporary ########

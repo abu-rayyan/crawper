@@ -24,7 +24,7 @@ class Utils:
         pg_conn, pg_cursor = self.pg_.get_conn()
         params = (product["ASIN"], product["Title"], product["Price"], product["ReviewsURL"],
                   category_id, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"],
-                  product["Rating"],)
+                  product["Rating"], product["TodayDate"],)
 
         try:
             self.pg_.execute_query(pg_cursor, query, params)
@@ -144,6 +144,83 @@ class Utils:
             self.pg_.commit_changes(pg_conn)
             self.pg_.put_conn(pg_conn)
             return success_bool[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def update_product_into_db(self, product, category_id):
+        logger.debug('update product {asin} into database'.format(asin=product["ASIN"]))
+        query = QUERIES["UpdateProduct"]
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        params = (product["Title"], product["Price"], product["ReviewsURL"],
+                  category_id, product["ProductLink"], product["TotalReviews"], '0', product["ImageLink"],
+                  product["Rating"], product["TodayDate"], product["ASIN"],)
+
+        try:
+            self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return False
+
+    def get_total_num_reviews(self, product_asin):
+        """
+        Returns total no of reviews of product from db
+        :param product_asin: product asin
+        :return:
+        """
+        logger.debug('getting product {asin} total no of reviews from database'.format(asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["GetTotalReviewCount"]
+        params = (product_asin,)
+
+        try:
+            review_count = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return review_count[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def get_scraped_reviews(self, product_asin):
+        """
+        Returns total number of scraped reviews of a product
+        :param product_asin: asin number of product
+        :return: no of scraped reviews
+        """
+        logger.debug('getting product {asin} total no of scraped reviews from database'.format(
+            asin=product_asin))
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["GetScrapedProductCount"]
+        params = (product_asin,)
+
+        try:
+            reviews_count = self.pg_.execute_query(pg_cursor, query, params)[0][0]
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return reviews_count
+        except Exception as e:
+            logger.exception(e.message)
+            self.pg_.put_conn(pg_conn)
+            return None
+
+    def update_status(self, product_asin, status):
+        logger.debug('Update product_asin')
+        pg_conn, pg_cursor = self.pg_.get_conn()
+        query = QUERIES["UpdateStatus"]
+        params = (status, product_asin,)
+
+        try:
+            results = self.pg_.execute_query(pg_cursor, query, params)
+            self.pg_.commit_changes(pg_conn)
+            self.pg_.put_conn(pg_conn)
+            return results
         except Exception as e:
             logger.exception(e.message)
             self.pg_.put_conn(pg_conn)

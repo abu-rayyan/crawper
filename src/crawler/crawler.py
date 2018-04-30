@@ -44,9 +44,10 @@ class Crawler:
             logger.exception(e.message)
             return None
 
-    def validate_product(self, product_asin):
+    def validate_product(self, product_asin, total_reviews):
         """
         Validates a product weather it should be scraped or not
+        :param total_reviews:
         :param product_asin: product asin
         :return: validate bool
         """
@@ -57,7 +58,7 @@ class Crawler:
             if exists is not None:
                 if exists:
                     logger.debug('product {asin} exists in database'.format(asin=product_asin))
-                    total_reviews = self.utils.get_total_reviews_from_db(product_asin).replace(',', '')
+                    # total_reviews = self.utils.get_total_reviews_from_db(product_asin).replace(',', '')
                     scraped_reviews = self.utils.get_no_of_scraped_reviews_from_db(product_asin)
                     global percent_scraped_reviews
                     if total_reviews is not None and scraped_reviews is not None:
@@ -143,28 +144,46 @@ class Crawler:
         logger.info("fetching product links")
         product_links = []
         tab = 1
-
-        while tab < 6:
+        self.utils.update_link_in_category(url, category_id)
+        while tab < 4:
             link_url = "{url}#{tab}".format(url=url, tab=tab)
+            print link_url
             logger.debug('current page url: {url}'.format(url=link_url))
             soup = common.request_page(link_url)
-            links = soup.find_all('a', {'class': 'a-link-normal'})
+            links = soup.find_all('li', {'class': 'zg-item-immersion'})
             logger.debug('fetching links with attribute [class=a-link-normal]')
-
             try:
                 for link in links:
-                    product_link = link.get('href')
+                    product_link = link.find('a', {'class': "a-link-normal"})['href']
+                    print product_link
                     if product_link.startswith('/') and not product_link.startswith('/product-reviews'):
                         prod_link = '{base_url}{link}'.format(base_url=self.base_url, link=product_link)
+                        # get total reviews from main page
+                        total_reviews = link.find('a', {'class': "a-size-small a-link-normal"}).text
+                        total_reviews = int(total_reviews.replace(',', ''))
                         splitted_link = prod_link.split('/')
                         if category_id in splitted_link[6]:
                             product_asin = splitted_link[5]
-                            if self.validate_product(product_asin):
-                                logger.debug('product {asin} needs to be scraped'.format(asin=product_asin))
-                                product_links.append(prod_link.decode('utf-8'))
-                                print("link/urls", product_links)
+                            exists = self.utils.exists_product_in_db(product_asin)
+                            if exists:
+                                reviews_and_status = self.utils.get_total_reviews_and_status(product_asin)
+                                if not int(reviews_and_status[0][0].replace(',', '')) == total_reviews and \
+                                        (reviews_and_status[0][1] == 1 or reviews_and_status[0][1] == 0):
+                                    total_reviews = total_reviews - int(reviews_and_status[0][0].replace(',', ''))
+                                    if self.validate_product(product_asin, total_reviews):
+                                        logger.debug('product {asin} needs to be scraped'.format(asin=product_asin))
+                                        product_links.append(prod_link.decode('utf-8'))
+                                    else:
+                                        logger.debug('product {asin} doesnot validated to be scraped')
+                                elif int(reviews_and_status[0][0].replace(',', '')) == total_reviews and \
+                                        reviews_and_status[0][1] == 0:
+                                    if self.validate_product(product_asin, total_reviews):
+                                        logger.debug('product {asin} needs to be scraped'.format(asin=product_asin))
+                                        product_links.append(prod_link.decode('utf-8'))
+                                    else:
+                                        logger.debug('product {asin} doesnot validated to be scraped')
                             else:
-                                logger.debug('product {asin} doesnot validated to be scraped')
+                                product_links.append(prod_link.decode('utf-8'))
                     else:
                         continue
             except Exception as e:

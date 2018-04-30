@@ -64,9 +64,9 @@ def start_rengine(db_pool, threads):
     utils = UtilityFunctions(pg_conn, pg_cursor, db_pool)
 
     asins = utils.get_zero_rank_asins_from_db()
-    print(asins)
-    db_pool.commit_changes(pg_conn)
-    db_pool.put_conn(pg_conn)
+    #print(asins)
+    #db_pool.commit_changes(pg_conn)
+    #db_pool.put_conn(pg_conn)
 
     MAX_THREADS = int(threads)
 
@@ -129,7 +129,7 @@ def main():
     crawper_threads = config.get('Crawper', 'Max Threads')
 
     start_crawper(crawper_threads)
-    start_rengine(db_conn, rengine_threads)
+    #start_rengine(db_conn, rengine_threads)
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()
