@@ -113,7 +113,7 @@ class UtilityFunctions:
         params = (review_stat["ReviewLink"], review_stat["ReviewLength"],
                   review_stat["WordCountCategory"], review_stat["SentimentScore"],
                   review_stat["SentimentLabel"], review_stat["CommonPhrase"],
-                  review_stat["CredulityScore"], review_stat["ReviewScore"])
+                  review_stat["CredulityScore"], review_stat["ReviewScore"], review_stat["AvgWordLengthTrigger"])
 
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
@@ -123,14 +123,14 @@ class UtilityFunctions:
             logger.exception(e.message)
             return False
 
-    def get_reviewers_ids_from_db(self):
+    def get_reviewers_ids_from_reviews(self, product_asin):
         """
         Returns all reviewer's ids from database
         :return: reviewer ids list
         """
         logger.debug('getting reviewers information from database')
         query = QUERIES["GetReviewerIds"]
-        params = [199900]
+        params = (product_asin,)
         try:
             reviewer_ids = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
@@ -167,6 +167,7 @@ class UtilityFunctions:
         query = QUERIES["UpdateReviewerCredualityScore"]
         params = (
             reviewer_data["TotalReviews"], reviewer_data["CredualityScore"], reviewer_data["ParticipationHistory"],
+            reviewer_data["one_off_trigger"], reviewer_data["multiple_single_day_trigger"],
             reviewer_data["ReviewerId"])
 
         try:
@@ -462,6 +463,7 @@ class UtilityFunctions:
     def get_reviews_reviewer_ids_from_db(self, product_asin):
         """
         Returns reviewer ids of a product reviews from database
+        :rtype: object
         :param product_asin: asin no of product
         :return: reviewer ids list
         """
@@ -643,12 +645,12 @@ class UtilityFunctions:
             logger.exception(e.message)
             return None
 
-    def get_distinct_category_from_products(self):
-        logger.debug('getting distinct categories from products')
+    def get_distinct_category_from_products(self, product_asin):
+        logger.debug('getting category from products where product_asin')
         query = QUERIES["GetDistinctCategories"]
-
+        params = (product_asin, )
         try:
-            distinct_categories = self.pg_pool.execute_query(self.pg_cursor, query, params='')
+            distinct_categories = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
             return distinct_categories
         except Exception as e:
@@ -693,7 +695,7 @@ class UtilityFunctions:
             logger.exception(e.message)
             return None
 
-    def insert_in_avg_word_len(self, AvgLength):
+    def insert_in_avg_word_len(self, avg_length):
         """
         Inserts review's analysis data to database
         :param review_stat: analyzed review information
@@ -701,8 +703,8 @@ class UtilityFunctions:
         """
         logger.debug('inserting review analysis into database')
         query = QUERIES["InsertAvgWordLen"]
-        params = (AvgLength["CategeoryName"], AvgLength["AvgWordLength"],
-                  AvgLength["NoOfProducts"])
+        params = (avg_length["CategoryName"], avg_length["AvgWordLength"],
+                  avg_length["NoOfProducts"])
 
         try:
             self.pg_pool.execute_query(self.pg_cursor, query, params)
@@ -712,12 +714,24 @@ class UtilityFunctions:
             logger.exception(e.message)
             return False
 
-    def get_reviewlength_productasin(self):
+    def update_in_avg_word_len(self, avg_length):
+        logger.debug('Update avg word length because category exists but no of products are not equal')
+        query = QUERIES["UpdateAvgLength"]
+        params = (avg_length["AvgWordLength"], avg_length["NoOfProducts"], avg_length["CategoryName"],)
+        try:
+            self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def get_reviewlength_productasin(self, product_asin):
         logger.debug('Get Reviews and product asin')
         query = QUERIES["GetReviewsProductasin"]
-
+        params = (product_asin,)
         try:
-            result = self.pg_pool.execute_query(self.pg_cursor, query, params="")
+            result = self.pg_pool.execute_query(self.pg_cursor, query, params)
             self.pg_pool.commit_changes(self.pg_conn)
             return result
         except Exception as e:
@@ -869,3 +883,95 @@ class UtilityFunctions:
         except Exception as e:
             logger.exception(e.message)
             return None
+
+    def exists_review_link(self, review_link):
+        logger.debug('check review link exists or not')
+        query = QUERIES["ExistsReviewLink"]
+        params = (review_link,)
+
+        try:
+            results = self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return results[0][0]
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def get_data(self):
+        query = QUERIES["GetData"]
+        params = ()
+
+        try:
+            results = self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return results
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def update_one_off_trigger(self, id, trigger):
+        logger.debug('Update product_asin')
+        query = QUERIES["UpdateOneOffTrigger"]
+        params = (trigger, id,)
+
+        try:
+            results = self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return results
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def update_status_reviews(self, product_asin, trigger):
+        logger.debug('Update product_asin')
+        query = QUERIES["UpdateStatusReviews"]
+        params = (trigger, product_asin,)
+
+        try:
+            results = self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return results
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def get_url_from_categories(self):
+        logger.debug('Get urls from categories')
+        query = QUERIES["GetUrls"]
+
+        try:
+            results = self.pg_pool.execute_query(self.pg_cursor, query, params='')
+            self.pg_pool.commit_changes(self.pg_conn)
+            return results
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def check_product_in_abnormal(self, product_asin):
+        logger.debug("Check product exists or not in abnormal table")
+        query = QUERIES["ExistsProductAbnormal"]
+        params = (product_asin,)
+
+        try:
+            self.pg_pool.execute_query(self.pg_cursor, query, params)
+            self.pg_pool.commit_changes(self.pg_conn)
+            return True
+        except Exception as e:
+            logger.exception(e.message)
+            return None
+
+    def update_abnormal_trigger(self, ProductAnalysis):
+        logger.debug("update abnormal trigger table")
+        query = QUERIES["UpdateAbnormalTrigger"]
+        params = (ProductAnalysis["TotatReviews"], ProductAnalysis["TotalReviewsScraped"],
+                  ProductAnalysis["MinDate"], ProductAnalysis["MaxDate"], ProductAnalysis["NoOf1star"],
+                  ProductAnalysis["NoOf2star"], ProductAnalysis["NoOf3star"], ProductAnalysis["NoOf4star"],
+                  ProductAnalysis["NoOf5star"], ProductAnalysis["trigger"], ProductAnalysis["ProductAsin"],)
+
+        try:
+            self.pg_pool.execute_query( self.pg_cursor, query, params )
+            self.pg_pool.commit_changes( self.pg_conn )
+            return True
+        except Exception as e:
+            logger.exception( e.message )
+            return False

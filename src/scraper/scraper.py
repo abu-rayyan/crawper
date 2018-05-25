@@ -2,7 +2,6 @@ import logging
 import datetime
 from config.config import *
 from src.common import common
-from src.common.db.postgres_pool import PgPool
 from utils import Utils
 
 logger = logging.getLogger(__name__)
@@ -126,7 +125,10 @@ class Scraper:
             logger.debug('Next URL: {url}'.format(url=next_url))
             try:
                 most_recent = '&sortBy=recent'
-                next_url = next_url + most_recent
+                if next_url is not None:
+                    next_url = next_url + most_recent
+                else:
+                    break
                 next_page = common.request_page(next_url)
                 review_links = next_page.find_all('a', {
                     'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'})

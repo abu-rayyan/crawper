@@ -34,26 +34,82 @@ class REngine:
         Starts the REngine to start the data analytics
         """
         logger.info('starting analysis engine')
-        self.calculate_reviewer_creduality()
-        #self.analyze_products()
+        #self.calculate_reviewer_creduality()
+        self.analyze_products()
 
     def analyze_products(self):
         """
         Calls all product analysis functionality of REngine
         """
         logger.info('analyzing products information')
-        print('* applying analysis to data')
-        asins = self.utility_method.get_zero_rank_asins_from_db()
+        asins = self.utility_method.get_products_asin_from_db()
         if asins is not None:
             for asin in asins:
                 try:
-                    print(asin)
-                    self.analyze_product(asin[0])
-                    self.generate_product_triggers(asin[0])
+                    self.calculate_reviewer_creduality(asin[0])
+                    #self.analyze_product(asin[0])
+                    #self.generate_product_triggers(asin[0])
                 except Exception as e:
                     logger.exception(e.message)
         else:
             logger.error('something bad happened')
+
+    def calculate_reviewer_creduality(self, product_asin):
+        """
+        Calculates reviewer's credulity's and Participation histories
+        """
+        logger.debug('calculating reviewer creduality')
+        try:
+            print (product_asin)
+            reviewer_ids = self.utility_method.get_reviewers_ids_from_reviews(product_asin)
+            reviewer_data = {
+                "ReviewerId": None,
+                "TotalReviews": None,
+                "CredualityScore": None,
+                "ParticipationHistory": None,
+                "one_off_trigger": None,
+                "multiple_single_day_trigger": None
+            }
+
+            if reviewer_ids:
+                for reviewer_id in reviewer_ids:
+                    print (reviewer_id)
+                    reviewer_data["ReviewerId"] = reviewer_id[0]
+                    reviews = self.utility_method.get_reviewers_total_reviews_from_db(reviewer_id[0])
+                    reviewer_data["TotalReviews"] = len(reviews)
+                    rates = [rate[0] for rate in reviews]
+
+                    sum_rates = 0
+                    for rate in rates:
+                        sum_rates += float(rate)
+
+                    reviewer_data["CredualityScore"] = sum_rates / float(len(reviews)) if \
+                        reviewer_data["TotalReviews"] else 0
+                    reviewer_data["ParticipationHistory"] = self.utility_method.calculate_participation_history(
+                        reviewer_data["TotalReviews"])
+                    # handling one_off_review_trigger
+                    if len(reviews) == 1:
+                        print("trigger on")
+                        trigger = '1'
+                    else:
+                        trigger = '0'
+
+                    reviewer_data["one_off_trigger"] = trigger
+
+                    reviewer_data["multiple_single_day_trigger"] = \
+                        self.triggers.get_multiple_single_day_reviews_trigger(reviewer_data["ReviewerId"])
+                    if self.utility_method.update_reviewer_creduality_in_db(reviewer_data):
+                        logger.debug('total reviews & creduality update success')
+                    else:
+                        logger.debug('error in updating creduality & total reviews')
+                self.analyze_product(product_asin)
+                self.generate_product_triggers(product_asin)
+                self.utility_method.update_status_reviews(product_asin, trigger=True)
+                print ("********* Trigger On ***********")
+            else:
+                logger.debug('error in fetching reviewer ids from database')
+        except Exception as e:
+            logger.exception(e.message)
 
     def analyze_product(self, asin):
         """
@@ -79,22 +135,21 @@ class REngine:
         """
         logger.debug('analyzing reviews {review}'.format(review=reviews))
 
-        reviews_text = self.utility_method.get_product_reviews_text_from_db(asin)
-        reviews_length = []
+        #reviews_text = self.utility_method.get_product_reviews_text_from_db(asin)
         reviews_commons = []
-        avg_review_length = 0
+        '''
         try:
             if reviews_text:
                 reviews_commons = self.find_common_phrases_in_reviews(reviews_text)
-                for review_text in reviews_text:
-                    blob = TextBlob(review_text[0].decode('utf-8'))
-                    reviews_length.append(len(blob.words))
-                avg_review_length = sum(reviews_length) / len(reviews_length)
         except Exception as e:
             logger.exception(e.message)
+        '''
 
         try:
+            avg_length = self.avg_word_len_category(asin)
+
             for review in reviews:
+                trigger_list = []
                 review_stats = {
                     "ReviewLink": review[0],
                     "ReviewLength": None,
@@ -103,26 +158,44 @@ class REngine:
                     "SentimentLabel": None,
                     "CommonPhrase": None,
                     "CredulityScore": None,
-                    "ReviewScore": None
+                    "ReviewScore": None,
+                    "AvgWordLengthTrigger": None
                 }
+                if not self.utility_method.exists_review_link(review[0]):
+                    try:
+                        blob = TextBlob(review[3].decode('utf-8'))
+                        review_stats["ReviewLength"] = len(blob.words)
+                        logger.debug('ReviewLength: {length}'.format(length=review_stats["ReviewLength"]))
+                        review_stats["SentimentScore"] = blob.sentiment.polarity * 100  # score between -100 to +100
+                        review_stats["SentimentLabel"] = self.get_sentiment_label(review_stats["SentimentScore"])
+                        # return credulity score, one_off_review multiple_single_day_trigger, total_reviews
+                        credulity_and_triggers = self.utility_method.get_reviewer_creduality_from_db(review[5])
+                        review_stats["CredulityScore"] = credulity_and_triggers[0][0]
+                        review_stats["WordCountCategory"] = self.get_word_count_category(avg_length["AvgWordLength"],
+                                                                                         review_stats["ReviewLength"])
+                        # review_stats["CommonPhrase"] = self.is_most_common_phrase_exists(review[3].decode('utf-8'),reviews_commons)
+                        review_stats["AvgWordLengthTrigger"] = self.word_volume_trigger(asin, review_stats["ReviewLength"])
 
-                try:
-                    blob = TextBlob(review[3].decode('utf-8'))
-                    review_stats["ReviewLength"] = len(blob.words)
-                    logger.debug('ReviewLength: {length}'.format(length=review_stats["ReviewLength"]))
-                    review_stats["SentimentScore"] = blob.sentiment.polarity * 100  # score between -100 to +100
-                    review_stats["SentimentLabel"] = self.get_sentiment_label(review_stats["SentimentScore"])
-                    review_stats["CredulityScore"] = self.utility_method.get_reviewer_creduality_from_db(review[5])[0][
-                        0]
-                    review_stats["WordCountCategory"] = self.get_word_count_category(avg_review_length, review_stats[
-                        "ReviewLength"])
-                    review_stats["CommonPhrase"] = self.is_most_common_phrase_exists(review[3].decode('utf-8'),
-                                                                                     reviews_commons)
-                    review_stats["ReviewScore"] = float(review[4]) + review_stats["SentimentScore"] + review_stats[
-                        "CredulityScore"]
-                except Exception as e:
-                    logger.exception(e.message)
-                self.utility_method.insert_rewiew_analysis_into_db(review_stats)
+                        scaling_factor = 50
+                        temporary_score = scaling_factor*(review[4]) + review_stats["SentimentScore"] + (1/(review_stats["CredulityScore"]*scaling_factor))
+
+                        # triggers helps in calculation of review score
+                        if credulity_and_triggers[0][1]:
+                            trigger_list.append(1)
+                        if credulity_and_triggers[0][2]:
+                            trigger_list.append(1)
+                        if review_stats["AvgWordLengthTrigger"] == '1':
+                            trigger_list.append(1)
+                        total_reviews = credulity_and_triggers[0][3]
+                        status = self.generate_reviewer_reliability_status(review[5], total_reviews, trigger_list)
+                        review_stats["ReviewScore"] = self.get_review_score(temporary_score, status)
+                        print (review_stats["ReviewScore"])
+                        print(review_stats["ReviewLink"])
+                    except Exception as e:
+                        logger.exception(e.message)
+                    self.utility_method.insert_rewiew_analysis_into_db(review_stats)
+                    print ("inserted into review analysis")
+
         except Exception as e:
             logger.exception(e.message)
 
@@ -173,45 +246,6 @@ class REngine:
         except Exception as e:
             logger.exception(e.message)
             return "Error"
-
-    def calculate_reviewer_creduality(self):
-        """
-        Calculates reviewer's credulity's and Participation histories
-        """
-        logger.debug('calculating reviewer creduality')
-        try:
-            reviewer_ids = self.utility_method.get_reviewers_ids_from_db()
-            reviewer_data = {
-                "ReviewerId": None,
-                "TotalReviews": None,
-                "CredualityScore": None,
-                "ParticipationHistory": None
-            }
-
-            if reviewer_ids is not None:
-                for reviewer_id in reviewer_ids:
-                    reviewer_data["ReviewerId"] = reviewer_id[0]
-                    reviews = self.utility_method.get_reviewers_total_reviews_from_db(reviewer_id[0])
-                    reviewer_data["TotalReviews"] = len(reviews)
-                    rates = [rate[0] for rate in reviews]
-
-                    sum_rates = 0
-                    for rate in rates:
-                        sum_rates += float(rate)
-
-                    reviewer_data["CredualityScore"] = sum_rates / float(len(reviews)) if \
-                        reviewer_data["TotalReviews"] else 0
-                    reviewer_data["ParticipationHistory"] = self.utility_method.calculate_participation_history(
-                        reviewer_data["TotalReviews"])
-
-                    if self.utility_method.update_reviewer_creduality_in_db(reviewer_data):
-                        logger.debug('total reviews & creduality update success')
-                    else:
-                        logger.debug('error in updating creduality & total reviews')
-            else:
-                logger.debug('error in fetching reviewer ids from database')
-        except Exception as e:
-            logger.exception(e.message)
 
     @staticmethod
     def find_common_phrases_in_reviews(reviews):
@@ -306,70 +340,7 @@ class REngine:
             logger.exception(e.message)
             return None
 
-    def generate_product_triggers(self, product_asin):
-        """
-        Checks and generates all the triggers for product, reviews and reviewers
-        :param product_asin: asin no of product
-        """
-        logger.debug('checking and generating triggers for product {asin}'.format(asin=product_asin))
-        trigger_list = []
-        try:
-            over_lapping_review_trigger = self.triggers.get_overlapping_trigger(product_asin)
-            wvc_trigger = self.triggers.get_words_vol_comparison_trigger(product_asin)
-            rating_trend_trigger = self.triggers.get_rating_trend_trigger(product_asin)
-            ts_ratio_trigger = self.triggers.get_three_star_ratio_check_trigger(product_asin)
-            abnormal_review_trigger = self.triggers.get_abnormal_review_trigger(product_asin)
-            review_spikes_trigger = self.triggers.get_review_spikes_trigger(product_asin)
-            one_off_review_trigger = self.triggers.get_one_off_trigger()
-
-            if over_lapping_review_trigger:
-                trigger_list.append(1)
-            if wvc_trigger:
-                trigger_list.append(1)
-            if rating_trend_trigger:
-                trigger_list.append(1)
-            if ts_ratio_trigger:
-                trigger_list.append(1)
-            if abnormal_review_trigger:
-                trigger_list.append(0.5)
-            if review_spikes_trigger:
-                trigger_list.append(1)
-            if one_off_review_trigger:
-                trigger_list.append(1)
-
-            try:
-                reviewer_ids = self.utility_method.get_reviews_reviewer_ids_from_db(product_asin)
-                for reviewer_id in reviewer_ids:
-                    status = self.generate_reviewer_reliability_status(reviewer_id[0], trigger_list)
-                    review_links = self.utility_method.get_review_ids_of_reviewer_from_db(reviewer_id[0])
-
-                    for link in review_links:
-                        try:
-                            review_score = self.utility_method.get_review_score_from_db(link[0])[0][0]
-                            if self.get_repeated_remarks_trigger(link[0], product_asin):
-                                trigger_list.append(1)
-                            updated_score = self.get_review_score(int(review_score), status)
-                            self.utility_method.update_review_score_in_db(link[0], updated_score)
-                        except Exception as e:
-                            logger.exception(e.message)
-
-                reviews_score = 0
-                product_score = self.utility_method.get_product_rank_from_db(product_asin)[0][0]
-                product_reviews = self.utility_method.get_product_reviews_from_db(product_asin)
-                for review in product_reviews:
-                    try:
-                        score = self.utility_method.get_review_score_from_db(review[0])[0][0]
-                        reviews_score += score
-                    except Exception as e:
-                        logger.exception(e.message)
-                product_score += reviews_score
-                self.utility_method.update_product_rank_in_db(product_asin, product_score)
-            except Exception as e:
-                logger.exception(e.message)
-        except Exception as e:
-            logger.exception(e.message)
-
-    def generate_reviewer_reliability_status(self, reviewer_id, trigger_list):
+    def generate_reviewer_reliability_status(self, reviewer_id, total_reviews, trigger_list):
         """
         Returns a reviewer's reliability status based on trigger list
         :param reviewer_id: id of reviewer
@@ -378,18 +349,15 @@ class REngine:
         """
         logger.debug('generating reviewer {reviewer_id} reliability status'.format(reviewer_id=reviewer_id))
         try:
-            msd_reviews_trigger = self.triggers.get_multiple_single_day_reviews_trigger(reviewer_id)
-            duplicated_reviews_trigger = self.triggers.get_duplicated_reviews_trigger(reviewer_id)
+            duplicated_reviews_trigger = self.triggers.get_duplicated_reviews_trigger(reviewer_id, total_reviews)
 
-            if msd_reviews_trigger:
-                trigger_list.append(1)
             if duplicated_reviews_trigger:
                 trigger_list.append(1)
 
             total_triggers = len(trigger_list)
-            if total_triggers >= 6:
+            if total_triggers >= 3:
                 return 'RED'
-            elif total_triggers in range(2, 5):
+            elif total_triggers == 2:
                 return 'YELLOW'
             elif total_triggers < 2:
                 return 'GREEN'
@@ -435,177 +403,81 @@ class REngine:
             logger.exception(e.message)
             return False
 
-    def avg_word_len_category(self):
-        categories = self.utility_method.get_distinct_category_from_products()
-        for category in categories:
-            AvgLength = {
-                    "CategeoryName": None,
-                    "AvgWordLength": None,
-                    "NoOfProducts": None
-                }
-            reviews_length = []
-            if not self.utility_method.check_category_in_avg_word_len(category[0]):
-                product_asin = self.utility_method.get_product_asin_from_products(category[0])
-                no_of_products = len(product_asin)
-                for pa in product_asin:
-                    reviews = self.utility_method.get_product_reviews(pa[0])
-                    for review in reviews:
-                        blob = TextBlob(review[0].decode('utf-8'))
-                        reviews_length.append(len(blob.words))
+    def avg_word_len_category(self, product_asin):
 
-                AvgLength["AvgWordLength"] = sum(reviews_length) / len(reviews_length)
-                AvgLength["NoOfProducts"] = no_of_products
-                AvgLength["CategeoryName"] = category[0]
-                print(AvgLength)
-                self.utility_method.insert_in_avg_word_len(AvgLength)
-            else:
-                print("not success yet")
+        # Getting Category from products table
+        category = self.utility_method.get_distinct_category_from_products(product_asin)
+        product_asin = self.utility_method.get_product_asin_from_products(category[0][0])
+        no_of_products = len(product_asin)
+        print(self.utility_method.check_category_in_avg_word_len(category[0][0]))
+        # checking if category exists in average word volume table
+        avg_length = self.calculate_word_length(product_asin, no_of_products, category[0])
+        if not self.utility_method.check_category_in_avg_word_len(category[0][0]):
+            self.utility_method.insert_in_avg_word_len(avg_length)
+        elif self.utility_method.check_category_in_avg_word_len(category[0][0])[0][0] != no_of_products:
+            self.utility_method.update_in_avg_word_len(avg_length)
+        else:
+            print(" category is present and new products not come yet ")
+        return avg_length
 
-    def word_volume_trigger(self):
-        review_productasin = self.utility_method.get_reviewlength_productasin()
-        for rp in review_productasin:
-            print(rp[0], rp[1], rp[2])
-            categories = self.utility_method.get_category_using_productasin(rp[1])
-            for category in categories:
-                avg_review_length = self.utility_method.get_avg_word_length(category[0])
-                print (avg_review_length)
-                trigger = ""
-                if avg_review_length:
-                    if int(rp[0]) < 0.2 * avg_review_length[0][0] or int(rp[0]) > 2.5 * avg_review_length[0][0]:
-                        trigger = '1'
-                        self.utility_method.insert_trigger_in_review_analysis(trigger, rp[2])
-                    else:
-                        trigger = '0'
-                        self.utility_method.insert_trigger_in_review_analysis(trigger, rp[2])
-                print (trigger)
+    def calculate_word_length(self, product_asin, no_of_products, category):
+        avg_length = {
+            "CategoryName": None,
+            "AvgWordLength": None,
+            "NoOfProducts": None
+        }
+        reviews_length = []
+        for pa in product_asin:
+            reviews = self.utility_method.get_product_reviews(pa[0])
+            for review in reviews:
+                blob = TextBlob(review[0].decode('utf-8'))
+                reviews_length.append(len(blob.words))
 
-    def get_abnormal_reviews(self):
-        distinct_product_asin = self.utility_method.get_distinct_product_asin()
-        
-        for product_asin in distinct_product_asin:
-            ProductAnalysis = {
-                "ProductAsin": None,
-                "TotatReviews": None,
-                "TotalReviewsScraped": None,
-                "MaxDate": None,
-                "MinDate": None,
-                "NoOf5star": None,
-                "NoOf4star": None,
-                "NoOf3star": None,
-                "NoOf2star": None,
-                "NoOf1star": None,
-                "trigger": None
-            }
-            rating = self.utility_method.get_all_rating_stars(product_asin[0])
-            print (rating)
-            r_5 = 0
-            r_4 = 0
-            r_3 = 0
-            r_2 = 0
-            r_1 = 0
-            try:
-                for rate in rating:
-                    if math.floor(rate[0]) == 5.0:
-                        r_5 += 1
-                    elif math.floor(rate[0]) == 4.0:
-                        r_4 += 1
-                    elif math.floor(rate[0]) == 3.0:
-                        r_3 += 1
-                    elif math.floor(rate[0]) == 2.0:
-                        r_2 += 1
-                    elif math.floor(rate[0]) == 1.0:
-                        r_1 += 1
-                    else:
-                        continue
-            except Exception as e:
-                print(e.message)
-            counttext_max_min_date = self.utility_method.get_min_max_date(product_asin[0])
-            
-            ProductAnalysis["ProductAsin"] = product_asin
-            ProductAnalysis["TotatReviews"] = (counttext_max_min_date[0][0])
-            ProductAnalysis["TotalReviewsScraped"] = (counttext_max_min_date[0][1])
-            ProductAnalysis["MaxDate"] = (counttext_max_min_date[0][2])
-            ProductAnalysis["MinDate"] = (counttext_max_min_date[0][3])
-            ProductAnalysis["NoOf1star"] = r_1
-            ProductAnalysis["NoOf2star"] = r_2
-            ProductAnalysis["NoOf3star"] = r_3
-            ProductAnalysis["NoOf4star"] = r_4
-            ProductAnalysis["NoOf5star"] = r_5
-            if ProductAnalysis["NoOf3star"] or ProductAnalysis["NoOf2star"] or ProductAnalysis["NoOf1star"]:
-                trigger = '0'
-            else:
+        avg_length["AvgWordLength"] = sum(reviews_length) / len(reviews_length)
+        avg_length["NoOfProducts"] = no_of_products
+        avg_length["CategoryName"] = category[0]
+        print(avg_length)
+        return avg_length
+
+    def word_volume_trigger(self, product_asin, avg_word_length):
+        category = self.utility_method.get_category_using_productasin(product_asin)[0][0]
+        print (category)
+        avg_review_length_category = self.utility_method.get_avg_word_length(category)[0][0]
+        if avg_review_length_category and avg_word_length:
+            if int(avg_word_length) < 0.2 * avg_review_length_category or int(avg_word_length) > 2.5 * avg_review_length_category:
                 trigger = '1'
-            ProductAnalysis["trigger"] = trigger
-            self.utility_method.insert_in_abnormal_review_table(ProductAnalysis)
-            print(ProductAnalysis)
-
-
-
-    ######### Temporary ########
-
-    def insert_status(self):
-        product_asin = self.utility_method.get_distinct_product_asin()
-        for product in product_asin:
-            total_reviews = self.utility_method.get_total_reviews(product[0])[0][0].replace(',', '')
-            scraped_reviews = self.utility_method.get_total_scraped(product[0])[0][0]
-            print (total_reviews, scraped_reviews)
-            global percent_scraped_reviews
-            global status
-            if total_reviews is not None and scraped_reviews is not None:
-                if not total_reviews == 0:
-                    percent_scraped_reviews = (float(scraped_reviews) / float(total_reviews)) * 100
-            # if status == 0 which means it need to be scraped and if status == 1 which means no need to be scraped
-            if 0 <= int(total_reviews) <= 100:
-                logger.debug('checking if scraped reviews are more then 90%')
-                if percent_scraped_reviews >= 50:
-                    logger.debug('scraped reviews >= 90% True')
-                    status = 1
-                    self.utility_method.update_status(product[0], status)
-                else:
-                    logger.debug('scraped reviews >= 90% False')
-                    status = 0
-                    self.utility_method.update_status(product[0], status)
-
-            elif 101 <= int(total_reviews) <= 1000:
-                logger.debug('checking if scraped reviews are more then 50%')
-                if percent_scraped_reviews >= 20:
-                    logger.debug('scraped reviews >= 50% True')
-                    status = 1
-                    self.utility_method.update_status(product[0], status)
-                else:
-                    logger.debug('scraped reviews >= 50% False')
-                    status = 0
-                    self.utility_method.update_status(product[0], status)
-            elif 1001 <= int(total_reviews) <= 5000:
-                logger.debug('checking if scraped reviews are more then 25%')
-                if percent_scraped_reviews >= 1:
-                    logger.debug('scraped reviews >= 25% True')
-                    status = 1
-                    self.utility_method.update_status(product[0], status)
-                else:
-                    logger.debug('scraped reviews >= 25% False')
-                    status = 0
-                    self.utility_method.update_status(product[0], status)
-            elif 5001 <= int(total_reviews) <= 10000:
-                logger.debug('checking if scraped reviews are more then 10%')
-                if percent_scraped_reviews >= 0.5:
-                    logger.debug('scraped reviews >= 10% True')
-                    status = 1
-                    self.utility_method.update_status(product[0], status)
-                else:
-                    logger.debug('scraped reviews >= 10% False')
-                    status = 0
-                    self.utility_method.update_status(product[0], status)
+                return trigger
             else:
-                logger.debug('checking if scraped reviews are more then 1%')
-                if percent_scraped_reviews >= 0.7:
-                    logger.debug('scraped reviews >= 1% True')
-                    status = 1
-                    self.utility_method.update_status(product[0], status)
-                else:
-                    logger.debug('scraped reviews >= 1% False')
-                    status = 0
-                    self.utility_method.update_status(product[0], status)
+                trigger = '0'
+                return trigger
+        return False
 
-
-    ######## Temporary ########
+    def generate_product_triggers(self, product_asin):
+        """
+        Checks and generates all the triggers for product, reviews and reviewers
+        :param product_asin: asin no of product
+        """
+        logger.debug('checking and generating triggers for product {asin}'.format(asin=product_asin))
+        trigger_list = []
+        try:
+            abnormal_review_trigger = self.triggers.get_abnormal_review_trigger(product_asin)
+            if abnormal_review_trigger:
+                trigger_list.append(1)
+            total_reviews = self.utility_method.get_product_reviews(product_asin)
+            product_trigger = len(total_reviews)*(-5)*len(trigger_list)
+            try:
+                reviews_score = 0
+                product_score = self.utility_method.get_product_rank_from_db(product_asin)[0][0]
+                product_reviews = self.utility_method.get_product_reviews_from_db(product_asin)
+                for review in product_reviews:
+                    try:
+                        score = self.utility_method.get_review_score_from_db(review[0])[0][0]
+                        reviews_score += score
+                    except Exception as e:
+                        logger.exception(e.message)
+                product_score += reviews_score + product_trigger
+                self.utility_method.update_product_rank_in_db(product_asin, product_score)
+            except Exception as e:
+                logger.exception(e.message)
+        except Exception as e:
+            logger.exception(e.message)

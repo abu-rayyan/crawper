@@ -7,27 +7,33 @@ from src.r_engine.rengine import REngine
 from src.r_engine.utility import UtilityFunctions
 from src.common.thread import Worker
 from src.r_engine.threader.thread import AnalysisWorker
-from src.common.config.urls import *
+# from src.common.config.urls import *
 from Queue import Queue
 from src.common.proxy_rotator import ProxyRotator
 from src.common.db.postgres_pool import PgPool
 
 logger = logging.getLogger(__name__)
 
-
 # noinspection PyPep8Naming,SpellCheckingInspection
-def start_crawper(threads):
+def start_crawper(threads, db_pool):
     """
     Starts threaded crawper
     :param threads: no of max threads
     """
-    print('* starting crawper')
-    logger.info('starting crawper')
+    logger.info('starting crawler')
     queue = Queue()
     links_list = []
+    pg_conn, pg_cursor = db_pool.get_conn()
+    utils = UtilityFunctions(pg_conn, pg_cursor, db_pool)
 
+    links = utils.get_url_from_categories()
+    '''
     for keys, links in Products.iteritems():
         links_list.extend(links.values())
+    '''
+    for link in links:
+        print link
+        links_list.extend(link)
 
     MAX_THREADS = int(threads)
     while MAX_THREADS is not 0:
@@ -63,10 +69,10 @@ def start_rengine(db_pool, threads):
     pg_conn, pg_cursor = db_pool.get_conn()
     utils = UtilityFunctions(pg_conn, pg_cursor, db_pool)
 
-    asins = utils.get_zero_rank_asins_from_db()
+    asins = utils.get_products_asin_from_db()
     #print(asins)
-    #db_pool.commit_changes(pg_conn)
-    #db_pool.put_conn(pg_conn)
+    db_pool.commit_changes(pg_conn)
+    db_pool.put_conn(pg_conn)
 
     MAX_THREADS = int(threads)
 
@@ -128,8 +134,8 @@ def main():
     # noinspection SpellCheckingInspection
     crawper_threads = config.get('Crawper', 'Max Threads')
 
-    start_crawper(crawper_threads)
-    #start_rengine(db_conn, rengine_threads)
+    #start_crawper(crawper_threads, db_conn)
+    start_rengine(db_conn, rengine_threads)
     logger.info('closing database connection')
     print('* closing database pool')
     db_conn.close_pool()

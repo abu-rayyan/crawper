@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences,PyUnresolvedReferences,PyUnresolvedReferences,PyUnresolvedReferences,PyUnresolvedReferences
 from app.common.db.postgres import PgPool
 import random
 

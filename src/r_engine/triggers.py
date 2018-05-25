@@ -4,9 +4,9 @@ import nltk
 import datetime
 
 from textblob import TextBlob
-from utility import UtilityFunctions
 from dateutil import parser
 from datetime import timedelta
+from utility import UtilityFunctions
 
 # noinspection SpellCheckingInspection
 nltk.download('punkt')
@@ -31,6 +31,7 @@ class Triggers:
         try:
             product_reviewers = self.utility_methods.get_reviewers_from_db(product_asin)
             # fetch all reviiews from database and check if their length is greater than 4 otherwise remove them
+            print product_reviewers
             for item in product_reviewers:
                 if not float(item[0]) >= 4:
                     product_reviewers.remove(item)
@@ -49,7 +50,7 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
-
+    '''
     # Trigger is activated if the length of a 4-5 star review is less than 25% or more than double the length of the average review of the product
     def get_words_vol_comparison_trigger(self, product_asin):
         """
@@ -78,6 +79,7 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
+    '''
 
     # Trigger is activated for reviewers giving only 1 review that is also a 4-5 star review
     def get_one_off_trigger(self):
@@ -122,7 +124,7 @@ class Triggers:
         # Trigger is activated if more than 5% of a reviewers total reviews are 4-5 stars and
         # are also word-for-word duplicates
 
-    def get_duplicated_reviews_trigger(self, reviewer_id):
+    def get_duplicated_reviews_trigger(self, reviewer_id, total_reviews):
         """
         Checks and generates Duplicated-Reviews trigger
         :param reviewer_id: Id of reviewer
@@ -130,7 +132,6 @@ class Triggers:
         """
         try:
             logger.debug('generating duplicated reviews trigger for reviewer {id}'.format(id=reviewer_id))
-            total_reviews = self.utility_methods.get_total_no_of_reviewes_of_reviewer_from_db(reviewer_id)[0][0]
             reviews = self.utility_methods.get_four_five_star_reviews_of_reviewer_from_db(reviewer_id)
 
             reviews_list = []
@@ -216,6 +217,69 @@ class Triggers:
 
         # Trigger is activated if the concentration of 4-5 star ratings is more than what would expect to see from a
         # reviewer for any category based on their participation history from column R
+
+    def get_abnormal_review_trigger(self, product_asin):
+        ProductAnalysis = {
+            "ProductAsin": None,
+            "TotatReviews": None,
+            "TotalReviewsScraped": None,
+            "MaxDate": None,
+            "MinDate": None,
+            "NoOf5star": None,
+            "NoOf4star": None,
+            "NoOf3star": None,
+            "NoOf2star": None,
+            "NoOf1star": None,
+            "trigger": None
+        }
+
+        rating = self.utility_methods.get_all_rating_stars(product_asin)
+        r_5 = 0
+        r_4 = 0
+        r_3 = 0
+        r_2 = 0
+        r_1 = 0
+        try:
+            for rate in rating:
+                if math.floor(rate[0]) == 5.0:
+                    r_5 += 1
+                elif math.floor(rate[0]) == 4.0:
+                    r_4 += 1
+                elif math.floor(rate[0]) == 3.0:
+                    r_3 += 1
+                elif math.floor(rate[0]) == 2.0:
+                    r_2 += 1
+                elif math.floor(rate[0]) == 1.0:
+                    r_1 += 1
+                else:
+                    continue
+        except Exception as e:
+            print(e.message)
+        counttext_max_min_date = self.utility_methods.get_min_max_date(product_asin)
+
+        ProductAnalysis["ProductAsin"] = product_asin
+        ProductAnalysis["TotatReviews"] = (counttext_max_min_date[0][0])
+        ProductAnalysis["TotalReviewsScraped"] = (counttext_max_min_date[0][1])
+        ProductAnalysis["MaxDate"] = (counttext_max_min_date[0][2])
+        ProductAnalysis["MinDate"] = (counttext_max_min_date[0][3])
+        ProductAnalysis["NoOf1star"] = r_1
+        ProductAnalysis["NoOf2star"] = r_2
+        ProductAnalysis["NoOf3star"] = r_3
+        ProductAnalysis["NoOf4star"] = r_4
+        ProductAnalysis["NoOf5star"] = r_5
+        if ProductAnalysis["NoOf3star"] or ProductAnalysis["NoOf2star"] or ProductAnalysis["NoOf1star"]:
+            trigger = '0'
+        else:
+            trigger = '1'
+        ProductAnalysis["trigger"] = trigger
+        if not self.utility_methods.check_product_in_abnormal(product_asin):
+            self.utility_methods.insert_in_abnormal_review_table(ProductAnalysis)
+        else:
+            self.utility_methods.update_abnormal_trigger(ProductAnalysis)
+        print(ProductAnalysis)
+        return trigger
+
+    '''
     def get_abnormal_review_trigger(self, product_asin):
         """
         Calculates abnormal reviews trigger
@@ -242,6 +306,7 @@ class Triggers:
         except Exception as e:
             logger.exception(e.message)
             return None
+    '''
 
     def get_review_spikes_trigger(self, product_asin):
         """

@@ -14,6 +14,7 @@ def get_categories(category_id):
     :return: list of categories/sub-categories
     """
     if category_id in Categories:
+        print Categories
         return Categories[category_id]
 
 
@@ -218,15 +219,58 @@ def get_common_phrase(product_id):
         pg_.put_conn(pg_conn)
         return None
 
-def get_msdr(product_id):
+
+def get_review_spikes(product_id):
     """
-       Returns word count categories of product
+       Returns reviews collect on that date
        :param product_id: id of product
        :return:
        """
     pg_conn, pg_cursor = pg_.get_conn()
-    query = QUERIES["GetMSDR"]
+    query = QUERIES["GetReviewSpikes"]
     params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
+def get_date(product_id):
+    """
+       Returns reviews collect on that date
+       :param product_id: id of product
+       :return:
+       """
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetDate"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
+def get_rating_using_date(product_id):
+    """
+          Returns avg rating against date
+          :type get_date: 
+          :param get_date:
+          :param product_id: id of product
+          :return:
+          """
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetRatingAgainstDate"]
+    params = (product_id, )
 
     try:
         res = pg_.execute_query(pg_cursor, query, params)
@@ -256,6 +300,36 @@ def sum_of_total_num_of_reviews():
         return None
 
 
+def get_one_off_review_trigger(product_id):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetOneOffTrigger"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query(pg_cursor, query, params)
+        pg_.commit_changes(pg_conn)
+        pg_.put_conn(pg_conn)
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+
+def get_multiple_single_day_review_trigger(product_id):
+    pg_conn, pg_cursor = pg_.get_conn()
+    query = QUERIES["GetMultipleSingleDay"]
+    params = (product_id,)
+
+    try:
+        res = pg_.execute_query( pg_cursor, query, params )
+        pg_.commit_changes( pg_conn )
+        pg_.put_conn( pg_conn )
+        return res
+    except Exception as e:
+        pg_.put_conn(pg_conn)
+        return None
+
+'''
 def get_data():
     pg_conn, pg_cursor = pg_.get_conn()
     query = "SELECT product_asin FROM crawper.products;"
@@ -285,3 +359,4 @@ def update_product(product_id):
     except Exception as e:
         pg_.put_conn(pg_conn)
         return False
+'''

@@ -32,6 +32,18 @@ QUERIES = {
 
     "MissingMiddle": "SELECT reviews.review_rate FROM crawper.reviews WHERE crawper.reviews.product_asin=%s;",
 
-    "GetMSDR": "SELECT msdr from crawper.products where product_asin=%s;",
-    
+    "GetReviewSpikes": "SELECT count(review_text) , to_date(reviews.review_date,'Month DD, YYYY') as review_date " 
+                        "FROM crawper.reviews WHERE product_asin=%s "
+                        "GROUP BY review_date ORDER BY review_date;",
+
+    "GetDate": "SELECT review_date FROM crawper.reviews WHERE product_asin=%s;",
+
+    "GetRatingAgainstDate": "SELECT AVG(review_rate), to_date(reviews.review_date,'Month DD, YYYY') as review_date FROM crawper.reviews "
+                            "WHERE product_asin=%s GROUP BY review_date order by review_date;",
+
+    "GetOneOffTrigger": "select reviewers.one_off_trigger from crawper.reviewers, crawper.reviews "
+                        "where product_asin=%s AND crawper.reviewers.reviewer_id=crawper.reviews.reviewer_id;",
+
+    "GetMultipleSingleDay": "select reviewers.multiple_single_day_trigger from crawper.reviewers, crawper.reviews "
+                        "where product_asin=%s AND crawper.reviewers.reviewer_id=crawper.reviews.reviewer_id;"
 }

@@ -150,7 +150,8 @@ class Crawler:
             print link_url
             logger.debug('current page url: {url}'.format(url=link_url))
             soup = common.request_page(link_url)
-            links = soup.find_all('li', {'class': 'zg-item-immersion'})
+            links = soup.find_all('div', {'class': 'zg_itemImmersion'})
+            print links
             logger.debug('fetching links with attribute [class=a-link-normal]')
             try:
                 for link in links:

@@ -7,6 +7,7 @@ from flask_cors import CORS
 from app.models.database import *
 from flask_autodoc import Autodoc
 import math
+import json
 
 CORS(app)
 auto = Autodoc(app)
@@ -119,11 +120,12 @@ def return_word_category(product_id):
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
+
 @app.route('/get-credulity-score/<product_id>', methods=['GET'])
 @auto.doc()
 def return_credulity_score(product_id):
     """
-    Returns number of word count categories of product
+    Returns credulity score of reviewer
     """
     credulity_score = get_credulity_score(product_id)
     credulity_1 = 0
@@ -162,6 +164,7 @@ def return_credulity_score(product_id):
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
+
 
 @app.route('/get-participation-history/<product_id>', methods=['GET'])
 @auto.doc()
@@ -205,6 +208,7 @@ def return_participation_history(product_id):
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
 
+
 @app.route('/get-common-phrase/<product_id>', methods=['GET'])
 @auto.doc()
 def return_common_phrase(product_id):
@@ -246,6 +250,7 @@ def return_common_phrase(product_id):
 
     response = Response(json.dumps(res), status=200, mimetype='application/json')
     return response
+
 
 @app.route('/get-missing-middle/<product_id>', methods=['GET'])
 @auto.doc()
@@ -367,6 +372,7 @@ def return_products(category_id):
         response = Response(json.dumps(ret_data), status=404, mimetype='application/json')
         return response
 
+
 @app.route('/total-review-sum')
 @auto.doc()
 def return_sum_of_total_number_of_reviews():
@@ -383,24 +389,92 @@ def return_sum_of_total_number_of_reviews():
             s = int(y) + s
     return str(s)
 
+
 @app.route('/get-msdr/<product_id>', methods=['GET'])
 @auto.doc()
-def return_msdr(product_id):
+def one_off_review_percentage(product_id):
     """
-    Return multiple single day review
+    Return percentage of one off review products
 
     """
-    g_m = get_msdr(product_id)
-    for x in g_m:
-        y = x[0]
-    remaining = 100 - y
+    list_of_triggers = get_one_off_review_trigger(product_id)
+    count = 0
+    for trigger in list_of_triggers:
+        print(trigger)
+        if trigger[0]:
+            count += 1
+    if len(list_of_triggers) == 0:
+        response = Response("Data is not available yet", status=200, mimetype='application/json' )
+    else:
+        one_off_percentage = (count/len(list_of_triggers))*100
+        remaining = 100 - one_off_percentage
+        res = {
+            'ms': one_off_percentage,
+            'rem': remaining
+        }
 
-    res = {
-        'ms': y,
-        'rem': remaining
-    }
+        response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
 
-    response = Response(json.dumps(res), status=200, mimetype='application/json')
+
+@app.route('/get-multiple-single/<product_id>', methods=['GET'])
+@auto.doc()
+def multiple_single_day_review_percentage(product_id):
+    """
+    Return percentage of multiple single day review of products
+
+    """
+    list_of_triggers = get_multiple_single_day_review_trigger(product_id)
+    count = 0
+    for trigger in list_of_triggers:
+        print(trigger)
+        if trigger[0]:
+            count += 1
+    if len(list_of_triggers) == 0:
+        response = Response("Data is not available", status=200, mimetype='application/json')
+    else:
+        one_off_percentage = (count/len(list_of_triggers))*100
+        remaining = 100 - one_off_percentage
+        res = {
+            'msp': one_off_percentage,
+            'remp': remaining
+        }
+        response = Response(json.dumps(res), status=200, mimetype='application/json')
+    return response
+
+
+@app.route('/detect-review-spikes/<product_id>', methods=['GET'])
+@auto.doc()
+def detection_of_review_spikes(product_id):
+
+    review_spikes = get_review_spikes(product_id)
+    list_review_data = []
+    for rs in review_spikes:
+        spikes = {
+            "review_text": rs[0],
+            "review_date": str(rs[1])
+        }
+        list_review_data.append(spikes)
+    print list_review_data
+
+    response = Response(json.dumps(list_review_data), status=200, mimetype='application/json')
+    return response
+
+
+@app.route('/rating_trend_rating_wise/<product_id>', methods=['GET'])
+@auto.doc()
+def rating_trend_rating_wise(product_id):
+    l1 = []
+    rating_trend = get_rating_using_date(product_id)
+    print rating_trend
+    for rating in rating_trend:
+        avg_rate_per_date = {
+           "avg_review": rating[0],
+           "day": str(rating[1])
+        }
+        l1.append(avg_rate_per_date)
+    print l1
+    response = Response(json.dumps(l1), status=200, mimetype='application/json')
     return response
 
 
@@ -411,8 +485,3 @@ def return_api_docs():
     :return:
     """
     return auto.html()
-
-@app.route('/update_database')
-def set_value_in_database():
-    get_data()
-    return "true"
