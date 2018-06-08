@@ -1,0 +1,89 @@
+1. How To start Data Analystis
+
+	* Go in main.py file
+	* Comment line# 137 (start_crawper(crawper_threads, db_conn))
+	* Un comment line# 138 (start_rengine(db_conn, rengine_threads))
+	* save file and run it (python main.py)
+	* for running in background (screen python main.py)
+
+2. How To Change Ips
+
+	* Go in Proxies.txt file which is located in assests folder
+	* open file and change ips
+
+3. How To Start Scraping
+
+	* Go in main.py file
+	* Un Comment line# 137 (start_crawper(crawper_threads, db_conn))
+	* Comment line# 138 (start_rengine(db_conn, rengine_threads))
+	* save file and run it (python main.py)
+	* for running in background (screen python main.py) 
+
+4. Explaination Of API Making
+
+	* api making is happen in "server" folder
+	* after "server" folder go to "app" folder then "views" after that open file common.py
+		-so full path is (server/app/views/common.py)
+	*In common.py all ips created and will be create here.
+
+	+ Explaining API (sum_of_total_num_reviews)
+	
+	* You have to write api in common.py, where you will perform all operation on data getting from database. 
+	* For fetching data from database go the database,py files present in models folder 
+	(server/app/models/databse.py)
+	* Open database.py file make model for executing Query
+	* For writing query for database go to "queries.py" file(server/app/models/config/queries.py)
+	* this is how one API is created, this cycle is repeated for every API.
+
+5. API with Commenting (sum_of_total_num_reviews)
+
+	* In "common.py" file
+
+		# mentioning route where another guy will get data using this route
+		@app.route('/total-review-sum')
+		# this is for auto documentation which you see on "/docs" page
+		@auto.doc()
+		def return_sum_of_total_number_of_reviews():
+		    sum_num_reviews = sum_of_total_num_of_reviews()
+		    s = 0
+		    for x in sum_num_reviews:
+		        for y in x:
+		            if ',' in y:
+		                y = y.replace(',', '')
+		            s = int(y) + s
+		    return str(s)
+
+	* In "database.py" file
+		def sum_of_total_num_of_reviews():
+		    pg_conn, pg_cursor = pg_.get_conn()
+		    # Calling query with key (Sum_of_total_num_of_reviews) which is written in queries.py file
+		    query = QUERIES["Sum_of_total_num_of_reviews"]
+
+		    try:
+				# Execution of query, note that query parameter is in middle and return data from database is in "res" variable.
+		        res = pg_.execute_query(pg_cursor, query, params='')
+		        # commit changes
+		        pg_.commit_changes(pg_conn)
+		        pg_.put_conn(pg_conn)
+		        return res
+		    except Exception as e:
+		        pg_.put_conn(pg_conn)
+		        return None
+
+	* In "queries.py" file
+		#write query getting total number of reviews from products table
+		"Sum_of_total_num_of_reviews": "SELECT total_reviews from crawper.products;",
+
+6. How to Check Categories
+	
+	* login in postgres
+		(sudo -u postgres psql)
+	* select count(*) from crawper.word_volume_comparison where no_of_products < 20;
+
+7. Code For Scrap Product < 20
+
+	* Getting urls from database in main.py where line # is 29
+	* on line # 29 it is calling function "getting_url_from_categories", which is written in 
+		(src/r_engine/utility.py)
+	* "getting_url_from_categories" function calls query "GetUrls" from "config.py" file
+		(src/r_engine/config/config.py)
