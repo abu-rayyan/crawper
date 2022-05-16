@@ -23,6 +23,7 @@ For contribution guideline follow [here](docs/contribution.md)
 ## Contributors
 
 - [Abdul Wakeel](https://github.com/a-wakeel)
+- [Sajid Ur Rehman](https://github.com/abu-rayyan)
 
 ## Build Using
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
