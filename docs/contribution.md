@@ -1,7 +1,7 @@
 ## Contribution Guideline
 In order to contribute to this code, follow the following rules:
 1. Always work on your own branch, don't push directly to **master**
-2. Always test your code more then one time before committing to remote branch
+2. Always test your code more than one time before committing to remote branch
 3. Carefully review the **pull requests** before merging into **master**
 4. Strictly follow the styling guidelines
 5. Always remove extra pieces of codes like comments or commented code before push
@@ -21,4 +21,3 @@ For the code styling strictly follow the following style
 guidelines.
 
 - [PEP 8 -- Style Guide For Python](https://www.python.org/dev/peps/pep-0008/)
-- [Best Practices For Python](https://gist.github.com/a-wakeel/ce3d26a6d80fc661295d76222ba111c5)
