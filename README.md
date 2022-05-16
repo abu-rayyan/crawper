@@ -22,7 +22,6 @@ For contribution guideline follow [here](docs/contribution.md)
 
 ## Contributors
 
-- [Abdul Wakeel](https://github.com/a-wakeel)
 - [Sajid Ur Rehman](https://github.com/abu-rayyan)
 
 ## Build Using
